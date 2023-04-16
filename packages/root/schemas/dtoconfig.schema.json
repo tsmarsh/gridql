@@ -1,0 +1,71 @@
+{
+  "title": "DTO Configuration",
+  "type": "object",
+  "properties": {
+    "resolvers": {
+      "type": "object",
+      "patternProperties": {
+        "^[A-Z0-9._%+-]+$": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "queryName": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "url",
+            "queryName"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "singletons": {
+      "type": "object",
+      "patternProperties": {
+        "^[A-Z0-9._%+-]+$": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "query": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "scalars": {
+        "type": "object",
+        "patternProperties": {
+          "^[A-Z0-9._%+-]+$": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "query": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "query"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    "additionalProperties": false
+  }
+}
