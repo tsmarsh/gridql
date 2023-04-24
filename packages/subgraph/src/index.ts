@@ -1,4 +1,5 @@
 import {GraphQLResolveInfo, Kind, SelectionNode, SelectionSetNode} from "graphql"
+import fetch from "node-fetch"
 
 export const callSubgraph = async (url: string, query: string, queryName: string) => {
     const body = JSON.stringify({"query": query});
@@ -12,7 +13,7 @@ export const callSubgraph = async (url: string, query: string, queryName: string
         body: body
     });
 
-    const json = await response.json();
+    const json : any = await response.json();
 
     if (json.hasOwnProperty('errors')) {
         console.log(json);
@@ -21,17 +22,19 @@ export const callSubgraph = async (url: string, query: string, queryName: string
     return json["data"][queryName];
 };
 
-export const processSelectionSet = (selectionSet: SelectionSetNode) => {
+export const processSelectionSet = (selectionSet: SelectionSetNode): string => {
     return selectionSet.selections.reduce((q: string, field : SelectionNode) => q + processFieldNode(field), "");
 }
 
 
-export const processFieldNode = (field: SelectionNode) => {
+export const processFieldNode = (field: SelectionNode) : string => {
     switch (field.kind){
         case Kind.FIELD:
-            return `${field.name.value} {
+            if(field.selectionSet !== undefined){
+                return `${field.name.value} {
                     ${processSelectionSet(field.selectionSet)}
                 }\n`
+            }
         case Kind.FRAGMENT_SPREAD:
             return field.name.value + "\n";
         default:
@@ -39,13 +42,20 @@ export const processFieldNode = (field: SelectionNode) => {
     }
 }
 
-export const processContext = (id: string, context: GraphQLResolveInfo, queryName: string) => {
-    const selectionSet: SelectionSetNode = context.fieldNodes[0].selectionSet;
-    const sss = processSelectionSet(selectionSet)
+export const processContext = (id: string, context: GraphQLResolveInfo, queryName: string) : string => {
 
-    return `{${queryName}(id: "${id}"){
-     ${sss} 
-    }}`;
+    if(context.fieldNodes.length > 0) {
+        const firstNode = context.fieldNodes[0]
+        if(firstNode.selectionSet !== undefined) {
+            const selectionSet: SelectionSetNode = firstNode.selectionSet;
+            const sss = processSelectionSet(selectionSet)
+            return `{${queryName}(id: "${id}"){
+                ${sss} 
+               }}`
+        }
+
+    }
+    throw Error("Context is malformed");
 }
 
 export {}

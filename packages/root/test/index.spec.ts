@@ -1,35 +1,62 @@
-import { expect } from 'chai';
 import {MongoMemoryServer} from "mongodb-memory-server";
-import {MongoClient} from "mongodb";
+import {MongoClient, Db, Collection} from "mongodb";
+import {context} from "../src"
+import {DTOConfiguration} from "../src/types/dtoconfig.schema";
+import {graphql, buildSchema} from "graphql"
+import assert from "assert"
+import {before, describe, it} from "mocha"
+
+let db: Collection;
+let test_db = "test_db";
+let mongo_collection = "simple"
 
 before(async function () {
-   this.mongod = await MongoMemoryServer.create();
+   const mongod = await MongoMemoryServer.create();
 
-   this.uri = this.mongod.getUri();
+   const uri = this.mongod.getUri();
 
-   this.client = new MongoClient(this.uri);
+   const client = new MongoClient(this.uri);
 
-   this.client.connect()
+   await client.connect();
 
-   this.test_db = "test_db";
-   this.mongo_collection = "rest_test"
-   this.db = this.client.db(this.test_db).collection(this.mongo_collection);
+
+
+   const connection: Db = client.db(test_db);
+   db = connection.collection(mongo_collection);
 });
 
-describe("Generating a simple root", () => {
-   it('should create a simple root', () => {
-      const simple = {
-         "singletons": {
-            "getById": {
-               "kind": "singleton",
-               "id": "id",
-               "query": "{'id': ${id}}"
-            }
+describe("Generating a simple root", async () => {
+   const simple: DTOConfiguration = {
+      "singletons": {
+         "getById": {
+            "id": "id",
+            "query": "{'_id': ${id}}"
          }
-
-         dtoFactory
       }
+   };
 
+   const schema = buildSchema(`{
+        type Test {
+          foo: String
+          eggs: Int
+        }
+        type Query {
+          getById(id: String): Test
+        }
+      }`);
 
+   const result = await db.insertOne({"foo": "bar", "eggs": 11});
+
+   const query: string = `{
+         getById(id: ${result?.insertedId}) {
+               eggs
+            }
+      }`
+
+   const {root} = context(db, simple);
+
+   it('should create a simple root', async () => {
+      const response = await graphql({schema, source: query, rootValue: root});
+      assert.equal(11, response.data?.eggs);
    })
 });

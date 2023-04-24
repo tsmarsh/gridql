@@ -19,6 +19,8 @@
   },
   "dependencies": {
     "@types/graphql": "^14.5.0",
-    "graphql": "^16.6.0"
+    "@types/node-fetch": "^2.6.3",
+    "graphql": "^16.6.0",
+    "node-fetch": "^3.3.1"
   }
 }

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "ts-node src/index.ts",
-    "test": "mocha -r ts-node/register 'test/**/*.spec.ts'",
+    "test": "mocha --loader=ts-node/esm --extension ts",
     "gentypes": "json2ts -i schemas -o src/types"
   },
   "devDependencies": {
@@ -14,6 +14,7 @@
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.15.11",
     "chai": "^4.3.7",
+    "esm": "^3.2.25",
     "mocha": "^10.2.0",
     "mongodb-memory-server": "^8.12.2",
     "ts-node": "^10.9.1",
