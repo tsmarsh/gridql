@@ -1,7 +1,8 @@
-import {callSubgraph, processContext} from "subgraph/src";
+const {callSubgraph, processContext} = require("subgraph/src");
 import {Collection} from "mongodb"
 import {DependencyResolver, DTOConfiguration, QueryResolver} from "./types/dtoconfig.schema";
 import {GraphQLResolveInfo} from "graphql"
+const {ObjectId} = require("mongodb");
 
 const assignProperties = (target: any, source: any) => {
     Object.keys(source).forEach((key: string) => {
@@ -79,7 +80,8 @@ export const assignResolver = (id: string = "id", queryName: string, url: string
 const processQueryTemplate = (id: string, queryTemplate: string) => {
     console.log(`Id used: ${id}`)
     const queryWithId = queryTemplate.replace("${id}", id);
-    return JSON.parse(queryWithId);
+    //TODO: Should only run eval on start up, not on each request
+    return eval(queryWithId);
 }
 
 export const scalar = (db: Collection, dtoFactory: DTOFactory, id: string = "id", queryTemplate: string) => {

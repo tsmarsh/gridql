@@ -1,9 +1,13 @@
 import {GraphQLResolveInfo, Kind, SelectionNode, SelectionSetNode} from "graphql"
-import fetch from "node-fetch"
 
 export const callSubgraph = async (url: string, query: string, queryName: string) => {
     const body = JSON.stringify({"query": query});
+
+
     console.log(`Sending: ${body} to ${url}`);
+
+    const { default: fetch } = await import('node-fetch');
+
     const response = await fetch(url, {
         method: 'POST',
         headers: {
