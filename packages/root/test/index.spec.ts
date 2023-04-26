@@ -4,10 +4,12 @@ import {MongoClient, Db, Collection} from "mongodb";
 const {context} = require("../src");
 import {DTOConfiguration} from "../src/types/dtoconfig.schema";
 import {fail} from "assert";
+import afterEach from "node:test";
 
 const {graphql, buildSchema} = require("graphql");
 const {before, describe, it} = require("mocha");
 const {expect} = require("chai");
+const sinon = require("sinon");
 
 const assert = require("assert");
 
@@ -118,8 +120,69 @@ describe("Generating a simple scalar root", () => {
             console.log(response.errors?.[0].message);
             fail();
         } else {
-            expect(response.data?.getByBreed.map((d: any)=>d["name"])).to.include.members(["henry", "harry"]);
+            expect(response.data?.getByBreed.map((d: any) => d["name"])).to.include.members(["henry", "harry"]);
         }
 
+    });
+});
+
+describe("Generating a simple scalar root with a dependency", () => {
+    afterEach(() => {
+        sinon.restore();
+    });
+
+    const simple: DTOConfiguration = {
+        singletons: {
+            getById: {
+                id: "id",
+                query: '{_id: new ObjectId("${id}")}'
+            },
+        },
+        resolvers: {
+            coop: {
+                id: "id",
+                queryName: "getById",
+                url: "http://localhost:3000"
+            }
+        }
+    };
+
+    const schema = buildSchema(
+        `
+        type Coop {
+            name: String
+        }
+        type Test {
+          name: String
+          eggs: Int
+          coop: Coop
+        }
+        type Query {
+          getById(id: String): Test
+        }`);
+
+
+    it("should call the dependency", async () => {
+        const fetchMock = sinon.stub(global, 'fetch')
+            .resolves({json: () => Promise.resolve({data: {getById: {name: "mega"}}})});
+
+        const result = await db.insertOne({name: "chucky", eggs: 1, coop: "101010"});
+
+        const query = `{
+         getById(id: "${result?.insertedId}") {
+               name, coop {name}
+            }
+        }`;
+
+        const {root} = context(db, simple);
+
+        const response = await graphql({schema, source: query, rootValue: root});
+
+        if (response.hasOwnProperty("errors")) {
+            console.log(response.errors?.[0].message);
+            fail();
+        } else {
+            assert.equal("mega", response.data?.getById.coop.name);
+        }
     });
 });
