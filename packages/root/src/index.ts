@@ -1,7 +1,9 @@
-const {callSubgraph, processContext} = require("subgraph/src");
 import {Collection} from "mongodb"
 import {DependencyResolver, DTOConfiguration, QueryResolver} from "./types/dtoconfig.schema";
-import {GraphQLResolveInfo} from "graphql"
+
+const {assignResolver} = require("./resolvers")
+
+//Putting ObjectId is scope so it can be used in queries
 const {ObjectId} = require("mongodb");
 
 const assignProperties = (target: any, source: any) => {
@@ -42,38 +44,37 @@ export const root = (db: Collection, dtoFactory: DTOFactory,
 }
 
 export class DTOFactory {
-    dto = {} as any
+    resolvers = {} as any
 
-    constructor(resolvers?: Record<string, DependencyResolver>) {
+    constructor(config?: Record<string, DependencyResolver>) {
 
-        if (resolvers !== undefined) {
-            for (const resolver in resolvers) {
-                const res = resolvers[resolver];
-                this.dto[resolver] = assignResolver(
+        if (config !== undefined) {
+            for (const name in config) {
+                const res = config[name];
+                this.resolvers[name] = assignResolver(
                     res.id,
                     res.queryName,
-                    res.url,
-                    this.dto)
+                    res.url)
             }
         }
     }
 
     fillOne(data: any) {
-        let copy = {...this.dto}
+        let copy = {} as any;
+
+        for (const f in this.resolvers) {
+            if (typeof this.resolvers[f] === 'function') {
+                let resolver = this.resolvers[f];
+                copy[f] = resolver.bind(copy);
+            }
+        }
+
         assignProperties(copy, data)
         return copy
     }
 
     fillMany(data: Array<any>) {
         return data.map((d) => this.fillOne(d))
-    }
-}
-
-
-export const assignResolver = (id: string = "id", queryName: string, url: string, self: any) => {
-    return async (parent: any, args: any, context: any, info: GraphQLResolveInfo) => {
-        const query = processContext(self[id], info, queryName);
-        return callSubgraph(url, query, queryName);
     }
 }
 
@@ -94,14 +95,15 @@ export const scalar = (db: Collection, dtoFactory: DTOFactory, i: string = "id",
 }
 
 export const singleton = (db: Collection, dtoFactory: DTOFactory, id: string = "id", queryTemplate: string) => {
-    return async ({id: id} : any) => {
+    return async ({id: id}: any) => {
         const query = processQueryTemplate(id, queryTemplate)
         const result = await db.findOne(query).catch(e => console.log(e));
         if (result === null) {
             console.log(`Nothing found for: ${id}`);
             return result;
         } else {
-            return dtoFactory.fillOne(result);
+            let graphdto = dtoFactory.fillOne(result);
+            return graphdto;
         }
     }
 }

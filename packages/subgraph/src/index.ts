@@ -1,31 +1,5 @@
 import {GraphQLResolveInfo, Kind, SelectionNode, SelectionSetNode} from "graphql"
 
-export const callSubgraph = async (url: string, query: string, queryName: string) => {
-    const body = JSON.stringify({"query": query});
-
-
-    console.log(`Sending: ${body} to ${url}`);
-
-    const { default: fetch } = await import('node-fetch');
-
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        },
-        body: body
-    });
-
-    const json : any = await response.json();
-
-    if (json.hasOwnProperty('errors')) {
-        console.log(json);
-    }
-
-    return json["data"][queryName];
-};
-
 export const processSelectionSet = (selectionSet: SelectionSetNode): string => {
     return selectionSet.selections.reduce((q: string, field : SelectionNode) => q + processFieldNode(field), "");
 }

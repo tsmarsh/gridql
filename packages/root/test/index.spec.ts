@@ -140,7 +140,7 @@ describe("Generating a simple scalar root with a dependency", () => {
         },
         resolvers: {
             coop: {
-                id: "id",
+                id: "coop_id",
                 queryName: "getById",
                 url: "http://localhost:3000"
             }
@@ -163,10 +163,10 @@ describe("Generating a simple scalar root with a dependency", () => {
 
 
     it("should call the dependency", async () => {
-        const fetchMock = sinon.stub(global, 'fetch')
+        sinon.stub(global, 'fetch')
             .resolves({json: () => Promise.resolve({data: {getById: {name: "mega"}}})});
 
-        const result = await db.insertOne({name: "chucky", eggs: 1, coop: "101010"});
+        const result = await db.insertOne({name: "chucky", eggs: 1, coop_id: "101010"});
 
         const query = `{
          getById(id: "${result?.insertedId}") {
