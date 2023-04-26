@@ -7,6 +7,8 @@ import {fail} from "assert";
 
 const {graphql, buildSchema} = require("graphql");
 const {before, describe, it} = require("mocha");
+const {expect} = require("chai");
+
 const assert = require("assert");
 
 let db: Collection;
@@ -52,11 +54,9 @@ describe("Generating a simple root", () => {
          getById(id: "${result?.insertedId}") {
                eggs
             }
-      }`;
+        }`;
 
         const {root} = context(db, simple);
-
-        const foo = await db.findOne({"_id": result.insertedId});
 
         const response = await graphql({schema, source: query, rootValue: root});
 
@@ -65,6 +65,60 @@ describe("Generating a simple root", () => {
             fail();
         } else {
             assert.equal(11, response.data?.getById.eggs);
+        }
+
+    });
+});
+
+describe("Generating a simple scalar root", () => {
+    const scalar: DTOConfiguration = {
+        singletons: {
+            getById: {
+                id: "id",
+                query: '{_id: new ObjectId("${id}")}',
+            },
+        },
+        scalars: {
+            getByBreed: {
+                id: "breed",
+                query: '({breed: "${id}"})',
+            }
+        }
+    };
+
+    const schema = buildSchema(
+        `type Test {
+          name: String
+          eggs: Int
+          breed: String
+        }
+        type Query {
+          getById(id: String): Test
+          getByBreed(breed: String): [Test]
+        }`);
+
+    it("should create a simple scalr root", async () => {
+        await Promise.all([
+            db.insertOne({name: "henry", eggs: 11, breed: "chicken"}),
+            db.insertOne({name: "harry", eggs: 7, breed: "chicken"}),
+            db.insertOne({name: "quack", eggs: 2, breed: "duck"})
+        ]);
+
+        const query = `{
+         getByBreed(breed: "chicken") {
+               name
+            }
+        }`;
+
+        const {root} = context(db, scalar);
+
+        const response = await graphql({schema, source: query, rootValue: root});
+
+        if (response.hasOwnProperty("errors")) {
+            console.log(response.errors?.[0].message);
+            fail();
+        } else {
+            expect(response.data?.getByBreed.map((d: any)=>d["name"])).to.include.members(["henry", "harry"]);
         }
 
     });

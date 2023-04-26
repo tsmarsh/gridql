@@ -84,8 +84,9 @@ const processQueryTemplate = (id: string, queryTemplate: string) => {
     return eval(queryWithId);
 }
 
-export const scalar = (db: Collection, dtoFactory: DTOFactory, id: string = "id", queryTemplate: string) => {
-    return async ({id: id} : any) => {
+export const scalar = (db: Collection, dtoFactory: DTOFactory, i: string = "id", queryTemplate: string) => {
+    return async (vars: any) => {
+        const id = vars[i]
         const query = processQueryTemplate(id, queryTemplate)
         const results = await db.find(query).toArray();
         return dtoFactory.fillMany(results);
