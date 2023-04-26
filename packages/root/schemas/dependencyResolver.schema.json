@@ -1,0 +1,19 @@
+{
+  "title": "DependencyResolver",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "queryName": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "url",
+    "queryName"
+  ]
+}

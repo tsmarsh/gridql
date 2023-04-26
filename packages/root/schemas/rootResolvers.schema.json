@@ -1,0 +1,16 @@
+{
+  "title": "QueryResolver",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "query": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "query"
+  ],
+  "additionalProperties": false
+}

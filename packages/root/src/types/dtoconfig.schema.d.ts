@@ -7,26 +7,35 @@
 
 export interface DTOConfiguration {
   resolvers?: {
-    /**
-     * This interface was referenced by `undefined`'s JSON-Schema definition
-     * via the `patternProperty` "^[A-Z0-9._%+-]+$".
-     */
-    [k: string]: {
-      id?: string;
-      url: string;
-      queryName: string;
-    };
+    [k: string]: DependencyResolver;
   };
   singletons?: {
-    /**
-     * This interface was referenced by `undefined`'s JSON-Schema definition
-     * via the `patternProperty` "^[A-Z0-9._%+-]+$".
-     */
-    [k: string]: {
-      id?: string;
-      query: string;
-    };
+    [k: string]: QueryResolver;
+  };
+  scalars?: {
+    [k: string]: QueryResolver;
   };
   additionalProperties?: false;
   [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `undefined`'s JSON-Schema definition
+ * via the `patternProperty` "^[A-Z0-9._%+-]+$".
+ */
+export interface DependencyResolver {
+  id?: string;
+  url: string;
+  queryName: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `undefined`'s JSON-Schema definition
+ * via the `patternProperty` "^[A-Z0-9._%+-]+$".
+ *
+ * This interface was referenced by `undefined`'s JSON-Schema definition
+ * via the `patternProperty` "^[A-Z0-9._%+-]+$".
+ */
+export interface QueryResolver {
+  id?: string;
+  query: string;
 }
