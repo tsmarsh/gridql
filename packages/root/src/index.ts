@@ -65,7 +65,7 @@ export class DTOFactory {
         for (const f in this.resolvers) {
             if (typeof this.resolvers[f] === 'function') {
                 let resolver = this.resolvers[f];
-                copy[f] = resolver.bind(copy);
+                copy[f] = resolver//.bind(copy);
             }
         }
 
