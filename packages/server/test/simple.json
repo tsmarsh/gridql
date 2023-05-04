@@ -1,0 +1,19 @@
+{
+  "test": {
+    "mongo" : {
+      "uri": "mongodb://127.0.0.1:60219/",
+      "collection": "test",
+      "db": "test"
+    },
+    "schema": "simple.graphql",
+    "port": 40000,
+    "dtoconfig": {
+      "singletons": {
+        "getById": {
+          "id": "id",
+          "query": "{_id: new ObjectId('${id}')}"
+        }
+      }
+    }
+  }
+}
