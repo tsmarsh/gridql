@@ -1,11 +1,17 @@
 {
   "useWorkspaces": true,
-  "version": "0.0.1",
-  "packages": ["packages/"],
+  "version": "0.0.2-alpha.0",
+  "packages": [
+    "packages/"
+  ],
   "npmClient": "yarn",
   "command": {
     "publish": {
-      "ignoreChanges": ["**/__tests__/**", "**/*.md", "**/*.spec.ts"],
+      "ignoreChanges": [
+        "**/__tests__/**",
+        "**/*.md",
+        "**/*.spec.ts"
+      ],
       "message": "chore(release): publish"
     }
   }
