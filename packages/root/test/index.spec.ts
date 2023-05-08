@@ -2,7 +2,7 @@ import {MongoMemoryServer} from "mongodb-memory-server";
 import {MongoClient, Db, Collection} from "mongodb";
 
 const {context} = require("../src");
-import {DTOConfiguration} from "configuration/src/types/dtoconfig.schema";
+import {DTOConfiguration} from "@tsmarsh/configuration/src/types/dtoconfig.schema";
 import {fail} from "assert";
 import afterEach from "node:test";
 

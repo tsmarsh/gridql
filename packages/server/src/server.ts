@@ -2,11 +2,11 @@ import express, {IRouter, IRouterHandler, RequestHandler} from 'express'
 import { graphqlHTTP } from 'express-graphql'
 import { buildSchema, GraphQLSchema } from 'graphql'
 import  fs from "fs"
-import {context} from "root/src"
+import {context} from "@tsmarsh/root/src"
 import {Collection, MongoClient} from "mongodb"
-import {ServerConfig} from "configuration/src/types/serverConfig.schema";
+import {ServerConfig} from "@tsmarsh/configuration/src/types/serverConfig.schema";
 import {Validator} from "jsonschema";
-import {MongoConfig} from "configuration/src/types/mongoConfig.schema";
+import {MongoConfig} from "@tsmarsh/configuration/src/types/mongoConfig.schema";
 
 const serverConfigSchema = JSON.parse(fs.readFileSync(__dirname + "/../schemas/serverConfig.schema.json").toString());
 

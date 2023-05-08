@@ -1,5 +1,5 @@
-import {processContext} from "subgraph/src";
-import {callSubgraph} from "subgraph/src/call";
+import {processContext} from "@tsmarsh/subgraph/src";
+import {callSubgraph} from "@tsmarsh/subgraph/src/call";
 
 export const assignResolver = (id= "id", queryName, url) => {
     return async function(parent, args, context) {
