@@ -1,5 +1,6 @@
 {
   "title": "DependencyResolver",
+  "$id": "dependencyResolver.schema.json",
   "type": "object",
   "properties": {
     "id": {

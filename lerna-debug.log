@@ -1,0 +1,20 @@
+0 silly argv {
+0 silly argv   _: [ 'bootstrap' ],
+0 silly argv   lernaVersion: '6.6.1',
+0 silly argv   '$0': '/opt/homebrew/bin/lerna'
+0 silly argv }
+1 notice cli v6.6.1
+2 verbose rootPath /Users/thomasmarsh/repos/gridql
+3 error JSONError: Expected double-quoted property name in JSON at position 215 while parsing '{  "name": "root",  "version": "1.0.0"' in packages/root/package.json
+3 error
+3 error [0m [90m  8 |[39m     [32m"start"[39m[33m:[39m [32m"ts-node src/index.ts"[39m[33m,[39m[0m
+3 error [0m [90m  9 |[39m     [32m"test"[39m[33m:[39m [32m"mocha --loader=ts-node/esm --extension ts"[39m[33m,[39m[0m
+3 error [0m[31m[1m>[22m[39m[90m 10 |[39m   }[33m,[39m[0m
+3 error [0m [90m    |[39m   [31m[1m^[22m[39m[0m
+3 error [0m [90m 11 |[39m   [32m"devDependencies"[39m[33m:[39m {[0m
+3 error [0m [90m 12 |[39m     [32m"@types/chai"[39m[33m:[39m [32m"^4.3.4"[39m[33m,[39m[0m
+3 error [0m [90m 13 |[39m     [32m"@types/mocha"[39m[33m:[39m [32m"^10.0.1"[39m[33m,[39m[0m
+3 error
+3 error     at parseJson (/opt/homebrew/lib/node_modules/lerna/node_modules/parse-json/index.js:29:21)
+3 error     at parse (/opt/homebrew/lib/node_modules/lerna/node_modules/load-json-file/index.js:15:9)
+3 error     at module.exports (/opt/homebrew/lib/node_modules/lerna/node_modules/load-json-file/index.js:18:47)

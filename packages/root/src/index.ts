@@ -1,5 +1,5 @@
 import {Collection} from "mongodb"
-import {DependencyResolver, DTOConfiguration, QueryResolver} from "./types/dtoconfig.schema";
+import {DependencyResolver, DTOConfiguration, QueryResolver} from "configuration/src/types/dtoconfig.schema";
 
 const {assignResolver} = require("./resolvers")
 

@@ -1,6 +1,7 @@
 {
   "title": "QueryResolver",
   "type": "object",
+  "$id": "rootResolvers.schema.json",
   "properties": {
     "id": {
       "type": "string"

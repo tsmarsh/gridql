@@ -1,12 +1,13 @@
 {
   "title": "DTOConfiguration",
   "type": "object",
+  "$id": "dtoconfig.schema.json",
   "properties": {
     "resolvers": {
       "type": "object",
       "patternProperties": {
         "^[A-Z0-9._%+-]+$": {
-          "$ref": "./schemas/dependencyResolver.schema.json"
+          "$ref": "dependencyResolver.schema.json"
         }
       }
     },
@@ -14,7 +15,7 @@
       "type": "object",
       "patternProperties": {
         "^[A-Z0-9._%+-]+$": {
-          "$ref": "./schemas/rootResolvers.schema.json"
+          "$ref": "rootResolvers.schema.json"
         }
       }
     },
@@ -22,7 +23,7 @@
       "type": "object",
       "patternProperties": {
         "^[A-Z0-9._%+-]+$": {
-          "$ref": "./schemas/rootResolvers.schema.json"
+          "$ref": "rootResolvers.schema.json"
         }
       }
     },

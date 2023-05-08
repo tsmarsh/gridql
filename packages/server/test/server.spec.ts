@@ -1,27 +1,27 @@
-const { expect } = require('chai');
-const { graphql } = require('graphql');
+import {MongoMemoryServer} from "mongodb-memory-server";
 
-const { init, start} = require('../src/server');
-const {before} = require("mocha");
-const {MongoMemoryServer} = require("mongodb-memory-server");
-const {MongoClient} = require("mongodb");
-const {callSubgraph} = require("subgraph/src/call");
+import { expect } from 'chai';
+
+import { init, start} from '../src/server';
+import {MongoClient, Collection} from "mongodb";
+import {callSubgraph} from "subgraph/src/call"
 
 
 describe('GraphQL Server', () => {
-  let mongod;
-  let uri;
+  let mongod: MongoMemoryServer;
+  let uri: string;
   let config;
   let server;
-  let db;
+  let db: Collection;
 
   before(async function () {
     mongod = await MongoMemoryServer.create({instance: {port: 60219}});
     let client = new MongoClient(mongod.getUri());
     await client.connect();
     db = client.db("test").collection("test");
-    config = init(__dirname + "/simple.json");
-    server = start(config);
+    config = await init(__dirname + "/simple.json");
+
+    server = start(config.port, config.graphlettes);
 
     uri = mongod.getUri();
   });
@@ -30,7 +30,7 @@ describe('GraphQL Server', () => {
     mongod.stop();
   });
 
-  it('returns "Hello, world!" for the hello query', async () => {
+  it('should build a simple server', async () => {
     const result = await db.insertOne({foo: "bar", eggs: 11});
 
     const query = `{
