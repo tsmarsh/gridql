@@ -1,5 +1,5 @@
 {
-  "name": "root",
+  "name": "@tsmarsh/root",
   "version": "0.0.2-alpha.0",
   "main": "index.js",
   "license": "MIT",

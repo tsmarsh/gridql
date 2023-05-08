@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "@tsmarsh/server",
   "version": "0.0.2-alpha.0",
   "description": "graphql server scaffolding",
   "main": "server.js",
