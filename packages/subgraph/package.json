@@ -1,6 +1,6 @@
 {
   "name": "@tsmarsh/subgraph",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -10,9 +10,9 @@
   },
   "devDependencies": {
     "@types/chai": "^4.3.4",
+    "@types/graphql": "^14.5.0",
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.15.11",
-    "@types/graphql": "^14.5.0",
     "@types/node-fetch": "^2.6.3",
     "chai": "^4.3.7",
     "moca": "^0.4.3",
