@@ -30,5 +30,6 @@
     "chai": "^4.3.7",
     "mocha": "^10.2.0",
     "mongodb-memory-server": "^8.12.2"
-  }
+  },
+  "gitHead": "17fa4f7e80ed8581b507d36e332de793d7771551"
 }

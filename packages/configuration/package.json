@@ -12,5 +12,6 @@
   },
   "dependencies": {
     "json-schema-to-typescript": "^12.0.0"
-  }
+  },
+  "gitHead": "17fa4f7e80ed8581b507d36e332de793d7771551"
 }
