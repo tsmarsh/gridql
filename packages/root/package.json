@@ -1,6 +1,6 @@
 {
   "name": "@tsmarsh/root",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -25,12 +25,12 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "@tsmarsh/callgraph": "^0.1.2",
+    "@tsmarsh/configuration": "^0.1.2",
+    "@tsmarsh/subgraph": "^0.1.3",
     "graphql": "^16.6.0",
     "json-schema-to-typescript": "^12.0.0",
-    "mongodb": "^5.3.0",
-    "@tsmarsh/subgraph": "^0.1.2",
-    "@tsmarsh/callgraph": "^0.1.2",
-    "@tsmarsh/configuration": "^0.1.2"
+    "mongodb": "^5.3.0"
   },
   "gitHead": "17fa4f7e80ed8581b507d36e332de793d7771551"
 }
