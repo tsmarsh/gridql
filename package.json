@@ -2,7 +2,7 @@
   "name": "gridql",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT",
+  "license": "BSD",
   "private": "true",
   "workspaces": [
     "packages/*"

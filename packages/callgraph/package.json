@@ -23,5 +23,6 @@
   "dependencies": {
     "graphql": "^16.6.0",
     "node-fetch": "2"
-  }
+  },
+  "gitHead": "0cb03d2fea91cd1cc1ef69287ef4b3a95e07d859"
 }
