@@ -34,5 +34,5 @@
     "mocha": "^10.2.0",
     "mongodb-memory-server": "^8.12.2"
   },
-  "gitHead": "0cb03d2fea91cd1cc1ef69287ef4b3a95e07d859"
+  "gitHead": "abd2a052956a027fd542997acf1adc787ca2d8b5"
 }

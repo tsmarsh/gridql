@@ -12,8 +12,5 @@
   },
   "scripts": {
     "build": "lerna run build"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
   }
 }
