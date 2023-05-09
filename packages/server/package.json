@@ -10,8 +10,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node server.js",
-    "test": "mocha",
-    "gentypes": "json2ts -i schemas -o src/types"
+    "test": "mocha"
   },
   "dependencies": {
     "@tsmarsh/configuration": "^0.1.8",
