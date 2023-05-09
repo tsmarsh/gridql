@@ -1,18 +1,17 @@
-import {MongoMemoryServer} from "mongodb-memory-server";
+const {MongoMemoryServer} = require("mongodb-memory-server");
+const { expect } = require('chai');
 
-import { expect } from 'chai';
-
-import { init, start} from '../src/server';
-import {MongoClient, Collection} from "mongodb";
-import {callSubgraph} from "@tsmarsh/callgraph/src"
+const { init, start} = require('../');
+const {MongoClient} = require("mongodb");
+const {callSubgraph} = require("@tsmarsh/callgraph")
 
 
-describe('GraphQL Server', () => {
-  let mongod: MongoMemoryServer;
-  let uri: string;
+describe('GraphQL Server', function(){
+  let mongod;
+  let uri;
   let config;
   let server;
-  let db: Collection;
+  let db;
 
   before(async function () {
     mongod = await MongoMemoryServer.create({instance: {port: 60219}});
@@ -30,9 +29,10 @@ describe('GraphQL Server', () => {
 
   after(async function() {
     mongod.stop();
+    server.stop();
   });
 
-  it('should build a simple server', async () => {
+  it('should build a simple server', async function() {
     const result = await db.insertOne({foo: "bar", eggs: 11});
 
     const query = `{

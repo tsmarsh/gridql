@@ -2,27 +2,14 @@
   "name": "@tsmarsh/callgraph",
   "version": "0.1.12",
   "main": "index.js",
-  "types": "dist/index.d.ts",
+  "private": false,
   "license": "MIT",
-  "scripts": {
-    "build": "tsc",
-    "start": "ts-node src/index.ts",
-    "test": "mocha -r ts-node/register 'test/**/*.spec.ts'"
-  },
   "devDependencies": {
-    "@types/chai": "^4.3.4",
-    "@types/graphql": "^14.5.0",
-    "@types/mocha": "^10.0.1",
-    "@types/node": "^18.15.11",
-    "@types/node-fetch": "^2.6.3",
     "chai": "^4.3.7",
-    "moca": "^0.4.3",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
+    "moca": "^0.4.3"
   },
   "dependencies": {
-    "graphql": "^16.6.0",
-    "node-fetch": "2"
+    "graphql": "^16.6.0"
   },
   "gitHead": "abd2a052956a027fd542997acf1adc787ca2d8b5"
 }

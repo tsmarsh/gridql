@@ -2,28 +2,17 @@
   "name": "@tsmarsh/root",
   "version": "0.1.12",
   "main": "index.js",
-  "types": "dist/index.d.ts",
   "license": "MIT",
+  "private": false,
   "scripts": {
-    "build": "tsc",
-    "start": "ts-node src/index.ts",
-    "test": "mocha --loader=ts-node/esm --extension ts"
+    "test": "mocha"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.4",
-    "@types/graphql": "^14.5.0",
-    "@types/mocha": "^10.0.1",
-    "@types/mongodb": "^4.0.7",
-    "@types/node": "^18.15.11",
-    "@types/sinon": "^10.0.14",
     "chai": "^4.3.7",
-    "esm": "^3.2.25",
     "json-schema-to-typescript": "^12.0.0",
     "mocha": "^10.2.0",
     "mongodb-memory-server": "^8.12.2",
-    "sinon": "^15.0.4",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
+    "sinon": "^15.0.4"
   },
   "dependencies": {
     "@tsmarsh/callgraph": "^0.1.12",

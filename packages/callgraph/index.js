@@ -1,6 +1,4 @@
-import fetch from 'node-fetch';
-
-export const callSubgraph = async (url: string, query: any, queryName: string) => {
+const callSubgraph = async (url, query, queryName) => {
     const body = JSON.stringify({"query": query});
     console.log(`Sending: ${body} to ${url}`);
 
@@ -21,3 +19,7 @@ export const callSubgraph = async (url: string, query: any, queryName: string) =
 
     return json["data"][queryName];
 };
+
+module.exports = {
+    callSubgraph
+}

@@ -1,7 +1,6 @@
 {
   "name": "gridql",
   "version": "1.0.0",
-  "main": "index.js",
   "license": "BSD",
   "private": "true",
   "workspaces": [
@@ -9,8 +8,5 @@
   ],
   "devDependencies": {
     "lerna": "^6.6.1"
-  },
-  "scripts": {
-    "build": "lerna run build"
   }
 }

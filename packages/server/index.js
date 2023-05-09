@@ -1,36 +1,24 @@
-import express from 'express'
-import { graphqlHTTP } from 'express-graphql'
-import { buildSchema, GraphQLSchema } from 'graphql'
-import  fs from "fs"
-import {context} from "@tsmarsh/root/src"
-import {Collection, MongoClient} from "mongodb"
-import {ServerConfig} from "@tsmarsh/configuration/src/types/serverConfig.schema";
-import {MongoConfig} from "@tsmarsh/configuration/src/types/mongoConfig.schema";
+const express = require( 'express')
+const { graphqlHTTP } = require('express-graphql')
+const { buildSchema } = require('graphql')
+const  fs = require( "fs")
+const {context} = require("@tsmarsh/root")
+const {MongoClient} = require("mongodb")
 
-export type Graphlette = {
-    path: string,
-    graph: {schema: GraphQLSchema, root: any}
-}
-
-export type Server = {
-    port: number,
-    graphlettes: Graphlette[]
-}
-
-async function buildDb(mongo: MongoConfig) {
+async function buildDb(mongo) {
     let client = new MongoClient(mongo.uri);
     await client.connect();
-    let db: Collection = client.db(mongo.db).collection(mongo.collection);
+    let db = client.db(mongo.db).collection(mongo.collection);
     return db;
 }
 
-export const init = async (configFile: string): Promise<Server> => {
-    const config: ServerConfig = require(configFile);
+const init = async (configFile) => {
+    const config = require(configFile);
 
     const port = config.port;
 
 
-    let graphlettes: Graphlette[] = await Promise.all(config.graphlettes.map(async ({mongo, dtoConfig, schema, path    }) => {
+    let graphlettes = await Promise.all(config.graphlettes.map(async ({mongo, dtoConfig, schema, path    }) => {
         let db = await buildDb(mongo);
 
         let {root} = context(db, dtoConfig);
@@ -48,7 +36,7 @@ export const init = async (configFile: string): Promise<Server> => {
 }
 
 
-export const start = async (port: number, graphlettes: Graphlette[]) => {
+const start = async (port, graphlettes) => {
     const app = express();
 
     for(let {path, graph} of graphlettes) {
@@ -70,4 +58,8 @@ export const start = async (port: number, graphlettes: Graphlette[]) => {
     });
 
     return app;
+}
+
+module.exports = {
+    start, init
 }
