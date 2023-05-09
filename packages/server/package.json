@@ -1,6 +1,6 @@
 {
   "name": "@tsmarsh/server",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "graphql server scaffolding",
   "main": "server.js",
   "types": "dist/index.d.ts",
@@ -14,8 +14,8 @@
     "gentypes": "json2ts -i schemas -o src/types"
   },
   "dependencies": {
-    "@tsmarsh/configuration": "^0.1.3",
-    "@tsmarsh/root": "^0.1.4",
+    "@tsmarsh/configuration": "^0.1.6",
+    "@tsmarsh/root": "^0.1.6",
     "express": "^4.18.2",
     "express-graphql": "^0.12.0",
     "graphql": "^16.6.0",
