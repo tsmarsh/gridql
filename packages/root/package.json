@@ -1,6 +1,6 @@
 {
   "name": "@tsmarsh/root",
-  "version": "0.1.12",
+  "version": "0.2.0",
   "main": "index.js",
   "license": "MIT",
   "private": false,
@@ -15,9 +15,9 @@
     "sinon": "^15.0.4"
   },
   "dependencies": {
-    "@tsmarsh/callgraph": "^0.1.12",
-    "@tsmarsh/configuration": "^0.1.12",
-    "@tsmarsh/subgraph": "^0.1.12",
+    "@tsmarsh/callgraph": "^0.2.0",
+    "@tsmarsh/configuration": "^0.2.0",
+    "@tsmarsh/subgraph": "^0.2.0",
     "graphql": "^16.6.0",
     "mongodb": "^5.3.0"
   },
