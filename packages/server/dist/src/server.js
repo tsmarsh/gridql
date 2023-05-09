@@ -46,8 +46,6 @@ const init = (configFile) => __awaiter(void 0, void 0, void 0, function* () {
 exports.init = init;
 const start = (port, graphlettes) => __awaiter(void 0, void 0, void 0, function* () {
     const app = (0, express_1.default)();
-    const { path, graph } = graphlettes[0];
-    console.log("Setting up: " + path);
     for (let { path, graph } of graphlettes) {
         console.log("Setting up: " + path);
         let route = yield (0, express_graphql_1.graphqlHTTP)({
@@ -63,12 +61,6 @@ const start = (port, graphlettes) => __awaiter(void 0, void 0, void 0, function*
     }
     app.listen(port, () => {
         console.log(`Server is running at http://localhost:${port}`);
-        const middleware = app._router.stack.filter((layer) => !layer.route);
-        console.log("Middleware:");
-        middleware.forEach((layer) => {
-            const name = layer.name || layer.handle.name;
-            console.log(`\t ${name}`);
-        });
     });
     return app;
 });
