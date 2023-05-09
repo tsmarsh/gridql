@@ -1,5 +1,5 @@
 {
-  "name": "@tsmarsh/subgraph",
+  "name": "@tsmarsh/callgraph",
   "version": "0.1.1",
   "main": "index.js",
   "types": "dist/index.d.ts",
@@ -23,6 +23,5 @@
   "dependencies": {
     "graphql": "^16.6.0",
     "node-fetch": "2"
-  },
-  "gitHead": "17fa4f7e80ed8581b507d36e332de793d7771551"
+  }
 }

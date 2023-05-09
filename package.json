@@ -10,6 +10,9 @@
   "devDependencies": {
     "lerna": "^6.6.1"
   },
+  "scripts": {
+    "build": "lerna run build"
+  },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   }

@@ -3,10 +3,12 @@
   "version": "0.1.1",
   "description": "graphql server scaffolding",
   "main": "server.js",
+  "types": "dist/index.d.ts",
   "author": "Tom Marsh",
   "license": "BSD",
   "private": false,
   "scripts": {
+    "build": "tsc",
     "start": "node server.js",
     "test": "mocha",
     "gentypes": "json2ts -i schemas -o src/types"

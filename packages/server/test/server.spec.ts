@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import { init, start} from '../src/server';
 import {MongoClient, Collection} from "mongodb";
-import {callSubgraph} from "@tsmarsh/subgraph/src/call"
+import {callSubgraph} from "@tsmarsh/callgraph/src"
 
 
 describe('GraphQL Server', () => {
