@@ -9,7 +9,7 @@
   "private": false,
   "scripts": {
     "build": "tsc",
-    "start": "node server.js",
+    "start": "ts-node src/server.ts",
     "test": "mocha"
   },
   "dependencies": {

@@ -19,9 +19,6 @@ const graphql_1 = require("graphql");
 const fs_1 = __importDefault(require("fs"));
 const src_1 = require("@tsmarsh/root/src");
 const mongodb_1 = require("mongodb");
-const jsonschema_1 = require("jsonschema");
-const serverConfigSchema = JSON.parse(fs_1.default.readFileSync(__dirname + "/../schemas/serverConfig.schema.json").toString());
-const validator = new jsonschema_1.Validator();
 function buildDb(mongo) {
     return __awaiter(this, void 0, void 0, function* () {
         let client = new mongodb_1.MongoClient(mongo.uri);

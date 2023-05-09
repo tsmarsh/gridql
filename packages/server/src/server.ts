@@ -1,25 +1,21 @@
-import express, {IRouter, IRouterHandler, RequestHandler} from 'express'
+import express from 'express'
 import { graphqlHTTP } from 'express-graphql'
 import { buildSchema, GraphQLSchema } from 'graphql'
 import  fs from "fs"
 import {context} from "@tsmarsh/root/src"
 import {Collection, MongoClient} from "mongodb"
 import {ServerConfig} from "@tsmarsh/configuration/src/types/serverConfig.schema";
-import {Validator} from "jsonschema";
 import {MongoConfig} from "@tsmarsh/configuration/src/types/mongoConfig.schema";
 
-const serverConfigSchema = JSON.parse(fs.readFileSync(__dirname + "/../schemas/serverConfig.schema.json").toString());
-
-type Graphlette = {
+export type Graphlette = {
     path: string,
     graph: {schema: GraphQLSchema, root: any}
 }
 
-type Server = {
+export type Server = {
     port: number,
     graphlettes: Graphlette[]
 }
-const validator = new Validator();
 
 async function buildDb(mongo: MongoConfig) {
     let client = new MongoClient(mongo.uri);
