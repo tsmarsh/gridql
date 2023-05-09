@@ -18,7 +18,9 @@ describe('GraphQL Server', () => {
     mongod = await MongoMemoryServer.create({instance: {port: 60219}});
     let client = new MongoClient(mongod.getUri());
     await client.connect();
+
     db = client.db("test").collection("test");
+
     config = await init(__dirname + "/simple.json");
 
     server = start(config.port, config.graphlettes);

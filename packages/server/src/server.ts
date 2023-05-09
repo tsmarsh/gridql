@@ -55,10 +55,6 @@ export const init = async (configFile: string): Promise<Server> => {
 export const start = async (port: number, graphlettes: Graphlette[]) => {
     const app = express();
 
-    const {path, graph} = graphlettes[0];
-
-    console.log("Setting up: " + path);
-
     for(let {path, graph} of graphlettes) {
         console.log("Setting up: " + path);
         let route = await graphqlHTTP({
@@ -73,22 +69,8 @@ export const start = async (port: number, graphlettes: Graphlette[]) => {
         app.use(path, route)
     }
 
-    interface Layer {
-        route: any;
-        name?: string;
-        handle: RequestHandler & { name?: string };
-    }
-
     app.listen(port, () => {
         console.log(`Server is running at http://localhost:${port}`);
-        const middleware = app._router.stack.filter((layer: Layer) => !layer.route);
-
-        console.log("Middleware:");
-        middleware.forEach((layer: Layer) => {
-            const name = layer.name || layer.handle.name;
-            console.log(`\t ${name}`);
-        });
-
     });
 
     return app;
