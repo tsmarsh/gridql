@@ -22,14 +22,13 @@ describe('GraphQL Server', function(){
 
     config = await init(__dirname + "/simple.json");
 
-    server = start(config.port, config.graphlettes);
+    server = await start(config.port, config.graphlettes);
 
     uri = mongod.getUri();
   });
 
   after(async function() {
     mongod.stop();
-    server.stop();
   });
 
   it('should build a simple server', async function() {

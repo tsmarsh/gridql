@@ -13,7 +13,7 @@ async function buildDb(mongo) {
 }
 
 const init = async (configFile) => {
-    const config = require(configFile);
+    const config = JSON.parse(fs.readFileSync(configFile).toString());
 
     const port = config.port;
 
