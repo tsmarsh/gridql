@@ -1,7 +1,7 @@
 {
   "title": "QueryResolver",
   "type": "object",
-  "$id": "rootResolvers.schema.json",
+  "$id": "https://gridql.com/schemas/rootResolvers.schema.json",
   "properties": {
     "id": {
       "type": "string"

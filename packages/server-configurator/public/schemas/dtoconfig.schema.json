@@ -1,0 +1,49 @@
+{
+  "title": "DTOConfiguration",
+  "type": "object",
+  "$id": "https://gridql.com/schemas/dtoconfig.schema.json",
+  "properties": {
+    "resolvers": {
+      "type": "object",
+      "patternProperties": {
+        "^[A-Z0-9._%+-]+$": {
+          "title": "DependencyResolver",
+          "$id": "https://gridql.com/schemas/dependencyResolver.schema.json",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "queryName": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "url",
+            "queryName"
+          ]
+        }
+      }
+    },
+    "singletons": {
+      "type": "object",
+      "patternProperties": {
+        "^[A-Z0-9._%+-]+$": {
+          "$ref": "/schemas/rootResolvers.schema.json"
+        }
+      }
+    },
+    "scalars": {
+      "type": "object",
+      "patternProperties": {
+        "^[A-Z0-9._%+-]+$": {
+          "$ref": "/schemas/rootResolvers.schema.json"
+        }
+      }
+    },
+    "additionalProperties": false
+  }
+}

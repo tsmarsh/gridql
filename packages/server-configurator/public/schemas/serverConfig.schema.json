@@ -1,0 +1,135 @@
+{
+  "title": "ServerConfig",
+  "type": "object",
+  "$id": "https://gridql.com/schemas/serverConfig.schema.json",
+  "properties": {
+    "port": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 65535
+    },
+    "graphlettes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "mongo": {
+            "title": "MongoConfig",
+            "type": "object",
+            "$id": "https://gridql.com/schemas/mongoConfig.schema.json",
+            "properties": {
+              "uri": {
+                "type": "string"
+              },
+              "collection": {
+                "type": "string"
+              },
+              "db": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "uri",
+              "collection",
+              "db"
+            ]
+          },
+          "schema": {
+            "type": "string"
+          },
+          "dtoConfig": {
+            "title": "DTOConfiguration",
+            "type": "object",
+            "$id": "https://gridql.com/schemas/dtoconfig.schema.json",
+            "properties": {
+              "resolvers": {
+                "type": "object",
+                "patternProperties": {
+                  "^[A-Z0-9._%+-]+$": {
+                    "title": "DependencyResolver",
+                    "$id": "https://gridql.com/schemas/dependencyResolver.schema.json",
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      },
+                      "queryName": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "url",
+                      "queryName"
+                    ]
+                  }
+                }
+              },
+              "singletons": {
+                "type": "object",
+                "patternProperties": {
+                  "^[A-Z0-9._%+-]+$": {
+                    "title": "QueryResolver",
+                    "type": "object",
+                    "$id": "https://gridql.com/schemas/rootResolvers.schema.json",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "query": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "query"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "scalars": {
+                "type": "object",
+                "patternProperties": {
+                  "^[A-Z0-9._%+-]+$": {
+                    "title": "QueryResolver",
+                    "type": "object",
+                    "$id": "https://gridql.com/schemas/rootResolvers.schema.json",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "query": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "query"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "path",
+          "mongo",
+          "schema",
+          "dtoConfig"
+        ]
+      }
+    }
+  },
+  "additionalProperties": false,
+    "required": [
+        "port",
+        "graphlettes"
+    ]
+}
