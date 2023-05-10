@@ -1,35 +1,38 @@
 const {MongoMemoryServer} = require("mongodb-memory-server");
-const { expect } = require('chai');
+const {expect} = require('chai');
 
-const { init, start} = require('../');
+const {init, start} = require('../');
 const {MongoClient} = require("mongodb");
 const {callSubgraph} = require("@tsmarsh/callgraph")
 
+let mongod;
+let uri;
+let client;
 
-describe('GraphQL Server', function(){
-  let mongod;
-  let uri;
+before(async function () {
+  mongod = await MongoMemoryServer.create({instance: {port: 60219}});
+  client = new MongoClient(mongod.getUri());
+  await client.connect();
+
+  uri = mongod.getUri();
+});
+
+after(async function () {
+  mongod.stop();
+});
+
+describe('GraphQL Server', function () {
+  let db;
   let config;
   let server;
-  let db;
 
   before(async function () {
-    mongod = await MongoMemoryServer.create({instance: {port: 60219}});
-    let client = new MongoClient(mongod.getUri());
-    await client.connect();
-
     db = client.db("test").collection("test");
 
     config = await init(__dirname + "/simple.json");
 
     server = await start(config.port, config.graphlettes);
-
-    uri = mongod.getUri();
-  });
-
-  after(async function() {
-    mongod.stop();
-  });
+  })
 
   it('should build a simple server', async function() {
     const result = await db.insertOne({foo: "bar", eggs: 11});
