@@ -1,4 +1,4 @@
-export const callSubgraph = async (url, query, queryName) => {
+const callSubgraph = async (url, query, queryName) => {
     const body = JSON.stringify({"query": query});
     console.log(`Sending: ${body} to ${url}`);
 
@@ -19,3 +19,7 @@ export const callSubgraph = async (url, query, queryName) => {
 
     return json["data"][queryName];
 };
+
+module.exports = {
+    callSubgraph
+}

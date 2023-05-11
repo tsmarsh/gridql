@@ -1,0 +1,21 @@
+{
+  "title": "MongoConfig",
+  "type": "object",
+  "$id": "https://gridql.com/schemas/mongoConfig.schema.json",
+  "properties": {
+    "uri": {
+      "type": "string"
+    },
+    "collection": {
+      "type": "string"
+    },
+    "db": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "uri",
+    "collection",
+    "db"
+  ]
+}

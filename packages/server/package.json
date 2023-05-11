@@ -1,26 +1,28 @@
 {
-  "name": "server",
-  "version": "1.0.0",
-  "main": "src/index.ts",
-  "license": "MIT",
+  "name": "@tsmarsh/server",
+  "version": "0.2.0",
+  "description": "graphql server scaffolding",
+  "main": "server.js",
+  "author": "Tom Marsh",
+  "license": "BSD",
+  "private": false,
   "scripts": {
-    "start": "node src/server.js",
-    "test": "mocha"
-  },
-  "devDependencies": {
-    "chai": "^4.3.7",
-    "esm": "^3.2.25",
-    "mocha": "^10.2.0",
-    "mongodb-memory-server": "^8.12.2",
-    "sinon": "^15.0.4",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
+    "test": "mocha --exit"
   },
   "dependencies": {
+    "@tsmarsh/configuration": "^0.2.0",
+    "@tsmarsh/root": "^0.2.0",
     "express": "^4.18.2",
     "express-graphql": "^0.12.0",
     "graphql": "^16.6.0",
-    "graphql-http": "^1.18.0",
+    "jsonschema": "^1.4.1",
     "mongodb": "^5.3.0"
-  }
+  },
+  "devDependencies": {
+    "@tsmarsh/callgraph": "^0.2.0",
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "mongodb-memory-server": "^8.12.2"
+  },
+  "gitHead": "abd2a052956a027fd542997acf1adc787ca2d8b5"
 }

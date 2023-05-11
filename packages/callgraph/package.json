@@ -1,8 +1,13 @@
 {
-  "name": "@tsmarsh/subgraph",
+  "name": "@tsmarsh/callgraph",
   "version": "0.2.0",
   "main": "index.js",
-  "license": "BSD",
+  "private": false,
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "moca": "^0.4.3"
+  },
   "dependencies": {
     "graphql": "^16.6.0"
   },

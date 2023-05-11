@@ -1,24 +1,21 @@
-import {MongoMemoryServer} from "mongodb-memory-server";
-import {MongoClient, Db, Collection} from "mongodb";
+const {MongoMemoryServer} = require("mongodb-memory-server");
+const {MongoClient } = require("mongodb");
 
-const {context} = require("../src");
-import {DTOConfiguration} from "../src/types/dtoconfig.schema";
-import {fail} from "assert";
-import afterEach from "node:test";
+const {context} = require("../");
 
 const {graphql, buildSchema} = require("graphql");
-const {before, describe, it} = require("mocha");
 const {expect} = require("chai");
 const sinon = require("sinon");
 
 const assert = require("assert");
 
-let db: Collection;
+let db;
 let test_db = "test_db";
 let mongo_collection = "simple";
+let mongod;
 
 before(async function () {
-    const mongod = await MongoMemoryServer.create();
+    mongod = await MongoMemoryServer.create();
 
     const uri = mongod.getUri();
 
@@ -26,12 +23,16 @@ before(async function () {
 
     await client.connect();
 
-    const connection: Db = client.db(test_db);
+    const connection = client.db(test_db);
     db = connection.collection(mongo_collection);
 });
 
+after(async function(){
+    mongod.stop();
+})
+
 describe("Generating a simple root", () => {
-    const simple: DTOConfiguration = {
+    const simple = {
         singletons: {
             getById: {
                 id: "id",
@@ -73,7 +74,7 @@ describe("Generating a simple root", () => {
 });
 
 describe("Generating a simple scalar root", () => {
-    const scalar: DTOConfiguration = {
+    const scalar = {
         singletons: {
             getById: {
                 id: "id",
@@ -118,9 +119,9 @@ describe("Generating a simple scalar root", () => {
 
         if (response.hasOwnProperty("errors")) {
             console.log(response.errors?.[0].message);
-            fail();
+            assert.fail();
         } else {
-            expect(response.data?.getByBreed.map((d: any) => d["name"])).to.include.members(["henry", "harry"]);
+            expect(response.data?.getByBreed.map((d) => d["name"])).to.include.members(["henry", "harry"]);
         }
 
     });
@@ -131,7 +132,7 @@ describe("Generating a simple scalar root with a dependency", () => {
         sinon.restore();
     });
 
-    const simple: DTOConfiguration = {
+    const simple = {
         singletons: {
             getById: {
                 id: "id",
@@ -180,7 +181,7 @@ describe("Generating a simple scalar root with a dependency", () => {
 
         if (response.hasOwnProperty("errors")) {
             console.log(response.errors?.[0].message);
-            fail();
+            assert.fail();
         } else {
             assert.equal("mega", response.data?.getById.coop.name);
         }

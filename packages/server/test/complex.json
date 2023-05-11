@@ -1,0 +1,98 @@
+{
+  "port": 40001,
+  "graphlettes": [
+    {
+      "path": "/hens",
+      "mongo": {
+        "uri": "mongodb://127.0.0.1:60219/",
+        "collection": "hens",
+        "db": "complex"
+      },
+      "schema": "test/hens.graphql",
+      "dtoConfig": {
+        "singletons": {
+          "getById": {
+            "id": "id",
+            "query": "({_id: new ObjectId('${id}')})"
+          }
+        },
+        "scalars": {
+          "getByCoop": {
+            "id": "coop_id",
+            "query": "({coop_id: \"${id}\"})"
+          }
+        },
+        "resolvers": {
+          "coop": {
+            "id": "coop_id",
+            "queryName": "getById",
+            "url": "http://localhost:40001/coops"
+          }
+        }
+      }
+    },
+    {
+      "path": "/coops",
+      "mongo": {
+        "uri": "mongodb://127.0.0.1:60219/",
+        "collection": "coops",
+        "db": "complex"
+      },
+      "schema": "test/coops.graphql",
+      "dtoConfig": {
+        "singletons": {
+          "getById": {
+            "id": "id",
+            "query": "({_id: new ObjectId('${id}')})"
+          }
+        },
+        "scalars": {
+          "getByFarm" : {
+            "id": "id",
+            "query": "({farm_id: \"${id}\"})"
+          }
+        },
+        "resolvers": {
+          "hens": {
+            "id": "_id",
+            "queryName": "getByCoop",
+            "url": "http://localhost:40001/hens"
+          },
+          "farm": {
+            "id": "_id",
+            "queryName": "getById",
+            "url": "http://localhost:40001/farms"
+          }
+        }
+      }
+    },
+    {
+      "path": "/farms",
+      "mongo": {
+        "uri": "mongodb://127.0.0.1:60219/",
+        "collection": "farms",
+        "db": "complex"
+      },
+      "schema": "test/farms.graphql",
+      "dtoConfig": {
+        "singletons": {
+          "getById": {
+            "id": "id",
+            "query": "({_id: new ObjectId('${id}')})"
+          },
+          "getByName": {
+            "id": "name",
+            "query": "{name: \"${id}\"}"
+          }
+        },
+        "resolvers": {
+          "coops": {
+            "id": "_id",
+            "queryName": "getByFarm",
+            "url": "http://localhost:40001/coops"
+          }
+        }
+      }
+    }
+  ]
+}

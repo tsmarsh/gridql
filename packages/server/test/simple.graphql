@@ -1,0 +1,7 @@
+type Test {
+    foo: String
+    eggs: Int
+}
+type Query {
+    getById(id: String): Test
+}
