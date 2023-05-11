@@ -7,7 +7,7 @@
   "license": "BSD",
   "private": false,
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --exit"
   },
   "dependencies": {
     "@tsmarsh/configuration": "^0.2.0",

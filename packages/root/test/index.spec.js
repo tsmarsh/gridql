@@ -12,9 +12,10 @@ const assert = require("assert");
 let db;
 let test_db = "test_db";
 let mongo_collection = "simple";
+let mongod;
 
 before(async function () {
-    const mongod = await MongoMemoryServer.create();
+    mongod = await MongoMemoryServer.create();
 
     const uri = mongod.getUri();
 
@@ -25,6 +26,10 @@ before(async function () {
     const connection = client.db(test_db);
     db = connection.collection(mongo_collection);
 });
+
+after(async function(){
+    mongod.stop();
+})
 
 describe("Generating a simple root", () => {
     const simple = {
