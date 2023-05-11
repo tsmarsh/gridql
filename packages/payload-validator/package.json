@@ -1,0 +1,15 @@
+{
+  "name": "@tsmarsh/payload-validator",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "^10.2.0"
+  },
+  "dependencies": {
+    "jsonschema": "^1.4.1"
+  }
+}

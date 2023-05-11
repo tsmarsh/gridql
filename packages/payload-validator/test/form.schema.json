@@ -1,0 +1,36 @@
+{
+  "type": "object",
+  "properties": {
+    "object_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "firstName": {
+      "type": "string",
+      "faker": "name.firstName"
+    },
+    "lastName": {
+      "type": "string",
+      "faker": "name.lastName"
+    },
+    "displayName": {
+      "type": "string",
+      "faker": "animal.horse"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "faker": "internet.email"
+    },
+    "notificationEmail": {
+      "type": "string",
+      "format": "email",
+      "faker": "internet.email"
+    }
+  },
+  "required": [
+    "firstName",
+    "lastName",
+    "email"
+  ]
+}

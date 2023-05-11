@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "@tsmarsh/callgraph": "^1.0.0",
-    "@tsmarsh/configuration": "^0.2.0",
     "@tsmarsh/subgraph": "^1.0.0",
     "graphql": "^16.6.0",
     "mongodb": "^5.3.0"

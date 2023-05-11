@@ -1,0 +1,16 @@
+{
+  "name": "payload-generator",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "json-schema-faker": "^0.5.0-rcv.46"
+  },
+  "devDependencies": {
+    "mocha": "^10.2.0"
+  }
+}
