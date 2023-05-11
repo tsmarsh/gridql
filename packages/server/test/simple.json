@@ -10,12 +10,13 @@
       },
       "schema": "test/simple.graphql",
       "dtoConfig": {
-        "singletons": {
-          "getById": {
+        "singletons": [
+          {
+            "name": "getById",
             "id": "id",
             "query": "{_id: new ObjectId('${id}')}"
           }
-        }
+        ]
       }
     }
   ]

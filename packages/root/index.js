@@ -33,16 +33,14 @@ const root = (db, dtoFactory,
     let base = {};
 
     if (singletons !== undefined) {
-        for (const s in singletons) {
-            const nonce = singletons[s];
-            base[s] = singleton(db, dtoFactory, nonce.id, nonce.query)
+        for (const s of singletons) {
+            base[s.name] = singleton(db, dtoFactory, s.id, s.query)
         }
     }
 
     if (scalars !== undefined) {
-        for (const s in scalars) {
-            const resolver = scalars[s];
-            base[s] = scalar(db, dtoFactory, resolver.id, resolver.query)
+        for (const s of scalars) {
+            base[s.name] = scalar(db, dtoFactory, s.id, s.query)
         }
     }
 
@@ -55,12 +53,11 @@ class DTOFactory {
     constructor(config) {
 
         if (config !== undefined) {
-            for (const name in config) {
-                const res = config[name];
-                this.resolvers[name] = assignResolver(
-                    res.id,
-                    res.queryName,
-                    res.url)
+            for (const c of config) {
+                this.resolvers[c.name] = assignResolver(
+                    c.id,
+                    c.queryName,
+                    c.url)
             }
         }
     }
@@ -70,8 +67,7 @@ class DTOFactory {
 
         for (const f in this.resolvers) {
             if (typeof this.resolvers[f] === 'function') {
-                let resolver = this.resolvers[f];
-                copy[f] = resolver//.bind(copy);
+                copy[f] = this.resolvers[f];
             }
         }
 

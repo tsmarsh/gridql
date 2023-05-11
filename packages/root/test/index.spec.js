@@ -33,12 +33,13 @@ after(async function(){
 
 describe("Generating a simple root", () => {
     const simple = {
-        singletons: {
-            getById: {
+        singletons: [
+            {
+                name: "getById",
                 id: "id",
                 query: '{_id: new ObjectId("${id}")}',
             },
-        },
+        ],
     };
 
     const schema = buildSchema(
@@ -75,18 +76,20 @@ describe("Generating a simple root", () => {
 
 describe("Generating a simple scalar root", () => {
     const scalar = {
-        singletons: {
-            getById: {
+        singletons: [
+            {
+                name: "getById",
                 id: "id",
                 query: '{_id: new ObjectId("${id}")}',
-            },
-        },
-        scalars: {
-            getByBreed: {
+            }
+        ],
+        scalars: [
+            {
+                name: "getByBreed",
                 id: "breed",
                 query: '({breed: "${id}"})',
             }
-        }
+        ]
     };
 
     const schema = buildSchema(
@@ -133,19 +136,21 @@ describe("Generating a simple scalar root with a dependency", () => {
     });
 
     const simple = {
-        singletons: {
-            getById: {
+        singletons: [
+            {
+                name: "getById",
                 id: "id",
                 query: '{_id: new ObjectId("${id}")}'
             },
-        },
-        resolvers: {
-            coop: {
+        ],
+        resolvers: [
+           {
+            name: "coop",
                 id: "coop_id",
                 queryName: "getById",
                 url: "http://localhost:3000"
             }
-        }
+        ]
     };
 
     const schema = buildSchema(

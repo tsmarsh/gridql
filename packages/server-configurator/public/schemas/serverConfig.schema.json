@@ -46,19 +46,18 @@
             "$id": "https://gridql.com/schemas/dtoconfig.schema.json",
             "properties": {
               "resolvers": {
-                "type": "object",
-                "patternProperties": {
-                  "^[A-Z0-9._%+-]+$": {
-                    "title": "DependencyResolver",
-                    "$id": "https://gridql.com/schemas/dependencyResolver.schema.json",
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "url": {
-                        "type": "string"
-                      },
+                "type": "array",
+                "items": {
+                  "title": "DependencyResolver",
+                  "$id": "https://gridql.com/schemas/dependencyResolver.schema.json",
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
                       "queryName": {
                         "type": "string"
                       }
@@ -67,54 +66,55 @@
                       "url",
                       "queryName"
                     ]
-                  }
                 }
               },
               "singletons": {
-                "type": "object",
-                "patternProperties": {
-                  "^[A-Z0-9._%+-]+$": {
-                    "title": "QueryResolver",
-                    "type": "object",
-                    "$id": "https://gridql.com/schemas/rootResolvers.schema.json",
-                    "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "query": {
-                        "type": "string"
-                      }
+                "type": "array",
+                "items": {
+                  "title": "QueryResolver",
+                  "type": "object",
+                  "$id": "https://gridql.com/schemas/rootResolvers.schema.json",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "query": {
+                      "type": "string"
+                    }
                     },
                     "required": [
                       "query"
                     ],
                     "additionalProperties": false
-                  }
                 }
               },
               "scalars": {
-                "type": "object",
-                "patternProperties": {
-                  "^[A-Z0-9._%+-]+$": {
-                    "title": "QueryResolver",
-                    "type": "object",
-                    "$id": "https://gridql.com/schemas/rootResolvers.schema.json",
-                    "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "query": {
-                        "type": "string"
-                      }
+                "type": "array",
+                "items": {
+                  "title": "QueryResolver",
+                  "type": "object",
+                  "$id": "https://gridql.com/schemas/rootResolvers.schema.json",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "query": {
+                      "type": "string"
+                    }
                     },
                     "required": [
-                      "query"
+                      "query",
+                      "name"
                     ],
                     "additionalProperties": false
-                  }
                 }
-              },
-              "additionalProperties": false
+              }
             }
           }
         },

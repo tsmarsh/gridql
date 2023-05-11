@@ -10,27 +10,29 @@
       },
       "schema": "test/hens.graphql",
       "dtoConfig": {
-        "singletons": {
-          "getById": {
+        "singletons": [
+          {
+            "name": "getById",
             "id": "id",
             "query": "({_id: new ObjectId('${id}')})"
           }
-        },
-        "scalars": {
-          "getByCoop": {
+        ],
+        "scalars": [
+          {
+            "name": "getByCoop",
             "id": "coop_id",
             "query": "({coop_id: \"${id}\"})"
           }
-        },
-        "resolvers": {
-          "coop": {
+        ],
+        "resolvers": [
+          {
+            "name": "coops",
             "id": "coop_id",
             "queryName": "getById",
             "url": "http://localhost:40001/coops"
           }
-        }
-      }
-    },
+        ]
+      }},
     {
       "path": "/coops",
       "mongo": {
@@ -40,31 +42,35 @@
       },
       "schema": "test/coops.graphql",
       "dtoConfig": {
-        "singletons": {
-          "getById": {
+        "singletons": [
+          {
+            "name": "getById",
             "id": "id",
             "query": "({_id: new ObjectId('${id}')})"
           }
-        },
-        "scalars": {
-          "getByFarm" : {
+        ],
+        "scalars": [
+          {
+            "name": "getByFarm",
             "id": "id",
             "query": "({farm_id: \"${id}\"})"
           }
-        },
-        "resolvers": {
-          "hens": {
+        ]
+      },
+        "resolvers": [
+          {
+            "name": "hens",
             "id": "_id",
             "queryName": "getByCoop",
             "url": "http://localhost:40001/hens"
           },
-          "farm": {
+          {
+            "name": "farms",
             "id": "_id",
             "queryName": "getById",
             "url": "http://localhost:40001/farms"
           }
-        }
-      }
+        ]
     },
     {
       "path": "/farms",
@@ -75,23 +81,26 @@
       },
       "schema": "test/farms.graphql",
       "dtoConfig": {
-        "singletons": {
-          "getById": {
+        "singletons": [
+          {
+            "name": "getById",
             "id": "id",
             "query": "({_id: new ObjectId('${id}')})"
           },
-          "getByName": {
+          {
+            "name": "getByName",
             "id": "name",
             "query": "{name: \"${id}\"}"
           }
-        },
-        "resolvers": {
-          "coops": {
+        ],
+        "resolvers": [
+          {
+            "name": "coops",
             "id": "_id",
             "queryName": "getByFarm",
             "url": "http://localhost:40001/coops"
           }
-        }
+        ]
       }
     }
   ]
