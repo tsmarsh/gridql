@@ -19,7 +19,6 @@
           "mongo": {
             "title": "MongoConfig",
             "type": "object",
-            "$id": "https://gridql.com/schemas/mongoConfig.schema.json",
             "properties": {
               "uri": {
                 "type": "string"
@@ -49,7 +48,6 @@
                 "type": "array",
                 "items": {
                   "title": "DependencyResolver",
-                  "$id": "https://gridql.com/schemas/dependencyResolver.schema.json",
                   "type": "object",
                   "properties": {
                     "id": {
@@ -73,7 +71,6 @@
                 "items": {
                   "title": "QueryResolver",
                   "type": "object",
-                  "$id": "https://gridql.com/schemas/rootResolvers.schema.json",
                   "properties": {
                     "name": {
                       "type": "string"
@@ -96,7 +93,6 @@
                 "items": {
                   "title": "QueryResolver",
                   "type": "object",
-                  "$id": "https://gridql.com/schemas/rootResolvers.schema.json",
                   "properties": {
                     "id": {
                       "type": "string"
