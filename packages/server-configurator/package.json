@@ -1,6 +1,6 @@
 {
   "name": "server-configurator",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@babel/preset-react": "^7.18.6",
