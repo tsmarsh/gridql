@@ -41,6 +41,7 @@ describe('simple restlette', function () {
         const response = await fetch("http://localhost:40020/hens", {
             method: "POST",
             body: hen,
+            redirect: "follow",
             headers: {
                 "Content-Type": "application/json"
             }

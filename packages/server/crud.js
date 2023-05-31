@@ -38,14 +38,14 @@ const create = (db, valid, context) => async (req, res) => {
         doc._authorized_readers = calculateReaders(doc, getSub(req.headers.authorization));
 
         const result = await db.insertOne(doc)
-        res.json(doc)
+        res.redirect(303, `${context}/${result.insertedId}`);
     } else {
         res.sendStatus(400);x
     }
 };
 
 const read = db => async (req, res) => {
-    const result = await db.findOne({_id: ObjectId(req.params.id)})
+    const result = await db.findOne({_id: new ObjectId(req.params.id)})
     if (result !== null) {
 
         if(req.headers.authorization === undefined || result._authorized_readers.count === 0 ||result._authorized_readers.includes(getSub(req.headers.authorization))){
