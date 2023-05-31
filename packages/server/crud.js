@@ -62,24 +62,28 @@ const read = db => async (req, res) => {
 
 const update = (db) => async (req, res) => {
     const doc = req.body;
-    let {_id, ...mongo_body} = doc
-    await db.replaceOne({_id: ObjectId(req.params.id)}, mongo_body).then(() => {
-        res.json(doc)
-    }).catch(err => console.log(err));
+    let replaceOne = await db.replaceOne({_id: new ObjectId(req.params.id)}, doc).catch(err => console.log(err));
+    res.json(doc);
 };
 
 const remove = (db) => async (req, res) => {
-    await db.deleteOne({_id: ObjectId(req.params.id)}).catch(err => console.log(err))
+    await db.deleteOne({_id: new ObjectId(req.params.id)}).catch(err => console.log(err))
 
     res.json({"deleted": req.params.id})
 };
 
+const list = (db) => async (req, res) => {
+    const results = await db.find().toArray();
+    res.json(results);
+}
 
 const init = (context, app, db, validate) => {
 
     app.use(express.json());
 
     app.post(`${context}`, create(db, validate, context));
+
+    app.get(`${context}`, list(db));
 
     app.get(`${context}/:id`, read(db));
 
