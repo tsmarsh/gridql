@@ -25,7 +25,7 @@ npm manifest:
   {
     "name": "@tsmarsh/root",
     "version": "0.1.2",
-    "main": "index.js",
+    "main": "crud.js",
     "types": "dist/index.d.ts",
     "license": "MIT",
     "scripts": {

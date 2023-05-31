@@ -4,7 +4,7 @@ const { buildSchema } = require('graphql')
 const  fs = require( "fs")
 const {context} = require("@tsmarsh/root")
 const {MongoClient} = require("mongodb")
-const {init: crud_init} = require("@tsmarsh/crud")
+const {init: crud_init} = require("./crud")
 const cors = require("cors");
 const {valid} = require("@tsmarsh/payload-validator")
 

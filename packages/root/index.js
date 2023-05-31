@@ -1,5 +1,5 @@
 const {processContext} = require("@tsmarsh/subgraph");
-const {callSubgraph} = require("@tsmarsh/callgraph");
+const {callSubgraph} = require("@tsmarsh/server/callgraph");
 
 const assignResolver = (id= "id", queryName, url) => {
     return async function(parent, args, context) {

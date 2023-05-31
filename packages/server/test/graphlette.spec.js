@@ -4,7 +4,7 @@ const {describe, it, before, after} = require('mocha')
 
 const {init, start} = require('../');
 const {MongoClient} = require("mongodb");
-const {callSubgraph} = require("@tsmarsh/callgraph")
+const {callSubgraph} = require("../callgraph")
 const bodyParser = require('body-parser');
 
 let mongod;
