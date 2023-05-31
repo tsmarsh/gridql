@@ -1,0 +1,14 @@
+{
+  "port": 40020,
+  "restlettes": [
+    {
+      "path": "/hens",
+      "mongo": {
+        "uri": "mongodb://127.0.0.1:60220/",
+        "collection": "hens",
+        "db": "test"
+      },
+      "schema": "test/simple_rest.json"
+    }
+  ]
+}

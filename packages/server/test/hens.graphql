@@ -1,18 +1,18 @@
 type Coop {
-    _id: [String]
+    _id: String
     name: String
     farm: Farm
 }
 
 type Hen {
-    _id: [String]
+    _id: String
     name: String
     eggs: Int
     coop: Coop
 }
 
 type Farm {
-    _id: [String]
+    _id: String
     name: String
 }
 

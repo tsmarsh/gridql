@@ -1,0 +1,9 @@
+{
+  "queries": {
+    "getById": {
+      "kind": "singleton",
+      "id": "id",
+      "query": "{'id': ${id}}"
+    }
+  }
+}

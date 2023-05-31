@@ -1,6 +1,6 @@
-const cors = require("cors");
 const {ObjectId} = require("mongodb");
 const jwt = require("jsonwebtoken");
+const express = require("express");
 
 const getSub = (authHeader) => {
     if(authHeader === null || authHeader === undefined){
@@ -32,24 +32,23 @@ const calculateReaders = (doc, sub) => {
     return [... readers]
 }
 
-const create = (db, valid, emit, context) => async (req, res) => {
+const create = (db, valid, context) => async (req, res) => {
     const doc = req.body;
+    if(valid(doc)){
+        doc._authorized_readers = calculateReaders(doc, getSub(req.headers.authorization));
 
-    doc._authorized_readers = calculateReaders(doc, getSub(req.headers.authorization));
-
-    const result = await db.insertOne(doc)
-    if (valid(doc)) {
-        emit("create", result.insertedId.toString(), doc)
+        const result = await db.insertOne(doc)
+        res.json(doc)
+    } else {
+        res.sendStatus(400);x
     }
-
-    res.redirect(`/${context}/${result.insertedId}`);
 };
 
 const read = db => async (req, res) => {
     const result = await db.findOne({_id: ObjectId(req.params.id)})
     if (result !== null) {
 
-        if(req.headers.authorization === undefined || result._authorized_readers.includes(getSub(req.headers.authorization))){
+        if(req.headers.authorization === undefined || result._authorized_readers.count === 0 ||result._authorized_readers.includes(getSub(req.headers.authorization))){
             res.json(result);
         } else {
             res.status(403);
@@ -61,35 +60,32 @@ const read = db => async (req, res) => {
     }
 };
 
-const update = (db, valid, emit) => async (req, res) => {
+const update = (db) => async (req, res) => {
     const doc = req.body;
     let {_id, ...mongo_body} = doc
     await db.replaceOne({_id: ObjectId(req.params.id)}, mongo_body).then(() => {
-        if (valid(doc)) {
-            emit("updated", req.params.id, doc)
-        }
         res.json(doc)
     }).catch(err => console.log(err));
 };
 
-const remove = (db, emit) => async (req, res) => {
+const remove = (db) => async (req, res) => {
     await db.deleteOne({_id: ObjectId(req.params.id)}).catch(err => console.log(err))
 
-    emit("deleted", req.params.id, {})
     res.json({"deleted": req.params.id})
 };
 
 
-const init = (context, app, db, validate, emit) => {
-    app.use(cors());
+const init = (context, app, db, validate) => {
 
-    app.post(`/${context}`, create(db, validate, emit, context));
+    app.use(express.json());
 
-    app.get(`/${context}/:id`, read(db));
+    app.post(`${context}`, create(db, validate, context));
 
-    app.put(`/${context}/:id`, update(db, validate, emit));
+    app.get(`${context}/:id`, read(db));
 
-    app.delete(`/${context}/:id`, remove(db, emit));
+    app.put(`${context}/:id`, update(db));
+
+    app.delete(`${context}/:id`, remove(db));
 
     return app;
 }

@@ -1,9 +1,11 @@
 const {MongoMemoryServer} = require("mongodb-memory-server");
 const {expect} = require('chai');
+const {describe, it, before, after} = require('mocha')
 
 const {init, start} = require('../');
 const {MongoClient} = require("mongodb");
 const {callSubgraph} = require("@tsmarsh/callgraph")
+const bodyParser = require('body-parser');
 
 let mongod;
 let uri;
@@ -73,12 +75,12 @@ describe('Complex nodes', function () {
     const coop2_result = await coops_db.insertOne({name: "yellow", farm_id: `${farm_result.insertedId}`})
     const coop3_result = await coops_db.insertOne({name: "pink", farm_id: `${farm_result.insertedId}`})
 
-    const hen1_result = await hens_db.insertOne({name: "buck", eggs: 1, coop_id: `${coop1_result.insertedId}`})
-    const hen2_result = await hens_db.insertOne({name: "chuck", eggs: 2, coop_id: `${coop1_result.insertedId}`})
-    const hen3_result = await hens_db.insertOne({name: "duck", eggs: 0, coop_id: `${coop1_result.insertedId}`})
+    await hens_db.insertOne({name: "buck", eggs: 1, coop_id: `${coop1_result.insertedId}`})
+    await hens_db.insertOne({name: "chuck", eggs: 2, coop_id: `${coop1_result.insertedId}`})
+    await hens_db.insertOne({name: "duck", eggs: 0, coop_id: `${coop1_result.insertedId}`})
 
-    const hen4_result = await hens_db.insertOne({name: "euck", eggs: 1, coop_id: `${coop2_result.insertedId}`})
-    const hen5_result = await hens_db.insertOne({name: "fuck", eggs: 2, coop_id: `${coop2_result.insertedId}`})
+    await hens_db.insertOne({name: "euck", eggs: 1, coop_id: `${coop2_result.insertedId}`})
+    await hens_db.insertOne({name: "fuck", eggs: 2, coop_id: `${coop2_result.insertedId}`})
 
     const query = `{
          getById(id: "${farm_result.insertedId}") {

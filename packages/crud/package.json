@@ -1,9 +1,12 @@
 {
-  "name": "crud",
+  "name": "@tsmarsh/crud",
   "version": "1.0.0",
   "description": "ReSTful API for adding data into the datastore",
   "main": "index.js",
   "author": "Thomas Marsh",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "dependencies": {
+    "jsonwebtoken": "^9.0.0"
+  }
 }

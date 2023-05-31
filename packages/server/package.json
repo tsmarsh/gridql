@@ -2,7 +2,7 @@
   "name": "@tsmarsh/server",
   "version": "1.0.0",
   "description": "graphql server scaffolding",
-  "main": "server.js",
+  "main": "index.js",
   "author": "Tom Marsh",
   "license": "BSD",
   "private": false,
@@ -10,7 +10,9 @@
     "test": "mocha --exit"
   },
   "dependencies": {
+    "@tsmarsh/crud": "^1.0.0",
     "@tsmarsh/root": "^1.0.0",
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "express-graphql": "^0.12.0",
     "graphql": "^16.6.0",
