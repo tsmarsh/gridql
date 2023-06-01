@@ -17,3 +17,11 @@ Apollo is a developer tool that gets a poor-to-mid solution to market quickly. B
 But thats not why we're here. We want to do a native GraphQL solution. An actual GraphQL solution that is genuinely distributed, performant and fast to market. 
 
 This is how you do it.
+
+## To Do
+
+* [X] Graph Nodes
+* [X] ReST Server
+* [ ] Mongo Listener that publishes to kafka
+* [ ] Kafka Listener that pushes to ReST
+* [ ] Bulk ReST API
