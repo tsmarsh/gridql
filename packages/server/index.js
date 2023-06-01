@@ -92,8 +92,7 @@ const start = async (port, graphlettes, restlettes) => {
         crud_init(path, app, db, validator)
     }
 
-    app.listen(port);
-    return app;
+    return app.listen(port);
 }
 
 module.exports = {

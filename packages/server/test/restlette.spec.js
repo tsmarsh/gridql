@@ -49,6 +49,7 @@ before(async function () {
 
 after(async function () {
     mongod.stop();
+    server.close();
 });
 
 describe('simple restlette', function () {
