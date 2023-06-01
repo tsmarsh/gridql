@@ -10,6 +10,16 @@ const jwt = require('jsonwebtoken');
 let mongod;
 let uri;
 let client;
+let db;
+let config;
+let server;
+let id;
+let fred_id
+
+let token;
+let payload;
+const secret = "secret_test";
+
 
 before(async function () {
     mongod = await MongoMemoryServer.create({instance: {port: 60220}});
@@ -17,6 +27,18 @@ before(async function () {
     await client.connect();
 
     uri = mongod.getUri();
+
+    db = client.db("test").collection("hens");
+
+    config = await init(__dirname + "/simple_rest.json");
+
+    payload = {
+        "sub": "1234567890",
+    }
+
+    token = jwt.sign(payload, secret, {expiresIn: '1h'});
+
+    server = await start(config.port, config.graphlettes, config.restlettes);
 });
 
 after(async function () {
@@ -24,29 +46,6 @@ after(async function () {
 });
 
 describe('simple restlette', function () {
-    let db;
-    let config;
-    let server;
-    let id;
-    let fred_id
-
-    let token;
-    let payload;
-    const secret = "secret_test";
-
-    before(async function () {
-        db = client.db("test").collection("hens");
-
-        config = await init(__dirname + "/simple_rest.json");
-
-        payload = {
-            "sub": "1234567890",
-        }
-
-        token = jwt.sign(payload, secret, {expiresIn: '1h'});
-
-        server = await start(config.port, config.graphlettes, config.restlettes);
-    })
 
     it('it should create a document ', async function () {
 
@@ -112,8 +111,9 @@ describe('simple restlette', function () {
 
         assert.equal(response.status, 200);
     });
+});
 
-    //----
+describe('simple restlette with auth', function () {
 
     it('it should create a document with a user', async function () {
 
