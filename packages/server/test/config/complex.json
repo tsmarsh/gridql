@@ -8,7 +8,7 @@
         "collection": "hens",
         "db": "complex"
       },
-      "schema": "test/hens.graphql",
+      "schema": "test/graph/hens.graphql",
       "dtoConfig": {
         "singletons": [
           {
@@ -40,7 +40,7 @@
         "collection": "coops",
         "db": "complex"
       },
-      "schema": "test/coops.graphql",
+      "schema": "test/graph/coops.graphql",
       "dtoConfig": {
         "singletons": [
           {
@@ -79,7 +79,7 @@
         "collection": "farms",
         "db": "complex"
       },
-      "schema": "test/farms.graphql",
+      "schema": "test/graph/farms.graphql",
       "dtoConfig": {
         "singletons": [
           {

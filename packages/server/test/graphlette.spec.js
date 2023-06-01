@@ -2,7 +2,7 @@ const {MongoMemoryServer} = require("mongodb-memory-server");
 const {expect} = require('chai');
 const {describe, it, before, after} = require('mocha')
 
-const {init, start} = require('../');
+const {init, start} = require('../index');
 const {MongoClient} = require("mongodb");
 const {callSubgraph} = require("../callgraph")
 const bodyParser = require('body-parser');
@@ -31,7 +31,7 @@ describe('Single node', function () {
   before(async function () {
     db = client.db("test").collection("test");
 
-    config = await init(__dirname + "/simple.json");
+    config = await init(__dirname + "/config/simple.json");
 
     server = await start(config.port, config.graphlettes, config.restlettes);
   })
@@ -63,7 +63,7 @@ describe('Complex nodes', function () {
     coops_db = client.db("complex").collection("coops");
     farms_db = client.db("complex").collection("farms");
 
-    config = await init(__dirname + "/complex.json");
+    config = await init(__dirname + "/config/complex.json");
 
     server = await start(config.port, config.graphlettes, config.restlettes);
   })

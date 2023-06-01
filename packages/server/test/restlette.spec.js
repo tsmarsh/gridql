@@ -1,7 +1,7 @@
 const {MongoMemoryServer} = require("mongodb-memory-server");
 const {describe, it, before, after} = require('mocha')
 
-const {init, start} = require('../');
+const {init, start} = require('../index');
 const {MongoClient} = require("mongodb");
 const assert = require("assert");
 const jwt = require('jsonwebtoken');
@@ -33,7 +33,7 @@ before(async function () {
 
     db = client.db("test").collection("hens");
 
-    config = await init(__dirname + "/simple_rest.json");
+    config = await init(__dirname + "/config/simple_rest.json");
 
     payload = {
         "sub": "1234567890",

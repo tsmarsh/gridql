@@ -8,7 +8,7 @@
         "collection": "test",
         "db": "test"
       },
-      "schema": "test/simple.graphql",
+      "schema": "test/graph/simple.graphql",
       "dtoConfig": {
         "singletons": [
           {

@@ -8,7 +8,7 @@
         "collection": "hens",
         "db": "test"
       },
-      "schema": "test/simple_rest.json"
+      "schema": "test/json/hen.schema.json"
     }
   ]
 }
