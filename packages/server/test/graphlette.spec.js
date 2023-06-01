@@ -33,7 +33,7 @@ describe('Single node', function () {
 
     config = await init(__dirname + "/simple.json");
 
-    server = await start(config.port, config.graphlettes);
+    server = await start(config.port, config.graphlettes, config.restlettes);
   })
 
   it('should build a simple server', async function() {
@@ -65,7 +65,7 @@ describe('Complex nodes', function () {
 
     config = await init(__dirname + "/complex.json");
 
-    server = await start(config.port, config.graphlettes);
+    server = await start(config.port, config.graphlettes, config.restlettes);
   })
 
   it('should build a server with multiple nodes', async function() {
