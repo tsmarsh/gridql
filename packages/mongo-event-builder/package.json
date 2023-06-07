@@ -1,0 +1,16 @@
+{
+  "name": "mongo-event-builder",
+  "version": "1.0.0",
+  "description": "Listens to mongo and emits events",
+  "main": "index.js",
+  "author": "Tom Marsh",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "kafkajs": "^2.2.4",
+    "mongodb": "^5.5.0"
+  },
+  "devDependencies": {
+    "testcontainers": "^9.8.0"
+  }
+}
