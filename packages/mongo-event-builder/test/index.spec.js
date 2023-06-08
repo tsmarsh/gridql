@@ -1,5 +1,8 @@
 const { MongoClient } = require('mongodb');
-const {Kafka} = require('kafkajs');
+const {Kafka, logLevel} = require('kafkajs');
+
+const {KafkaContainer} = require('testcontainers');
+
 const { start } = require('../index');
 const assert = require('assert');
 
@@ -24,16 +27,26 @@ async function connectWithRetry(uri, options, maxRetries = 10) {
     throw new Error('Failed to connect to MongoDB');
 }
 
+async function listTopics(kafka) {
+    const admin = kafka.admin();
+    await admin.connect()
+
+    await admin.listTopics().then((topics) => console.log("Topics: ", topics)).catch((reason) => console.log("Can't list topics: ", reason));
+
+    await admin.disconnect();
+}
+
 describe('MongoDB change listener', () => {
     let client;
     let collection;
     let kafka_admin;
     let kafka;
+    let kafkaContainer;
 
     before(async function() {
+        this.timeout(60000);
 
-
-        const uri =
+        const uri = `mongodb+srv://grid:Co2FcjhiIBujByXM@cluster0.7nr1dmw.mongodb.net/?retryWrites=true&w=majority`;
 
         console.log("mongodb uri: ", uri);
 
@@ -41,47 +54,34 @@ describe('MongoDB change listener', () => {
 
         collection = client.db("test").collection("frogs");
 
+        kafkaContainer = await new KafkaContainer()
+            .withExposedPorts(9093)
+            .withEnvironment({"KAFKA_AUTO_CREATE_TOPICS_ENABLE": "true"})
+            .withEnvironment({"KAFKA_DELETE_TOPIC_ENABLE": "true"})
+            //.withEnvironment({"KAFKA_CREATE_TOPICS": "mongo-test:1:1"})
+            .start()
+            .catch((reason) => console.log("Kafka container failed to start: ", reason));
+
         kafka = new Kafka({
-            clientId: 'test',
-            brokers: ['pkc-p11xm.us-east-1.aws.confluent.cloud:9092'],
-            ssl: true,
-            sasl: {
-                mechanism: 'plain'
-            }
+            logLevel: logLevel.INFO,
+            brokers: [`${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}`],
+            clientId: 'mongo-event-builder-test',
         });
 
-        kafka_admin = kafka.admin();
-        await kafka_admin.connect().catch((reason) => console.log("The fuck? ", reason));
+        const admin = kafka.admin();
+        await admin.connect()
 
-        await kafka_admin.createTopics({
-            topics: [{ topic: 'test', numPartitions: 1 }],
-        }).catch((reason) => console.log("Kafka shit the bed", reason));
+        await admin.createTopics({topics: [{topic: "mongo-test"}]}).then((topics) => console.log("Topics: ", topics)).catch((reason) => console.log("Can't list topics: ", reason));
+
+        await admin.disconnect();
+
+        await listTopics(kafka);
 
         const kafkaProducer = kafka.producer();
 
         await kafkaProducer.connect().catch((reason) => console.log("Srsly? ", reason));
 
-        await start({ collection, kafkaProducer, test: "test"});
-    });
-
-    after(async () => {
-        // after all tests, disconnect from the in-memory MongoDB instance
-        try {
-            // after all tests, disconnect from the in-memory MongoDB instance
-            await collection.drop();
-        } catch (err) {
-            console.error('Error dropping collection:', err);
-        }
-        try {
-            await kafka_admin.deleteTopics({
-                topics: ['test'],
-            });
-        } catch (err) {
-            console.error('Error deleting topic:', err);
-        }
-
-        await kafka_admin.disconnect();
-        await client.close();
+        await start({ collection, kafkaProducer, topic: "mongo-test", id: "_id" });
     });
 
     it('should publish a message when a document is inserted', async () => {
@@ -89,13 +89,15 @@ describe('MongoDB change listener', () => {
         let consumer = kafka.consumer({ groupId: 'test-group-1'});
 
         await consumer.connect();
-        await consumer.subscribe({ topic: 'test', fromBeginning: true });
+        await consumer.subscribe({ topic: 'mongo-test', fromBeginning: true })
+            .then(() => {console.log("Subscribed")})
+            .catch((reason) => console.log("can't subscribe: ", reason));
 
         let actual;
 
         await consumer.run({
-            eachMessage: async ({ topic, partition, message }) => {
-                console.log({
+            eachMessage: async ({ partition, message }) => {
+                console.log("Event received: ",{
                     partition,
                     offset: message.offset,
                     value: message.value.toString(),
@@ -105,10 +107,15 @@ describe('MongoDB change listener', () => {
         });
 
         const result = await collection.insertOne({ name: 'Test' });
+        let actual_id = result.insertedId = result.insertedId.toString();
+
+
+        listTopics(kafka);
 
         await delay(1000);
 
-        assert.equal(actual.name, 'test');
+        assert.equal(actual.id, actual_id);
+        assert.equal(actual.operation, 'create');
     });
 
     // it('should publish a message when a document is updated', async () => {
@@ -132,4 +139,17 @@ describe('MongoDB change listener', () => {
     //     expect(payload).to.have.property('_id');
     //     expect(payload).to.have.property('operation', 'delete');
     // });
+    after(async () => {
+        console.log("-----CLEANING UP------")
+        // after all tests, disconnect from the in-memory MongoDB instance
+        try {
+            // after all tests, disconnect from the in-memory MongoDB instance
+            await collection.drop();
+        } catch (err) {
+            console.error('Error dropping collection:', err);
+        }
+
+        await kafkaContainer.stop();
+        await client.close();
+    });
 });
