@@ -60,7 +60,6 @@ describe('MongoDB change listener', () => {
             .withExposedPorts(9093)
             .withEnvironment({"KAFKA_AUTO_CREATE_TOPICS_ENABLE": "true"})
             .withEnvironment({"KAFKA_DELETE_TOPIC_ENABLE": "true"})
-            //.withEnvironment({"KAFKA_CREATE_TOPICS": "mongo-test:1:1"})
             .start()
             .catch((reason) => console.log("Kafka container failed to start: ", reason));
 
@@ -69,15 +68,6 @@ describe('MongoDB change listener', () => {
             brokers: [`${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}`],
             clientId: 'mongo-event-builder-test',
         });
-
-        const admin = kafka.admin();
-        await admin.connect()
-
-        await admin.createTopics({topics: [{topic: topic}]}).then((topics) => console.log("Topics: ", topics)).catch((reason) => console.log("Can't list topics: ", reason));
-
-        await admin.disconnect();
-
-        await listTopics(kafka);
 
         const kafkaProducer = kafka.producer();
 
@@ -111,14 +101,11 @@ describe('MongoDB change listener', () => {
         const result = await collection.insertOne({ name: 'Test' });
         let actual_id = result.insertedId = result.insertedId.toString();
 
-
-        await listTopics(kafka);
-
         await delay(1000);
 
         assert.equal(actual.id, actual_id);
         assert.equal(actual.operation, 'CREATE');
-    });
+    }).timeout(10000)
 
     // it('should publish a message when a document is updated', async () => {
     //     // update a document in the collection
@@ -130,6 +117,8 @@ describe('MongoDB change listener', () => {
     //     expect(payload).to.have.property('_id');
     //     expect(payload).to.have.property('operation', 'update');
     // });
+
+
     //
     // it('should publish a message when a document is deleted', async () => {
     //     // delete a document from the collection
