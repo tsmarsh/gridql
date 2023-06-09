@@ -41,8 +41,7 @@ describe('MongoDB change listener', () => {
     let collection;
     let kafka;
     let kafkaContainer;
-
-    let topic = "mongo-test";
+    let kafkaProducer;
 
     before(async function() {
         this.timeout(360000);
@@ -69,19 +68,21 @@ describe('MongoDB change listener', () => {
             clientId: 'mongo-event-builder-test',
         });
 
-        const kafkaProducer = kafka.producer();
+        kafkaProducer = kafka.producer();
 
         await kafkaProducer.connect().catch((reason) => console.log("Srsly? ", reason));
-
-        await start({ collection, kafkaProducer, topic: topic, id: "_id" });
     });
 
     it('should publish a message when a document is inserted', async () => {
+        let topic = "create-mongo-test";
+
+        await start({ collection, kafkaProducer, topic, id: "_id" });
 
         let consumer = kafka.consumer({ groupId: 'test-group-1'});
 
         await consumer.connect();
-        await consumer.subscribe({ topic: 'mongo-test', fromBeginning: true })
+
+        await consumer.subscribe({ topic, fromBeginning: true })
             .then(() => {console.log("Subscribed")})
             .catch((reason) => console.log("can't subscribe: ", reason));
 
@@ -101,7 +102,7 @@ describe('MongoDB change listener', () => {
         const result = await collection.insertOne({ name: 'Test' });
         let actual_id = result.insertedId = result.insertedId.toString();
 
-        await delay(1000);
+        await delay(100);
 
         assert.equal(actual.id, actual_id);
         assert.equal(actual.operation, 'CREATE');
