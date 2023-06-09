@@ -52,8 +52,6 @@ describe('MongoDB change listener', () => {
 
         client = await connectWithRetry(uri, { useUnifiedTopology: true, connectTimeoutMS:2000, appName: 'farts' });
 
-        collection = client.db("test").collection("frogs");
-
 
         kafkaContainer = await new KafkaContainer()
             .withExposedPorts(9093)
@@ -75,6 +73,8 @@ describe('MongoDB change listener', () => {
 
     it('should publish a message when a document is inserted', async () => {
         let topic = "create-mongo-test";
+
+        collection = client.db("test").collection(topic);
 
         await start({ collection, kafkaProducer, topic, id: "_id" });
 
@@ -108,29 +108,87 @@ describe('MongoDB change listener', () => {
         assert.equal(actual.operation, 'CREATE');
     }).timeout(10000)
 
-    // it('should publish a message when a document is updated', async () => {
-    //     // update a document in the collection
-    //     const result = await collection.updateOne({ name: 'Test' }, { $set: { name: 'Updated Test' }});
-    //
-    //     // verify that a message was published
-    //     sinon.assert.calledOnce(kafkaProducer.send);
-    //     const payload = JSON.parse(kafkaProducer.send.getCall(0).args[0][0].messages);
-    //     expect(payload).to.have.property('_id');
-    //     expect(payload).to.have.property('operation', 'update');
-    // });
+    it('should publish a message when a document is updated', async () => {
+        let topic = "update-mongo-test";
+
+        collection = client.db("test").collection(topic);
+
+        await start({ collection, kafkaProducer, topic, id: "_id" });
+
+        let consumer = kafka.consumer({ groupId: 'test-group-2'});
+
+        await consumer.connect();
+
+        await consumer.subscribe({ topic, fromBeginning: true })
+            .then(() => {console.log("Subscribed")})
+            .catch((reason) => console.log("can't subscribe: ", reason));
+
+        let actual;
+
+        await consumer.run({
+            eachMessage: async ({ partition, message }) => {
+                console.log("Event received: ",{
+                    partition,
+                    offset: message.offset,
+                    value: message.value.toString(),
+                })
+                actual = JSON.parse(message.value.toString());
+            }
+        });
+
+        const result = await collection.insertOne({ name: 'Test' });
+        let actual_id= result.insertedId.toString();
+
+        await collection.updateOne({ _id: result.insertedId }, { $set: { name: 'Updated Test' }});
+
+        await delay(100);
+
+        assert.equal(actual.id, actual_id);
+        assert.equal(actual.operation, 'UPDATE');
+    }).timeout(10000)
 
 
-    //
-    // it('should publish a message when a document is deleted', async () => {
-    //     // delete a document from the collection
-    //     const result = await collection.deleteOne({ name: 'Updated Test' });
-    //
-    //     // verify that a message was published
-    //     sinon.assert.calledOnce(kafkaProducer.send);
-    //     const payload = JSON.parse(kafkaProducer.send.getCall(0).args[0][0].messages);
-    //     expect(payload).to.have.property('_id');
-    //     expect(payload).to.have.property('operation', 'delete');
-    // });
+
+    it('should publish a message when a document is deleted', async () => {
+        let topic = "delete-mongo-test";
+
+        collection = client.db("test").collection(topic);
+
+        await start({ collection, kafkaProducer, topic, id: "_id" });
+
+        let consumer = kafka.consumer({ groupId: 'test-group-3'});
+
+        await consumer.connect();
+
+        await consumer.subscribe({ topic, fromBeginning: true })
+            .then(() => {console.log("Subscribed")})
+            .catch((reason) => console.log("can't subscribe: ", reason));
+
+        let actual;
+
+        await consumer.run({
+            eachMessage: async ({ partition, message }) => {
+                console.log("Event received: ",{
+                    partition,
+                    offset: message.offset,
+                    value: message.value.toString(),
+                })
+                actual = JSON.parse(message.value.toString());
+            }
+        });
+
+        const result = await collection.insertOne({ name: 'Test' });
+        let actual_id= result.insertedId.toString();
+
+        await collection.deleteOne({ _id: result.insertedId });
+
+        await delay(100);
+
+        assert.equal(actual.id, actual_id);
+        assert.equal(actual.operation, 'DELETE');
+    }).timeout(10000)
+
+
     after(async () => {
         console.log("-----CLEANING UP------")
         // after all tests, disconnect from the in-memory MongoDB instance
