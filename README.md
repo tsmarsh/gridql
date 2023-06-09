@@ -22,6 +22,7 @@ This is how you do it.
 
 * [X] Graph Nodes
 * [X] ReST Server
-* [ ] Mongo Listener that publishes to kafka
-* [ ] Kafka Listener that pushes to ReST
+* [X] Mongo Listener that publishes to kafka
 * [ ] Bulk ReST API
+* [ ] Time aware GraphAPI
+* [ ] Kafka Listener that pushes to ReST
