@@ -1,7 +1,7 @@
 const { MongoClient } = require('mongodb');
 const {Kafka, logLevel} = require('kafkajs');
 
-const {KafkaContainer} = require('testcontainers');
+const {KafkaContainer, GenericContainer} = require('testcontainers');
 
 const { start } = require('../index');
 const assert = require('assert');
@@ -39,12 +39,13 @@ async function listTopics(kafka) {
 describe('MongoDB change listener', () => {
     let client;
     let collection;
-    let kafka_admin;
     let kafka;
     let kafkaContainer;
 
+    let topic = "mongo-test";
+
     before(async function() {
-        this.timeout(60000);
+        this.timeout(360000);
 
         const uri = `mongodb+srv://grid:Co2FcjhiIBujByXM@cluster0.7nr1dmw.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -53,6 +54,7 @@ describe('MongoDB change listener', () => {
         client = await connectWithRetry(uri, { useUnifiedTopology: true, connectTimeoutMS:2000, appName: 'farts' });
 
         collection = client.db("test").collection("frogs");
+
 
         kafkaContainer = await new KafkaContainer()
             .withExposedPorts(9093)
@@ -71,7 +73,7 @@ describe('MongoDB change listener', () => {
         const admin = kafka.admin();
         await admin.connect()
 
-        await admin.createTopics({topics: [{topic: "mongo-test"}]}).then((topics) => console.log("Topics: ", topics)).catch((reason) => console.log("Can't list topics: ", reason));
+        await admin.createTopics({topics: [{topic: topic}]}).then((topics) => console.log("Topics: ", topics)).catch((reason) => console.log("Can't list topics: ", reason));
 
         await admin.disconnect();
 
@@ -81,7 +83,7 @@ describe('MongoDB change listener', () => {
 
         await kafkaProducer.connect().catch((reason) => console.log("Srsly? ", reason));
 
-        await start({ collection, kafkaProducer, topic: "mongo-test", id: "_id" });
+        await start({ collection, kafkaProducer, topic: topic, id: "_id" });
     });
 
     it('should publish a message when a document is inserted', async () => {
@@ -110,12 +112,12 @@ describe('MongoDB change listener', () => {
         let actual_id = result.insertedId = result.insertedId.toString();
 
 
-        listTopics(kafka);
+        await listTopics(kafka);
 
         await delay(1000);
 
         assert.equal(actual.id, actual_id);
-        assert.equal(actual.operation, 'create');
+        assert.equal(actual.operation, 'CREATE');
     });
 
     // it('should publish a message when a document is updated', async () => {

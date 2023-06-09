@@ -30,7 +30,7 @@ const toCRUD = (change) => {
 }
 
 
-const toPayload = (topic, id) => (change) => {
+const toPayload = (id) => (change) => {
     const operationType = toCRUD(change);
     if (operationType === undefined) {
         return null;
@@ -45,13 +45,13 @@ const toPayload = (topic, id) => (change) => {
         operation: operationType
     };
 
-    return { topic: topic, messages: [JSON.stringify(message)] };
+    return {key: message.id, value: JSON.stringify(message)};
 }
 
 const start = async ({collection, kafkaProducer, topic, id ='_id'}) => {
     const changeStream = await collection.watch();
 
-    const processChange = toPayload(topic, id);
+    const processChange = toPayload(id);
 
 
     changeStream.on('change', async (change) => {
@@ -61,9 +61,10 @@ const start = async ({collection, kafkaProducer, topic, id ='_id'}) => {
             payloads.push(payload);
         }
         if(payloads.length > 0) {
-            console.log("Sending: ", payloads);
+            let message = {topic, messages: payloads}
+            console.log("Sending: ", message);
 
-            await kafkaProducer.send(payloads)
+            await kafkaProducer.send(message)
                 .then(console.log("Sent"))
                 .catch((reason) => console.log("Can't send: ", reason));
             payloads = [];
