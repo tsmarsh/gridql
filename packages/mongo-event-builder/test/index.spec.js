@@ -22,7 +22,7 @@ describe('MongoDB change listener', () => {
     before(async function() {
         this.timeout(360000);
 
-        mongoContainer =  await new MongoDBContainer('mongo:6.0.6').withExposedPorts(27017).start();
+        mongoContainer =  await new MongoDBContainer('mongo:6.0.6').start();
 
         const uri = mongoContainer.getConnectionString();
 
