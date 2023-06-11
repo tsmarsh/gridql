@@ -70,7 +70,7 @@ const read = db => async (req, res) => {
 
 
 const update = (db) => async (req, res) => {
-    const doc = req.body;
+    const {_id, ...doc} = req.body;
     const result = await db.findOne({_id: new ObjectId(req.params.id)})
     if (result !== null) {
         if (isAuthorized(req.headers.authorization, result)) {
