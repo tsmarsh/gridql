@@ -1,3 +1,6 @@
+[![CI](https://github.com/tsmarsh/gridql/actions/workflows/node.js.yml/badge.svg)](https://github.com/tsmarsh/gridql/actions/workflows/node.js.yml)
+[![codecov](https://codecov.io/gh/tsmarsh/gridql/branch/main/graph/badge.svg?token=b9wLrKB3dU)](https://codecov.io/gh/tsmarsh/gridql)
+
 # gridql
 Scaffolding for converting event documents into a mesh
 
@@ -10,11 +13,11 @@ Apollo has lots of advantages if you didn't start with GraphQL in mind. It does 
 * How do the filters work?
 * How does it handle dependent system failures?
 
-And ofcourse, it handles them as well as it can, given this architecture: poorly. 
+And of course, it handles them as well as it can, given this architecture: poorly. 
 
 Apollo is a developer tool that gets a poor-to-mid solution to market quickly. Because of that, its very attractive organisations that value time to market over performance. This trade off is nearly always the right solution.
 
-But thats not why we're here. We want to do a native GraphQL solution. An actual GraphQL solution that is genuinely distributed, performant and fast to market. 
+But that's not why we're here. We want to do a native GraphQL solution. An actual GraphQL solution that is genuinely distributed, performant and fast to market. 
 
 This is how you do it.
 
@@ -26,3 +29,7 @@ This is how you do it.
 * [ ] Bulk ReST API
 * [ ] Time aware GraphAPI
 * [ ] Kafka Listener that pushes to ReST
+
+## Coverage
+
+[![coverage](https://codecov.io/gh/tsmarsh/gridql/branch/main/graphs/sunburst.svg?token=b9wLrKB3dU)]
