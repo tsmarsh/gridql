@@ -169,7 +169,6 @@ describe('MongoDB change listener', () => {
     after(async () => {
         console.log("-----CLEANING UP------")
         await kafkaContainer.stop();
-        await client.close();
         await mongoContainer.stop();
 
     });

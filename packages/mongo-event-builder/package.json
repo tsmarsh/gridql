@@ -10,7 +10,11 @@
     "kafkajs": "^2.2.4",
     "mongodb": "^5.5.0"
   },
+  "scripts": {
+    "test": "nyc mocha --exit"
+  },
   "devDependencies": {
+    "nyc": "^15.1.0",
     "testcontainers": "^9.8.0"
   }
 }
