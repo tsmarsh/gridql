@@ -21,6 +21,7 @@
   "devDependencies": {
     "chai": "^4.3.7",
     "mocha": "^10.2.0",
+    "sinon": "^15.1.0",
     "mongodb-memory-server": "^8.12.2"
   },
   "gitHead": "abd2a052956a027fd542997acf1adc787ca2d8b5"
