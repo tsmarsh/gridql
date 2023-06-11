@@ -1,7 +1,7 @@
 const {MongoMemoryServer} = require("mongodb-memory-server");
 const {MongoClient } = require("mongodb");
 
-const {context} = require("../root");
+const {context} = require("../lib/root");
 
 const {graphql, buildSchema} = require("graphql");
 const {expect} = require("chai");

@@ -2,9 +2,9 @@ const express = require( 'express')
 const { graphqlHTTP } = require('express-graphql')
 const { buildSchema } = require('graphql')
 const  fs = require( "fs")
-const {context} = require("./root")
+const {context} = require("./lib/root")
 const {MongoClient} = require("mongodb")
-const {init: crud_init} = require("./crud")
+const {init: crud_init} = require("./lib/crud")
 const cors = require("cors");
 const {valid} = require("@tsmarsh/payload-validator")
 
