@@ -4,13 +4,14 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "mocha"
+    "test": "nyc mocha"
   },
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
     "json-schema-faker": "^0.5.0-rcv.46"
   },
   "devDependencies": {
-    "mocha": "^10.2.0"
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0"
   }
 }
