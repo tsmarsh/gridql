@@ -7,7 +7,8 @@
     "packages/*"
   ],
   "scripts": {
-    "test": "lerna run test"
+    "test": "lerna run test",
+    "coverage:merge": "mkdir -p ./nyc_output && cp -R packages/*/.nyc_output/* .nyc_output && nyc merge .nyc_output && nyc report --reporter=lcov"
   },
   "devDependencies": {
     "lerna": "^6.6.1"

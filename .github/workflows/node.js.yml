@@ -29,3 +29,13 @@ jobs:
     - run: yarn install
     - run: lerna bootstrap
     - run: yarn test
+    - name: Merge coverage reports
+      run: yarn coverage:merge
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        file: ./coverage/lcov.info  # replace with your coverage file path if not "./coverage/lcov.info"
+        flags: unittests  # optional, use to distinguish coverage reports
+        name: codecov-umbrella  # optional, use to name the coverage report
+        fail_ci_if_error: true  # optional, set to true to fail the workflow if coverage upload fails
+
