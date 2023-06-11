@@ -1,7 +1,7 @@
 const { MongoClient } = require('mongodb');
 const {Kafka, logLevel} = require('kafkajs');
 
-const {KafkaContainer, GenericContainer} = require('testcontainers');
+const {KafkaContainer, MongoDBContainer} = require('testcontainers');
 
 const { start } = require('../index');
 const assert = require('assert');
@@ -11,47 +11,24 @@ function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function connectWithRetry(uri, options, maxRetries = 10) {
-    let client;
-
-    for (let i = 0; i < maxRetries; i++) {
-        try {
-            client = await MongoClient.connect(uri, options);
-            console.log('Connected to MongoDB');
-            return client;
-        } catch (err) {
-            console.log('Failed to connect to MongoDB, retrying...', err);
-            await delay(5000);  // wait for 5 seconds before retrying
-        }
-    }
-    throw new Error('Failed to connect to MongoDB');
-}
-
-async function listTopics(kafka) {
-    const admin = kafka.admin();
-    await admin.connect()
-
-    await admin.listTopics().then((topics) => console.log("Topics: ", topics)).catch((reason) => console.log("Can't list topics: ", reason));
-
-    await admin.disconnect();
-}
-
 describe('MongoDB change listener', () => {
     let client;
     let collection;
     let kafka;
     let kafkaContainer;
+    let mongoContainer;
     let kafkaProducer;
 
     before(async function() {
         this.timeout(360000);
 
-        const uri = `mongodb+srv://grid:Co2FcjhiIBujByXM@cluster0.7nr1dmw.mongodb.net/?retryWrites=true&w=majority`;
+        mongoContainer =  await new MongoDBContainer('mongo:6.0.6').withExposedPorts(27017).start();
+
+        const uri = mongoContainer.getConnectionString();
 
         console.log("mongodb uri: ", uri);
 
-        client = await connectWithRetry(uri, { useUnifiedTopology: true, connectTimeoutMS:2000, appName: 'farts' });
-
+        client = await MongoClient.connect(uri, { directConnection: true }).catch((err) => console.log('Failed to connect to MongoDB, retrying...', err));
 
         kafkaContainer = await new KafkaContainer()
             .withExposedPorts(9093)
@@ -191,15 +168,9 @@ describe('MongoDB change listener', () => {
 
     after(async () => {
         console.log("-----CLEANING UP------")
-        // after all tests, disconnect from the in-memory MongoDB instance
-        try {
-            // after all tests, disconnect from the in-memory MongoDB instance
-            await collection.drop();
-        } catch (err) {
-            console.error('Error dropping collection:', err);
-        }
-
         await kafkaContainer.stop();
         await client.close();
+        await mongoContainer.stop();
+
     });
 });
