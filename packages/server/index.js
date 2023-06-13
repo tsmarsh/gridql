@@ -41,6 +41,7 @@ const process_restlettes = async (config) => {
 const init = async (configFile) => {
     const config = JSON.parse(fs.readFileSync(configFile).toString());
 
+    const url = config.url;
     const port = config.port;
 
     let graphlettes = [];
@@ -65,11 +66,11 @@ const init = async (configFile) => {
     }
 
 
-    return {port, graphlettes, restlettes};
+    return {url, port, graphlettes, restlettes};
 }
 
 
-const start = async (port, graphlettes, restlettes) => {
+const start = async (url, port, graphlettes, restlettes) => {
     const app = express();
     app.use(cors());
 
@@ -89,7 +90,7 @@ const start = async (port, graphlettes, restlettes) => {
 
     for(let {path, db, validator} of restlettes) {
         console.log("ReSTing up: " + path);
-        crud_init(path, app, db, validator)
+        crud_init(`${url}:${port}${path}`, path, app, db, validator)
     }
 
     return app.listen(port);

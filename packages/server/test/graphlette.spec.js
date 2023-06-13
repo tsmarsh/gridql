@@ -33,7 +33,7 @@ describe('Single node', function () {
 
     config = await init(__dirname + "/config/simple.json");
 
-    server = await start(config.port, config.graphlettes, config.restlettes);
+    server = await start(config.url, config.port, config.graphlettes, config.restlettes);
   })
 
   it('should build a simple server', async function() {

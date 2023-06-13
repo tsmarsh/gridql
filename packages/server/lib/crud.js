@@ -44,10 +44,12 @@ const create = (db, valid, context) => async (req, res) => {
         doc._authorized_readers = calculateReaders(doc, getSub(req.headers.authorization));
 
         const result = await db.insertOne(doc)
+        if(req.headers.authorization !== undefined) {
+            res.header("Authorization", req.headers.authorization)
+        }
         res.redirect(303, `${context}/${result.insertedId}`);
     } else {
         res.sendStatus(400);
-        x
     }
 };
 
@@ -115,10 +117,44 @@ const list = (db) => async (req, res) => {
     res.json(results);
 }
 
-const init = (context, app, db, validate) => {
+const bulk_create = (url) => async (req, res) => {
+    const init = {
+        method: "POST",
+        redirect: "follow",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }
+
+    if(req.headers.authorization !== undefined) {
+        init.header["Authorization"] = req.headers.authorization
+    }
+
+    let responses = await Promise.all(req.body.map((doc) => {
+        init["body"] = JSON.stringify(doc)
+        return fetch(url, init)
+    }));
+
+    const res_body = {}
+
+    for(let response of responses){
+        let collection = res_body[response.statusText] || [];
+
+        let good = response.status >= 200 && response.status < 300 && ! Object.keys(response.body).length;
+        collection.push(good ? await response.body().catch((err) => console.log(err)) : response.url);
+
+        res_body[response.statusText] = collection;
+    }
+
+    console.log(res_body)
+    res.json(res_body);
+}
+
+const init = (url, context, app, db, validate) => {
 
     app.use(express.json());
 
+    app.post(`${context}/bulk`, bulk_create(url));
     app.post(`${context}`, create(db, validate, context));
 
     app.get(`${context}`, list(db));

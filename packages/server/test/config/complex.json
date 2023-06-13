@@ -1,5 +1,6 @@
 {
   "port": 40001,
+  "url": "http://localhost",
   "graphlettes": [
     {
       "path": "/hens",

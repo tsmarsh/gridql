@@ -1,5 +1,6 @@
 {
   "port": 40022,
+  "url": "http://localhost",
   "restlettes": [
     {
       "path": "/hens",

@@ -1,5 +1,6 @@
 {
   "port": 40000,
+  "url": "http://localhost",
   "graphlettes": [
     {
       "path": "/test",

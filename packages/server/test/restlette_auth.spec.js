@@ -42,7 +42,7 @@ before(async function () {
         "sub": "0987654321",
     }, "not a secret", {expiresIn: '1h'});
 
-    server = await start(config.port, config.graphlettes, config.restlettes);
+    server = await start(config.url, config.port, config.graphlettes, config.restlettes);
 });
 
 after(async function () {

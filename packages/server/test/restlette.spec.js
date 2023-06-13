@@ -4,7 +4,6 @@ const {describe, it, before, after} = require('mocha')
 const {init, start} = require('../index');
 const {MongoClient} = require("mongodb");
 const assert = require("assert");
-const jwt = require('jsonwebtoken');
 
 
 let mongod;
@@ -32,7 +31,7 @@ before(async function () {
     payload = {
         "sub": "1234567890",
     }
-    server = await start(config.port, config.graphlettes, config.restlettes);
+    server = await start(config.url, config.port, config.graphlettes, config.restlettes);
 });
 
 after(async function () {
