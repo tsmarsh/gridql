@@ -39,11 +39,11 @@ const calculateReaders = (doc, sub) => {
 }
 
 const create = (db, valid, context) => async (req, res) => {
-    const doc = req.body;
+    const {_id, ...doc} = req.body;
     if (valid(doc)) {
         doc._authorized_readers = calculateReaders(doc, getSub(req.headers.authorization));
 
-        const result = await db.insertOne(doc)
+        const result = await db.insertOne(doc,{ writeConcern: { w: 'majority' } })
         if(req.headers.authorization !== undefined) {
             res.header("Authorization", req.headers.authorization)
         }
@@ -56,6 +56,7 @@ const create = (db, valid, context) => async (req, res) => {
 
 const read = db => async (req, res) => {
     const result = await db.findOne({_id: new ObjectId(req.params.id)})
+
     if (result !== null) {
 
         if (isAuthorized(req.headers.authorization, result)) {
@@ -141,7 +142,19 @@ const bulk_create = (url) => async (req, res) => {
         let collection = res_body[response.statusText] || [];
 
         let good = response.status >= 200 && response.status < 300 && ! Object.keys(response.body).length;
-        collection.push(good ? await response.body().catch((err) => console.log(err)) : response.url);
+        let value;
+
+        if (good) {
+           try {
+                value = await response.json().catch((err) => console.log(err));
+           } catch(err) {
+               console.log(err);
+           }
+        } else {
+            value = response.url;
+        }
+
+        collection.push(value);
 
         res_body[response.statusText] = collection;
     }

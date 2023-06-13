@@ -65,7 +65,7 @@ describe('Complex nodes', function () {
 
     config = await init(__dirname + "/config/complex.json");
 
-    server = await start(config.port, config.graphlettes, config.restlettes);
+    server = await start(config.url, config.port, config.graphlettes, config.restlettes);
   })
 
   it('should build a server with multiple nodes', async function() {

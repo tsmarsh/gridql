@@ -69,6 +69,9 @@ describe('a bulky restlette', function () {
     it('it should create n documents', async function () {
 
         let hen_data = builder(3);
+        for(h of hen_data){
+            delete h["_id"]
+        }
 
         const hen = JSON.stringify(hen_data)
 
@@ -84,11 +87,7 @@ describe('a bulky restlette', function () {
         assert.equal(response.status, 200);
         const actual = await response.json();
 
-        assert(actual.success.length, 3);
-
-        // assert.equal(actual.eggs, 6);
-        // assert.equal(actual.name, "chuck");
-        // assert(actual._id !== undefined);
+        assert(actual.OK.length, 3);
     });
 
     // it("should list all documents", async function () {

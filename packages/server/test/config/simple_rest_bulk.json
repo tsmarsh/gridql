@@ -1,6 +1,6 @@
 {
   "port": 40025,
-  "url": "http://localhost",
+  "url": "http://localhost:40025/chicks",
   "restlettes": [
     {
       "path": "/chicks",

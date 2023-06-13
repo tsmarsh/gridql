@@ -90,7 +90,7 @@ const start = async (url, port, graphlettes, restlettes) => {
 
     for(let {path, db, validator} of restlettes) {
         console.log("ReSTing up: " + path);
-        crud_init(`${url}:${port}${path}`, path, app, db, validator)
+        crud_init(url, path, app, db, validator)
     }
 
     return app.listen(port);
