@@ -79,7 +79,11 @@ describe('MongoDB change listener', () => {
         const result = await collection.insertOne({ name: 'Test' });
         let actual_id = result.insertedId = result.insertedId.toString();
 
-        await delay(100);
+        let loop = 0;
+        while(actual === undefined && loop < 10){
+            await delay(50);
+            loop++;
+        }
 
         assert.equal(actual.id, actual_id);
         assert.equal(actual.operation, 'CREATE');
@@ -118,7 +122,11 @@ describe('MongoDB change listener', () => {
 
         await collection.updateOne({ _id: result.insertedId }, { $set: { name: 'Updated Test' }});
 
-        await delay(100);
+        let loop = 0;
+        while(actual === undefined && loop < 10){
+            await delay(50);
+            loop++;
+        }
 
         assert.equal(actual.id, actual_id);
         assert.equal(actual.operation, 'UPDATE');
@@ -159,7 +167,11 @@ describe('MongoDB change listener', () => {
 
         await collection.deleteOne({ _id: result.insertedId });
 
-        await delay(100);
+        let loop = 0;
+        while(actual === undefined && loop < 10){
+            await delay(50);
+            loop++;
+        }
 
         assert.equal(actual.id, actual_id);
         assert.equal(actual.operation, 'DELETE');

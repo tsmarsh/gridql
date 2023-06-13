@@ -1,8 +1,6 @@
 const { MongoClient } = require('mongodb');
 const Kafka = require('kafkajs');
 
-// create a Kafka client and producer
-
 
 async function buildDb(mongo) {
     let client = await new MongoClient(mongo.uri, { useUnifiedTopology: true });
