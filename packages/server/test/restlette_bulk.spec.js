@@ -90,8 +90,44 @@ describe('a bulky restlette', function () {
         assert(actual.OK.length, 3);
     });
 
-    // it("should list all documents", async function () {
-    //     const response = await fetch("http://localhost:40020/hens", {
+    it('it should create a large number of documents', async function () {
+
+        let hen_data = builder(200);
+        for(h of hen_data){
+            delete h["_id"]
+        }
+
+        const hen = JSON.stringify(hen_data)
+
+        const response = await fetch("http://localhost:40025/chicks/bulk", {
+            method: "POST",
+            body: hen,
+            redirect: "follow",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        assert.equal(response.status, 200);
+        const actual = await response.json();
+
+        assert(actual.OK.length, 200);
+    });
+
+
+
+    // it("should read n documents", async function () {
+    //     let hen_data = builder(10);
+    //     for(h of hen_data){
+    //         delete h["_id"]
+    //     }
+    //
+    //     const hen = JSON.stringify(hen_data)
+    //
+    //     const response = await fetch("http://localhost:40025/chicks/bulk", {
+    //         method: "POST",
+    //         body: hen,
+    //         redirect: "follow",
     //         headers: {
     //             "Content-Type": "application/json"
     //         }
@@ -103,6 +139,8 @@ describe('a bulky restlette', function () {
     //     assert.equal(actual[0].eggs, 6);
     //     assert.equal(actual[0].name, "chuck");
     // });
+
+
     //
     // it("should update a document", async function () {
     //     const response = await fetch("http://localhost:40020/hens/" + id, {
