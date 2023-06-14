@@ -1,5 +1,5 @@
 {
-  "name": "mongo-event-builder",
+  "name": "@gridql/mongo-event-builder",
   "version": "2.0.0",
   "description": "Listens to mongo and emits events",
   "main": "index.js",

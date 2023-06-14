@@ -1,5 +1,5 @@
 {
-  "name": "@tsmarsh/payload-validator",
+  "name": "@gridql/payload-validator",
   "version": "2.0.0",
   "main": "index.js",
   "license": "MIT",

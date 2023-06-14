@@ -1,5 +1,5 @@
 {
-  "name": "@tsmarsh/server",
+  "name": "@gridql/server",
   "version": "2.0.0",
   "description": "graphql server scaffolding",
   "main": "index.js",
