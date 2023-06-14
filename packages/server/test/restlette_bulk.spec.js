@@ -159,18 +159,49 @@ describe('a bulky restlette', function () {
         assert.equal(actual.OK.length, 5);
     });
 
-    //
-    // it("should delete a document", async function () {
-    //     const response = await fetch("http://localhost:40020/hens/" + id, {
-    //         method: "DELETE",
-    //         redirect: "follow",
-    //         headers: {
-    //             "Content-Type": "application/json"
-    //         }
-    //     });
-    //
-    //     assert.equal(response.status, 200);
-    // });
+
+    it("should delete n documents", async function () {
+        let hen_data = builder(10);
+        for(h of hen_data){
+            delete h["_id"]
+        }
+
+        const hen = JSON.stringify(hen_data)
+
+        await fetch("http://localhost:40025/chicks/bulk", {
+            method: "POST",
+            body: hen,
+            redirect: "follow",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        const response = await fetch("http://localhost:40025/chicks", {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        let actual = await response.json();
+
+        let ids = {ids: actual.slice(0,5).map((h) => h._id)};
+
+        let url = buildUrl("http://localhost:40025/chicks/bulk", ids).toString();
+
+        console.log("URL:", url);
+
+        const read = await fetch(url, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        actual = await read.json();
+
+        assert.equal(actual.OK.length, 5);
+    });
 });
 
 function buildUrl(baseUrl, params) {

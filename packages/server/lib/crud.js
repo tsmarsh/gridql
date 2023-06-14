@@ -166,12 +166,38 @@ const bulk_read = (url) => async (req, res) => {
     res.json(res_body);
 }
 
+const bulk_delete = (url) => async (req, res) => {
+    const init = {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }
+
+    if(req.headers.authorization !== undefined) {
+        init.header["Authorization"] = req.headers.authorization
+    }
+
+    let ids = req.query.ids.split(",");
+
+    let responses = await Promise.all(ids.map((id) => {
+        let location = `${url}/${id}`;
+        return fetch(location, init)
+    }));
+
+    const res_body = await extracted(responses);
+
+    res.json(res_body);
+}
+
+
 const init = (url, context, app, db, validate) => {
 
     app.use(express.json());
 
     app.post(`${context}/bulk`, bulk_create(url));
     app.get(`${context}/bulk`, bulk_read(url));
+    app.delete(`${context}/bulk`, bulk_delete(url));
 
     app.post(`${context}`, create(db, validate, context));
 
