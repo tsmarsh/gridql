@@ -1,6 +1,6 @@
 {
   "name": "@gridql/server-configurator",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "private": false,
   "dependencies": {
     "@babel/preset-react": "^7.18.6",
@@ -38,5 +38,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "gitHead": "0af1373a5b1b21c231fd039d3a361bde1ca01aa6"
 }
