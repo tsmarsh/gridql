@@ -69,7 +69,7 @@ describe('a bulky restlette', function () {
     it('it should create n documents', async function () {
 
         let hen_data = builder(3);
-        for(h of hen_data){
+        for(let h of hen_data){
             delete h["_id"]
         }
 
@@ -87,13 +87,13 @@ describe('a bulky restlette', function () {
         assert.equal(response.status, 200);
         const actual = await response.json();
 
-        assert(actual.OK.length, 3);
+        assert.equal(actual.OK.length, 3);
     });
 
     it('it should create a large number of documents', async function () {
 
         let hen_data = builder(200);
-        for(h of hen_data){
+        for(let h of hen_data){
             delete h["_id"]
         }
 
@@ -111,7 +111,7 @@ describe('a bulky restlette', function () {
         assert.equal(response.status, 200);
         const actual = await response.json();
 
-        assert(actual.OK.length, 200);
+        assert.equal(actual.OK.length, 200);
     });
 
 

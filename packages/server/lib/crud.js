@@ -136,7 +136,7 @@ const bulk_create = (url) => async (req, res) => {
         return fetch(url, init)
     }));
 
-    const res_body = extracted(responses);
+    const res_body = await extracted(responses);
 
     console.log(res_body)
     res.json(res_body);
