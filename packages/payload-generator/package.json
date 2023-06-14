@@ -1,8 +1,9 @@
 {
   "name": "@gridql/payload-generator",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "main": "index.js",
   "license": "MIT",
+  "private": false,
   "scripts": {
     "test": "nyc mocha"
   },
@@ -14,5 +15,5 @@
     "mocha": "^10.2.0",
     "nyc": "^15.1.0"
   },
-  "gitHead": "0af1373a5b1b21c231fd039d3a361bde1ca01aa6"
+  "gitHead": "3248537b570554a1a9b1bd93d4151a24331b5db3"
 }
