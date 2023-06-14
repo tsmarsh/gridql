@@ -116,47 +116,49 @@ describe('a bulky restlette', function () {
 
 
 
-    // it("should read n documents", async function () {
-    //     let hen_data = builder(10);
-    //     for(h of hen_data){
-    //         delete h["_id"]
-    //     }
-    //
-    //     const hen = JSON.stringify(hen_data)
-    //
-    //     const response = await fetch("http://localhost:40025/chicks/bulk", {
-    //         method: "POST",
-    //         body: hen,
-    //         redirect: "follow",
-    //         headers: {
-    //             "Content-Type": "application/json"
-    //         }
-    //     });
-    //
-    //     const actual = await response.json();
-    //
-    //     assert.equal(actual.length, 1);
-    //     assert.equal(actual[0].eggs, 6);
-    //     assert.equal(actual[0].name, "chuck");
-    // });
+    it("should read n documents", async function () {
+        let hen_data = builder(10);
+        for(h of hen_data){
+            delete h["_id"]
+        }
 
+        const hen = JSON.stringify(hen_data)
 
-    //
-    // it("should update a document", async function () {
-    //     const response = await fetch("http://localhost:40020/hens/" + id, {
-    //         method: "PUT",
-    //         body: JSON.stringify({"name": "chuck", "eggs": 12}),
-    //         redirect: "follow",
-    //         headers: {
-    //             "Content-Type": "application/json"
-    //         }
-    //     });
-    //
-    //     const actual = await response.json();
-    //
-    //     assert.equal(actual.eggs, 12);
-    //     assert.equal(actual.name, "chuck");
-    // });
+        await fetch("http://localhost:40025/chicks/bulk", {
+            method: "POST",
+            body: hen,
+            redirect: "follow",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        const response = await fetch("http://localhost:40025/chicks", {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        let actual = await response.json();
+
+        let ids = {ids: actual.slice(0,5).map((h) => h._id)};
+
+        let url = buildUrl("http://localhost:40025/chicks/bulk", ids).toString();
+
+        console.log("URL:", url);
+
+        const read = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        actual = await read.json();
+
+        assert.equal(actual.OK.length, 5);
+    });
+
     //
     // it("should delete a document", async function () {
     //     const response = await fetch("http://localhost:40020/hens/" + id, {
@@ -170,3 +172,9 @@ describe('a bulky restlette', function () {
     //     assert.equal(response.status, 200);
     // });
 });
+
+function buildUrl(baseUrl, params) {
+    const url = new URL(baseUrl);
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+    return url;
+}
