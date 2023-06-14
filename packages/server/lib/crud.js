@@ -31,9 +31,6 @@ const calculateReaders = (doc, sub) => {
     if (sub !== null) {
         readers.add(sub);
     }
-    if ("object_id" in doc) {
-        readers.add(doc.object_id);
-    }
 
     return [...readers]
 }
