@@ -27,9 +27,12 @@ This is how you do it.
 * [X] ReST Server
 * [X] Mongo Listener that publishes to kafka
 * [X] Bulk ReST API
+* [ ] Configurable ID on rest
+* [ ] Check config schema in init
+* [ ] Fix the configurator
 * [ ] Time aware GraphAPI
 * [ ] Kafka Listener that pushes to ReST
 
 ## Coverage
 
-[![coverage](https://codecov.io/gh/tsmarsh/gridql/branch/main/graphs/sunburst.svg?token=b9wLrKB3dU)]
+![coverage](https://codecov.io/gh/tsmarsh/gridql/branch/main/graphs/sunburst.svg?token=b9wLrKB3dU)
