@@ -4,7 +4,7 @@ const {describe, it, before, after} = require('mocha')
 const {init, start} = require('../index');
 const {MongoClient} = require("mongodb");
 const assert = require("assert");
-const {builderFactory} = require("payload-generator");
+const {builderFactory} = require("@gridql/payload-generator");
 
 
 let mongod;

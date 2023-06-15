@@ -13,6 +13,8 @@
     "test": "nyc mocha --exit"
   },
   "dependencies": {
+    "@gridql/payload-generator": "^2.0.5",
+    "@gridql/payload-validator": "^2.0.5",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "express-graphql": "^0.12.0",

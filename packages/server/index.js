@@ -6,7 +6,7 @@ const {context} = require("./lib/root")
 const {MongoClient} = require("mongodb")
 const {init: crud_init} = require("./lib/crud")
 const cors = require("cors");
-const {valid} = require("@tsmarsh/payload-validator")
+const {valid} = require("@gridql/payload-validator")
 
 async function buildDb(mongo) {
     let client = await new MongoClient(mongo.uri);
