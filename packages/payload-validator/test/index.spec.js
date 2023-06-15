@@ -1,5 +1,5 @@
 const {valid} = require("../index.js");
-const {builderFactory} = require("payload-generator");
+const {builderFactory} = require("@gridql/payload-generator");
 const assert = require("assert");
 
 

@@ -15,6 +15,7 @@
     "nyc": "^15.1.0"
   },
   "dependencies": {
+    "@gridql/payload-generator": "^2.0.5",
     "jsonschema": "^1.4.1"
   },
   "gitHead": "3895bc290a0e641952867a66d9eb95350c46ef39"
