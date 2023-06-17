@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "properties": {
+    "_id": {
+      "type": "string",
+      "format": "id"
+    },
+    "name": {
+      "type": "string",
+      "faker": "animal.bear"
+    }
+    "farm_id": {
+      "type": "string",
+      "format": "id"
+    }
+  },
+  "required": ["name"],
+  "additionalProperties": false
+}

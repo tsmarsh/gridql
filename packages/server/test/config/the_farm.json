@@ -90,5 +90,22 @@
         ]
       }
     }
+  ],
+  "restlettes": [
+    {
+      "path": "/hens",
+      "mongo": "hens",
+      "schema": "test/json/hen.schema.json"
+    },
+    {
+      "path": "/coops",
+      "mongo": "coops",
+      "schema": "test/json/coop.schema.json"
+    },
+    {
+      "path": "/farms",
+      "mongo": "farms",
+      "schema": "test/json/farm.schema.json"
+    }
   ]
 }

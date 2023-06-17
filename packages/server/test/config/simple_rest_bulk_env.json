@@ -1,0 +1,18 @@
+{
+  "port": 40025,
+  "url": "http://localhost:40025/chicks",
+  "mongos": {
+    "chicks": {
+      "uri": "mongodb://127.0.0.1:60222/",
+      "collection": "chicks",
+      "db": "test"
+    }
+  },
+  "restlettes": [
+    {
+      "path": "/chicks",
+      "mongo": "chicks",
+      "schema": "test/json/hen.schema.json"
+    }
+  ]
+}

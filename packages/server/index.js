@@ -48,6 +48,7 @@ const init = async (configFile) => {
 
     let restlettes = [];
 
+    for (chr)
     try {
         if (config.graphlettes !== undefined){
             graphlettes = await process_graphlettes(config)

@@ -1,14 +1,8 @@
 {
-  "port": 40020,
-  "url": "http://localhost:40020/hens",
   "restlettes": [
     {
       "path": "/hens",
-      "mongo": {
-        "uri": "mongodb://127.0.0.1:60220/",
-        "collection": "hens",
-        "db": "test"
-      },
+      "mongo": "hens",
       "schema": "test/json/hen.schema.json"
     }
   ]

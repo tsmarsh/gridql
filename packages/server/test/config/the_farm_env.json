@@ -1,0 +1,21 @@
+{
+  "port": 40044,
+  "url": "http://localhost",
+  "mongos": {
+    "hens": {
+      "uri": "mongodb://127.0.0.1:60300/",
+      "collection": "hens",
+      "db": "complex"
+    },
+    "coops": {
+      "uri": "mongodb://127.0.0.1:60300/",
+      "collection": "coops",
+      "db": "complex"
+    },
+    "farms": {
+      "uri": "mongodb://127.0.0.1:60300/",
+      "collection": "farms",
+      "db": "complex"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "port": 40022,
+  "url": "http://localhost",
+  "mongos": {
+    "hens": {
+      "uri": "mongodb://127.0.0.1:60230/",
+      "collection": "chicks",
+      "db": "test"
+    }
+  }
+}
