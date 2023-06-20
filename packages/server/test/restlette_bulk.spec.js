@@ -108,7 +108,7 @@ describe('a bulky restlette', function () {
             }
         });
 
-        assert.equal(response.status, 100);
+        assert.equal(response.status, 200);
         const actual = await response.json();
 
         assert.equal(actual.OK.length, 100);
