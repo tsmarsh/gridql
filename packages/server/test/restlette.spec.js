@@ -26,7 +26,7 @@ before(async function () {
 
     db = client.db("test").collection("hens");
 
-    config = await init(__dirname + "/config/simple_rest.json");
+    config = await init(__dirname + "/config/simple_rest.conf");
 
     payload = {
         "sub": "1234567890",

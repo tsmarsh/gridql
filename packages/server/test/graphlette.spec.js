@@ -31,7 +31,7 @@ describe('Single node', function () {
   before(async function () {
     db = client.db("test").collection("test");
 
-    config = await init(__dirname + "/config/simple.json");
+    config = await init(__dirname + "/config/simple.conf");
 
     server = await start(config.url, config.port, config.graphlettes, config.restlettes);
   })
@@ -63,7 +63,7 @@ describe('Complex nodes', function () {
     coops_db = client.db("complex").collection("coops");
     farms_db = client.db("complex").collection("farms");
 
-    config = await init(__dirname + "/config/complex.json");
+    config = await init(__dirname + "/config/complex.conf");
 
     server = await start(config.url, config.port, config.graphlettes, config.restlettes);
   })

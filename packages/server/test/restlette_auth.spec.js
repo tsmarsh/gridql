@@ -31,7 +31,7 @@ before(async function () {
     uri = mongod.getUri();
 
 
-    config = await init(__dirname + "/config/rest_auth.json");
+    config = await init(__dirname + "/config/rest_auth.conf");
 
     payload = {
         "sub": "1234567890",

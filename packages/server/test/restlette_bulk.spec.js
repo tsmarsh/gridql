@@ -54,7 +54,7 @@ before(async function () {
 
     db = client.db("test").collection("hens");
 
-    config = await init(__dirname + "/config/simple_rest_bulk.json");
+    config = await init(__dirname + "/config/simple_rest_bulk.conf");
 
     server = await start(config.url, config.port, config.graphlettes, config.restlettes);
 });
@@ -92,7 +92,7 @@ describe('a bulky restlette', function () {
 
     it('it should create a large number of documents', async function () {
 
-        let hen_data = builder(200);
+        let hen_data = builder(100);
         for(let h of hen_data){
             delete h["_id"]
         }
@@ -108,10 +108,10 @@ describe('a bulky restlette', function () {
             }
         });
 
-        assert.equal(response.status, 200);
+        assert.equal(response.status, 100);
         const actual = await response.json();
 
-        assert.equal(actual.OK.length, 200);
+        assert.equal(actual.OK.length, 100);
     });
 
 

@@ -3015,6 +3015,14 @@
     schema-utils "^3.0.0"
     source-map "^0.7.3"
 
+"@pushcorn/hocon-parser@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@pushcorn/hocon-parser/-/hocon-parser-1.2.6.tgz#0c5abd491e7be94d6f28bca2d4e42c898ebb4c14"
+  integrity sha512-OuAw5tdGaXIMyjyVeu/9qyxgNjkJNgP2SMjs6+wRQ2dc5q6z/Ncj/cl7uf/s4V/Z5x/1WS60A05muYybNY391Q==
+  dependencies:
+    commander "10.0.0"
+    node-fetch "2.6.9"
+
 "@rjsf/core@^5.6.2":
   version "5.6.2"
   resolved "https://registry.yarnpkg.com/@rjsf/core/-/core-5.6.2.tgz#2b3b0a22a3c4d934ee2e8504d57df120f55a7eac"
@@ -5270,6 +5278,11 @@ combined-stream@^1.0.8:
   integrity sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==
   dependencies:
     delayed-stream "~1.0.0"
+
+commander@10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-10.0.0.tgz#71797971162cd3cf65f0b9d24eb28f8d303acdf1"
+  integrity sha512-zS5PnTI22FIRM6ylNW8G4Ap0IEOyk62fhLSD0+uHRT9McRCLGpkVNvao4bjimpK/GShynyQkFFxHhwMcETmduA==
 
 commander@^2.20.0:
   version "2.20.3"
@@ -10300,6 +10313,13 @@ node-fetch@2.6.7:
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.7.tgz#24de9fba827e3b4ae44dc8b20256a379160052ad"
   integrity sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==
+  dependencies:
+    whatwg-url "^5.0.0"
+
+node-fetch@2.6.9:
+  version "2.6.9"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.9.tgz#7c7f744b5cc6eb5fd404e0c7a9fec630a55657e6"
+  integrity sha512-DJm/CJkZkRjKKj4Zi4BsKVZh3ValV5IR5s7LVZnW+6YMh0W1BfNA8XSs6DLMGYlId5F3KnA70uu2qepcR08Qqg==
   dependencies:
     whatwg-url "^5.0.0"
 

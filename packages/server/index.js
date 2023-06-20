@@ -7,16 +7,17 @@ const {MongoClient} = require("mongodb")
 const {init: crud_init} = require("./lib/crud")
 const cors = require("cors");
 const {valid} = require("@gridql/payload-validator")
+const parser = require ("@pushcorn/hocon-parser");
 
 async function buildDb(mongo) {
-    let client = await new MongoClient(mongo.uri);
+    let client = await new MongoClient(mongo["uri"]);
     await client.connect().catch((reason) => console.log(reason));
-    let db = client.db(mongo.db).collection(mongo.collection);
+    let db = client.db(mongo["db"]).collection(mongo["collection"]);
     return db;
 }
 
 const process_graphlettes = async (config) => {
-    return await Promise.all(config.graphlettes.map(async ({mongo, dtoConfig, schema, path    }) => {
+    return await Promise.all(config["graphlettes"].map(async ({mongo, dtoConfig, schema, path    }) => {
         let db = await buildDb(mongo);
 
         let {root} = context(db, dtoConfig);
@@ -29,7 +30,7 @@ const process_graphlettes = async (config) => {
 }
 
 const process_restlettes = async (config) => {
-    return await Promise.all(config.restlettes.map(async ({mongo, schema, path }) => {
+    return await Promise.all(config["restlettes"].map(async ({mongo, schema, path }) => {
         let db = await buildDb(mongo);
 
         let sch = JSON.parse(fs.readFileSync(schema).toString());
@@ -39,17 +40,18 @@ const process_restlettes = async (config) => {
 }
 
 const init = async (configFile) => {
-    const config = JSON.parse(fs.readFileSync(configFile).toString());
+    const config = await parser.parse({ url: configFile })
+        .catch(e => console.log("Error parse config: ", e));
 
-    const url = config.url;
-    const port = config.port;
+    const url = config["url"];
+    const port = config["port"];
 
     let graphlettes = [];
 
     let restlettes = [];
 
     try {
-        if (config.graphlettes !== undefined){
+        if (config["graphlettes"] !== undefined){
             graphlettes = await process_graphlettes(config)
         }
     } catch (err) {
@@ -58,7 +60,7 @@ const init = async (configFile) => {
 
 
     try {
-        if (config.restlettes !== undefined){
+        if (config["restlettes"] !== undefined){
             restlettes = await process_restlettes(config)
         }
     }catch (err) {
