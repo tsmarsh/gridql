@@ -1,6 +1,9 @@
 const {ObjectId} = require("mongodb");
 const jwt = require("jsonwebtoken");
 const express = require("express");
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+
 
 const getSub = (authHeader) => {
     if (authHeader === null || authHeader === undefined) {
@@ -34,7 +37,18 @@ const calculateReaders = (doc, sub) => {
 
     return [...readers]
 }
-
+/**
+ * @swagger
+ *
+ * paths /{context}:
+ *  post:
+ *      summary: Create a new entity
+ *      responses:
+ *        303:
+ *          description: successful creation and redirect to new url
+ *         400:
+ *          description: the document doesn't match the schema for the entity
+ */
 const create = (db, valid, context) => async (req, res) => {
     const {_id, ...doc} = req.body;
     if (valid(doc)) {
@@ -188,7 +202,11 @@ const bulk_delete = (url) => async (req, res) => {
 }
 
 
-const init = (url, context, app, db, validate) => {
+const init = (url, context, app, db, validate, schema) => {
+
+    console.log("API Docks Might Be Available on: ", `${context}/api-docs`);
+
+    app.use(`${context}/api-docs`, swaggerUi.serve, swaggerUi.setup(swagger(context, schema)));
 
     app.use(express.json());
 
@@ -237,4 +255,348 @@ async function extracted(responses) {
 
 module.exports = {
     init, getSub, calculateReaders
+}
+
+const swagger = (context, schema) => {
+    return {
+        "openapi":
+            "3.0.0",
+        "info":
+            {
+                "title":
+                    `${context}`,
+                "version":
+                    "1.0.0"
+            }
+        ,
+        "paths":
+            {
+                [context + "/{id}"]:
+                    {
+                        "get":
+                            {
+                                "summary":
+                                    "Retrieves a document",
+                                "parameters":
+                                    [
+                                        {
+                                            "in": "path",
+                                            "name": "id",
+                                            "required": true,
+                                            "schema": {
+                                                "type": "string"
+                                            },
+                                            "description": "The ID of the document to retrieve."
+                                        }
+                                    ],
+                                "responses":
+                                    {
+                                        "200":
+                                            {
+                                                "description":
+                                                    "The document was successfully retrieved.",
+                                                "content":
+                                                    {
+                                                        "application/json":
+                                                            {
+                                                                "schema":
+                                                                    {
+                                                                        "$ref":
+                                                                            "#/components/schemas/State"
+                                                                    }
+                                                            }
+                                                    }
+                                            }
+                                        ,
+                                        "404":
+                                            {
+                                                "description":
+                                                    "A document with the specified ID was not found."
+                                            }
+                                    }
+                            }
+                        ,
+                        "put":
+                            {
+                                "summary":
+                                    "Creates or updates a document",
+                                "parameters":
+                                    [
+                                        {
+                                            "in": "path",
+                                            "name": "id",
+                                            "required": true,
+                                            "schema": {
+                                                "type": "string"
+                                            },
+                                            "description": "The ID of the document to create or update."
+                                        }
+                                    ],
+                                "requestBody":
+                                    {
+                                        "required":
+                                            true,
+                                        "content":
+                                            {
+                                                "application/json":
+                                                    {
+                                                        "schema":
+                                                            {
+                                                                "$ref":
+                                                                    "#/components/schemas/State"
+                                                            }
+                                                    }
+                                            }
+                                    }
+                                ,
+                                "responses":
+                                    {
+                                        "200":
+                                            {
+                                                "description":
+                                                    "The document was successfully updated."
+                                            }
+                                        ,
+                                        "201":
+                                            {
+                                                "description":
+                                                    "The document was successfully created.",
+                                                "headers":
+                                                    {
+                                                        "Location":
+                                                            {
+                                                                "schema":
+                                                                    {
+                                                                        "type":
+                                                                            "string"
+                                                                    }
+                                                                ,
+                                                                "description":
+                                                                    "URI of the created document."
+                                                            }
+                                                    }
+                                            }
+                                    }
+                            }
+                        ,
+                        "delete":
+                            {
+                                "summary":
+                                    "Deletes a document",
+                                "parameters":
+                                    [
+                                        {
+                                            "in": "path",
+                                            "name": "id",
+                                            "required": true,
+                                            "schema": {
+                                                "type": "string"
+                                            },
+                                            "description": "The ID of the document to delete."
+                                        }
+                                    ],
+                                "responses":
+                                    {
+                                        "204":
+                                            {
+                                                "description":
+                                                    "The document was successfully deleted."
+                                            }
+                                        ,
+                                        "404":
+                                            {
+                                                "description":
+                                                    "A document with the specified ID was not found."
+                                            }
+                                    }
+                            }
+                    }
+                ,
+                [context + "/bulk"]:
+                    {
+                        "get":
+                            {
+                                "summary":
+                                    "Retrieves a list of all documents",
+                                "responses":
+                                    {
+                                        "200":
+                                            {
+                                                "description":
+                                                    "The documents were successfully retrieved.",
+                                                "content":
+                                                    {
+                                                        "application/json":
+                                                            {
+                                                                "schema":
+                                                                    {
+                                                                        "type":
+                                                                            "array",
+                                                                        "items":
+                                                                            {
+                                                                                "$ref":
+                                                                                    "#/components/schemas/State"
+                                                                            }
+                                                                    }
+                                                            }
+                                                    }
+                                            }
+                                    }
+                            }
+                        ,
+                        "post":
+                            {
+                                "summary":
+                                    "Creates multiple documents",
+                                "requestBody":
+                                    {
+                                        "required":
+                                            true,
+                                        "content":
+                                            {
+                                                "application/json":
+                                                    {
+                                                        "schema":
+                                                            {
+                                                                "type":
+                                                                    "array",
+                                                                "items":
+                                                                    {
+                                                                        "$ref":
+                                                                            "#/components/schemas/State"
+                                                                    }
+                                                            }
+                                                    }
+                                            }
+                                    }
+                                ,
+                                "responses":
+                                    {
+                                        "200":
+                                            {
+                                                "description":
+                                                    "The documents were successfully created.",
+                                                "content":
+                                                    {
+                                                        "application/json":
+                                                            {
+                                                                "schema":
+                                                                    {
+                                                                        "type":
+                                                                            "object",
+                                                                        "properties":
+                                                                            {
+                                                                                "successful":
+                                                                                    {
+                                                                                        "type":
+                                                                                            "array",
+                                                                                        "items":
+                                                                                            {
+                                                                                                "$ref":
+                                                                                                    "#/components/schemas/OperationStatus"
+                                                                                            }
+                                                                                    }
+                                                                                ,
+                                                                                "failed":
+                                                                                    {
+                                                                                        "type":
+                                                                                            "array",
+                                                                                        "items":
+                                                                                            {
+                                                                                                "$ref":
+                                                                                                    "#/components/schemas/OperationStatus"
+                                                                                            }
+                                                                                    }
+                                                                            }
+                                                                    }
+                                                            }
+                                                    }
+                                            }
+                                    }
+                            }
+                        ,
+                        "delete":
+                            {
+                                "summary":
+                                    "Deletes multiple documents",
+                                "responses":
+                                    {
+                                        "200":
+                                            {
+                                                "description":
+                                                    "The documents were successfully deleted.",
+                                                "content":
+                                                    {
+                                                        "application/json":
+                                                            {
+                                                                "schema":
+                                                                    {
+                                                                        "type":
+                                                                            "object",
+                                                                        "properties":
+                                                                            {
+                                                                                "successful":
+                                                                                    {
+                                                                                        "type":
+                                                                                            "array",
+                                                                                        "items":
+                                                                                            {
+                                                                                                "$ref":
+                                                                                                    "#/components/schemas/OperationStatus"
+                                                                                            }
+                                                                                    }
+                                                                                ,
+                                                                                "failed":
+                                                                                    {
+                                                                                        "type":
+                                                                                            "array",
+                                                                                        "items":
+                                                                                            {
+                                                                                                "$ref":
+                                                                                                    "#/components/schemas/OperationStatus"
+                                                                                            }
+                                                                                    }
+                                                                            }
+                                                                    }
+                                                            }
+                                                    }
+                                            }
+                                    }
+                            }
+                    }
+            }
+        ,
+        "components":
+            {
+                "schemas":
+                    {
+                        "State": schema,
+                        "OperationStatus":
+                            {
+                                "type":
+                                    "object",
+                                "properties":
+                                    {
+                                        "id":
+                                            {
+                                                "type":
+                                                    "string"
+                                            }
+                                        ,
+                                        "status":
+                                            {
+                                                "type":
+                                                    "string"
+                                            }
+                                        ,
+                                        "error":
+                                            {
+                                                "type":
+                                                    "string"
+                                            }
+                                    }
+                            }
+                    }
+            }
+    }
 }

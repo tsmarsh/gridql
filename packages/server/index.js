@@ -56,7 +56,7 @@ const process_restlettes = async (config) => {
 
         let sch = JSON.parse(fs.readFileSync(schema).toString());
 
-        return {path, validator: valid(sch), db};
+        return {path, schema: sch, validator: valid(sch), db};
     }))
 }
 
@@ -113,9 +113,9 @@ const start = async (url, port, graphlettes, restlettes) => {
         app.use(path, route)
     }
 
-    for(let {path, db, validator} of restlettes) {
+    for(let {path, db, validator, schema} of restlettes) {
         console.log("ReSTing up: " + path);
-        crud_init(url, path, app, db, validator)
+        crud_init(url, path, app, db, validator, schema)
     }
 
     return app.listen(port);
