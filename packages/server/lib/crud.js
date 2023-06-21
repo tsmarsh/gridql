@@ -201,12 +201,20 @@ const bulk_delete = (url) => async (req, res) => {
     res.json(res_body);
 }
 
+const options = {
+    swaggerOptions: {
+        url: "/api-docs/swagger.json",
+    },
+}
 
 const init = (url, context, app, db, validate, schema) => {
 
-    console.log("API Docks Might Be Available on: ", `${context}/api-docs`);
+    console.log("API Docks are available on: ", `${context}/api-docs`);
 
-    app.use(`${context}/api-docs`, swaggerUi.serve, swaggerUi.setup(swagger(context, schema)));
+    let swaggerDoc = swagger(context, schema);
+
+    app.get(`${context}/api-docs/swagger.json`, (req, res) => res.json(swaggerDoc));
+    app.use(`${context}/api-docs`, swaggerUi.serveFiles(swaggerDoc, options), swaggerUi.setup(swaggerDoc, options));
 
     app.use(express.json());
 
