@@ -1,9 +1,9 @@
 const { MongoClient } = require('mongodb');
-const Kafka = require('kafkajs');
+const kafka = require('kafkajs');
 
 
 async function buildDb(mongo) {
-    let client = await new MongoClient(mongo.uri, { useUnifiedTopology: true });
+    let client = await new MongoClient(mongo.uri, { directConnection: true });
     await client.connect().catch((reason) => console.log(reason));
     return client.db(mongo.db).collection(mongo.collection);
 }

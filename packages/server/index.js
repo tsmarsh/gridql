@@ -8,12 +8,33 @@ const {init: crud_init} = require("./lib/crud")
 const cors = require("cors");
 const {valid} = require("@gridql/payload-validator")
 const parser = require ("@pushcorn/hocon-parser");
+const promiseRetry = require('promise-retry')
+
+const options = {
+    directConnection: true
+}
+
+const promiseRetryOptions = {
+    retries: options.reconnectTries,
+    factor: 1.5,
+    minTimeout: options.reconnectInterval,
+    maxTimeout: 5000
+}
+
+const connect = (url) => {
+    let client = new MongoClient(url, options)
+    promiseRetry((retry, number) => {
+        console.log(`MongoClient connecting to ${url} - retry number: ${number}`)
+        return client.connect().catch(retry)
+    }, promiseRetryOptions)
+    return client;
+}
 
 async function buildDb(mongo) {
-    let client = await new MongoClient(mongo["uri"]);
-    await client.connect().catch((reason) => console.log(reason));
-    let db = client.db(mongo["db"]).collection(mongo["collection"]);
-    return db;
+    // let client = await connect(mongo["uri"]);
+    // await client.connect().catch((reason) => console.log(reason));
+    let client = connect(mongo["uri"]);
+    return client.db(mongo["db"]).collection(mongo["collection"]);
 }
 
 const process_graphlettes = async (config) => {
@@ -42,6 +63,8 @@ const process_restlettes = async (config) => {
 const init = async (configFile) => {
     const config = await parser.parse({ url: configFile })
         .catch(e => console.log("Error parse config: ", e));
+
+    console.log("Config file: ", config)
 
     const url = config["url"];
     const port = config["port"];
