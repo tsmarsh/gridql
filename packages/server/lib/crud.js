@@ -70,7 +70,9 @@ const create = (db, valid, context) => async (req, res) => {
 };
 
 const read = (db) => async (req, res) => {
-  const result = await db.findOne({ _id: new ObjectId(req.params.id) });
+  let objectId = new ObjectId(req.params.id);
+
+  const result = await db.findOne({ _id: objectId });
 
   if (result !== null) {
     if (isAuthorized(req.headers.authorization, result)) {
@@ -401,7 +403,7 @@ const swagger = (context, schema, url) => {
             },
           ],
           responses: {
-            204: {
+            200: {
               description: "The document was successfully deleted.",
             },
             404: {

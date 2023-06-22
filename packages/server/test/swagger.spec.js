@@ -1,9 +1,10 @@
 const { MongoMemoryServer } = require("mongodb-memory-server");
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 const { init, start } = require("../index");
 const { swagger } = require("../lib/crud");
 const assert = require("assert");
-const { after } = require("mocha");
+const { after, it } = require("mocha");
+const { response } = require("express");
 const OpenAPIClientAxios = require("openapi-client-axios").default;
 
 let mongod;
@@ -56,6 +57,14 @@ after(async function () {
 });
 
 describe("The published swagger should work", function () {
+  it("should not read a non-document", async function () {
+    try {
+      await swagger_client.read({ id: new ObjectId() });
+    } catch (err) {
+      assert.equal(err.response.status, 404);
+    }
+  });
+
   it("it should create a document ", async function () {
     let hen_data = { name: "chuck", eggs: 6 };
     const hen = JSON.stringify(hen_data);
@@ -68,13 +77,30 @@ describe("The published swagger should work", function () {
     assert(result.data._id !== undefined);
 
     id = result.data._id;
+  });
 
-    // assert.equal(response.status, 200);
-    // const actual = await response.json();
-    // id = actual._id;
-    //
-    // assert.equal(actual.eggs, 6);
-    // assert.equal(actual.name, "chuck");
-    // assert(actual._id !== undefined);
+  it("should read a document", async function () {
+    const result = await swagger_client.read({ id });
+
+    assert.equal(result.status, 200);
+    assert.equal(result.data.eggs, 6);
+    assert.equal(result.data.name, "chuck");
+  });
+
+  it("should update a document", async function () {
+    let { data: actual, ...result } = await swagger_client.update(
+      { id },
+      { name: "chuck", eggs: 12 }
+    );
+
+    assert.equal(result.status, 200);
+    assert.equal(actual.eggs, 12);
+    assert.equal(actual.name, "chuck");
+  });
+
+  it("should delete a document", async function () {
+    const result = await swagger_client.delete({ id });
+
+    assert.equal(result.status, 200);
   });
 });
