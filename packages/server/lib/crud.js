@@ -317,6 +317,7 @@ const swagger = (context, schema, url) => {
       [context + "/{id}"]: {
         get: {
           summary: "Retrieves a document",
+          operationId: "read",
           parameters: [
             {
               in: "path",
@@ -346,6 +347,7 @@ const swagger = (context, schema, url) => {
         },
         put: {
           summary: "Creates or updates a document",
+          operationId: "update",
           parameters: [
             {
               in: "path",
@@ -386,6 +388,7 @@ const swagger = (context, schema, url) => {
         },
         delete: {
           summary: "Deletes a document",
+          operationId: "delete",
           parameters: [
             {
               in: "path",
@@ -410,6 +413,7 @@ const swagger = (context, schema, url) => {
       [context + "/bulk"]: {
         get: {
           summary: "Retrieves a list of all documents",
+          operationId: "bulk_read",
           responses: {
             200: {
               description: "The documents were successfully retrieved.",
@@ -428,6 +432,7 @@ const swagger = (context, schema, url) => {
         },
         post: {
           summary: "Creates multiple documents",
+          operationId: "bulk_create",
           requestBody: {
             required: true,
             content: {
@@ -470,6 +475,7 @@ const swagger = (context, schema, url) => {
         },
         delete: {
           summary: "Deletes multiple documents",
+          operationId: "bulk_delete",
           responses: {
             200: {
               description: "The documents were successfully deleted.",
