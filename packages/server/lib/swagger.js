@@ -10,6 +10,25 @@ const swagger = (context, schema, url) => {
     servers: [{ url: new URL(url).origin }],
     paths: {
       [context]: {
+        get: {
+          operationId: "list",
+          summary: "Lists all documents",
+          responses: {
+            200: {
+              description: "A list of documents",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "array",
+                    values: {
+                      $ref: "#/components/schemas/State",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
         post: {
           operationId: "create",
           summary: "Creates a document",
