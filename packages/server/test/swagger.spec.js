@@ -1,7 +1,7 @@
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const { MongoClient, ObjectId } = require("mongodb");
 const { init, start } = require("../index");
-const { swagger } = require("../lib/crud");
+const { swagger } = require("../lib/swagger");
 const assert = require("assert");
 const { after, it } = require("mocha");
 const { response } = require("express");
