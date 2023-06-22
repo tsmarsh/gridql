@@ -67,7 +67,6 @@ describe("The published swagger should work", function () {
 
   it("it should create a document ", async function () {
     let hen_data = { name: "chuck", eggs: 6 };
-    const hen = JSON.stringify(hen_data);
 
     const result = await swagger_client.create(null, hen_data);
 
@@ -77,6 +76,16 @@ describe("The published swagger should work", function () {
     assert(result.data._id !== undefined);
 
     id = result.data._id;
+  });
+
+  it("it shouldn't create a bad document ", async function () {
+    let hen_data = { gname: "bad", eggs: 6 };
+
+    try {
+      await swagger_client.create(null, hen_data);
+    } catch (err) {
+      assert.equal(err.response.status, 400);
+    }
   });
 
   it("should read a document", async function () {
@@ -98,9 +107,28 @@ describe("The published swagger should work", function () {
     assert.equal(actual.name, "chuck");
   });
 
+  it("shouldn't update a missing document", async function () {
+    try {
+      await swagger_client.update(
+        { id: new ObjectId() },
+        { name: "chuck", eggs: 12 }
+      );
+    } catch (err) {
+      assert.equal(err.response.status, 404);
+    }
+  });
+
   it("should delete a document", async function () {
     const result = await swagger_client.delete({ id });
 
     assert.equal(result.status, 200);
+  });
+
+  it("shouldn't delete a missing document", async function () {
+    try {
+      await swagger_client.delete({ id: new ObjectId() });
+    } catch (err) {
+      assert.equal(err.response.status, 404);
+    }
   });
 });
