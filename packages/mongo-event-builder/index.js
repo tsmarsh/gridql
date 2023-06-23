@@ -1,18 +1,31 @@
 const { MongoClient } = require('mongodb');
-const kafka = require('kafkajs');
+const {Kafka, logLevel} = require("kafkajs");
+const parser = require("@pushcorn/hocon-parser");
+const {buildDb} = require("@gridql/mongo-connector");
 
 
-async function buildDb(mongo) {
-    let client = await new MongoClient(mongo.uri, { directConnection: true });
-    await client.connect().catch((reason) => console.log(reason));
-    return client.db(mongo.db).collection(mongo.collection);
-}
+const init = async (configFile) => {
+    const config = await parser
+        .parse({ url: configFile })
+        .catch((e) => console.log("Error parse config: ", e));
 
-const init = async ({mongo, kafkaHost}) => {
+    console.log("Config: ", config);
+
+    const {mongo, kafka} = config;
+
+    let k = new Kafka({
+        logLevel: logLevel.INFO,
+        brokers: kafka.brokers,
+        clientId: kafka.clientId,
+    });
+
     const collection = await buildDb(mongo);
-    const kafkaClient = new kafka.KafkaClient({ kafkaHost });
-    const kafkaProducer = new kafka.Producer(kafkaClient);
-    return {collection, kafkaProducer};
+
+    const kafkaProducer = k.producer();
+
+    await kafkaProducer.connect().catch((reason) => console.log("Kafka Producer failed to connect: ", reason));
+
+    return {collection, kafkaProducer, topic: kafka.topic}
 }
 
 let payloads = [];

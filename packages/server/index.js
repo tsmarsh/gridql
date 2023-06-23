@@ -10,33 +10,8 @@ const { valid } = require("@gridql/payload-validator");
 const parser = require("@pushcorn/hocon-parser");
 const promiseRetry = require("promise-retry");
 const { URL } = require("url");
+const { buildDb } = require("@gridql/mongo-connector");
 
-const options = {
-  directConnection: true,
-};
-
-const promiseRetryOptions = {
-  retries: options.reconnectTries,
-  factor: 1.5,
-  minTimeout: options.reconnectInterval,
-  maxTimeout: 5000,
-};
-
-const connect = (url) => {
-  let client = new MongoClient(url, options);
-  promiseRetry((retry, number) => {
-    console.log(`MongoClient connecting to ${url} - retry number: ${number}`);
-    return client.connect().catch(retry);
-  }, promiseRetryOptions);
-  return client;
-};
-
-async function buildDb(mongo) {
-  // let client = await connect(mongo["uri"]);
-  // await client.connect().catch((reason) => console.log(reason));
-  let client = connect(mongo["uri"]);
-  return client.db(mongo["db"]).collection(mongo["collection"]);
-}
 
 const process_graphlettes = async (config) => {
   return await Promise.all(

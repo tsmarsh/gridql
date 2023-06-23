@@ -3,8 +3,9 @@ const {Kafka, logLevel} = require('kafkajs');
 
 const {KafkaContainer, MongoDBContainer} = require('testcontainers');
 
-const { start } = require('../index');
+const { start, init} = require('../index');
 const assert = require('assert');
+const fs = require("fs");
 
 
 function delay(ms) {
@@ -13,16 +14,14 @@ function delay(ms) {
 
 describe('MongoDB change listener', () => {
     let client;
-    let collection;
     let kafka;
     let kafkaContainer;
     let mongoContainer;
-    let kafkaProducer;
 
     before(async function() {
         this.timeout(360000);
 
-        mongoContainer =  await new MongoDBContainer('mongo:6.0.6').start();
+        mongoContainer =  await new MongoDBContainer('mongo:6.0.6').withExposedPorts(27071).start();
 
         const uri = mongoContainer.getConnectionString();
 
@@ -37,22 +36,35 @@ describe('MongoDB change listener', () => {
             .start()
             .catch((reason) => console.log("Kafka container failed to start: ", reason));
 
+        console.log(`${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}`)
+
+        let config = `
+        {
+            "mongo": {
+                "uri": "${mongoContainer.getConnectionString()}",
+                "db": "test",
+                "collection": \${topic}
+            },
+            "kafka": {
+                "brokers": ["${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}"],
+                    "host": "${kafkaContainer.getHost()}",
+                "clientId": "mongo-event-builder-test",
+                "topic": \${topic}
+            }
+        }`
+
         kafka = new Kafka({
             logLevel: logLevel.INFO,
             brokers: [`${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}`],
-            clientId: 'mongo-event-builder-test',
+            clientId: "mongo-event-builder-test",
         });
 
-        kafkaProducer = kafka.producer();
+        fs.writeFileSync(__dirname + '/config/base.conf', config);
 
-        await kafkaProducer.connect().catch((reason) => console.log("Srsly? ", reason));
     });
 
     it('should publish a message when a document is inserted', async () => {
-        let topic = "create-mongo-test";
-
-        collection = client.db("test").collection(topic);
-
+        const {collection, kafkaProducer, topic} = await init(__dirname + "/config/create.conf");
         await start({ collection, kafkaProducer, topic, id: "_id" });
 
         let consumer = kafka.consumer({ groupId: 'test-group-1'});
@@ -90,9 +102,7 @@ describe('MongoDB change listener', () => {
     }).timeout(10000)
 
     it('should publish a message when a document is updated', async () => {
-        let topic = "update-mongo-test";
-
-        collection = client.db("test").collection(topic);
+        const {collection, kafkaProducer, topic} = await init(__dirname + "/config/update.conf");
 
         await start({ collection, kafkaProducer, topic, id: "_id" });
 
@@ -135,9 +145,7 @@ describe('MongoDB change listener', () => {
 
 
     it('should publish a message when a document is deleted', async () => {
-        let topic = "delete-mongo-test";
-
-        collection = client.db("test").collection(topic);
+        const {collection, kafkaProducer, topic} = await init(__dirname + "/config/delete.conf");
 
         await start({ collection, kafkaProducer, topic, id: "_id" });
 
