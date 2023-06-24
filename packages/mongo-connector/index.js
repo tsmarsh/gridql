@@ -15,7 +15,9 @@ const promiseRetryOptions = {
 async function buildDb(mongo) {
   let client = new MongoClient(mongo["uri"], options);
   promiseRetry((retry, number) => {
-    console.log(`MongoClient connecting to ${uri} - retry number: ${number}`);
+    console.log(
+      `MongoClient connecting to ${mongo["uri"]} - retry number: ${number}`
+    );
     return client.connect().catch(retry);
   }, promiseRetryOptions);
 
