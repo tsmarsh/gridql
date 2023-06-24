@@ -8,5 +8,9 @@
   "gitHead": "bb91890717ce2829d804de9047ac787aa524dc69",
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "mongodb": "^5.6.0",
+    "promise-retry": "^2.0.1"
   }
 }
