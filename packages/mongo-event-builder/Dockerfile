@@ -4,7 +4,7 @@ FROM node:20-alpine
 WORKDIR /app
 
 RUN mkdir -p config
-VOLUME config/environment
+VOLUME /app/config/environment
 
 COPY package.json ./
 
@@ -12,7 +12,7 @@ COPY package.json ./
 RUN yarn install
 
 # Copy the rest of the application code to the working directory
-COPY lib ./
+COPY lib ./lib/
 COPY index.js ./
 
 # Expose the port that the application listens on
