@@ -1,6 +1,6 @@
 {
   "name": "@gridql/mongo-event-builder",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "description": "Listens to mongo and emits events",
   "main": "index.js",
   "author": "Tom Marsh",
@@ -20,5 +20,5 @@
     "nyc": "^15.1.0",
     "testcontainers": "^9.8.0"
   },
-  "gitHead": "472f329b707faaf52a1ccfc7cc5f397823add9ca"
+  "gitHead": "bb91890717ce2829d804de9047ac787aa524dc69"
 }
