@@ -10,6 +10,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@gridql/mongo-connector": "^2.3.2",
     "@pushcorn/hocon-parser": "^1.2.6",
     "kafkajs": "^2.2.4",
     "mongodb": "^5.5.0"
