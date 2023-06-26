@@ -28,8 +28,6 @@ This is how you do it.
 * [X] Mongo Listener that publishes to kafka
 * [X] Bulk ReST API
 * [ ] Configurable ID on rest
-* [ ] Check config schema in init
-* [ ] Fix the configurator
 * [ ] Time aware GraphAPI
 * [ ] Kafka Listener that pushes to ReST
 
