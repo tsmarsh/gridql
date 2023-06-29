@@ -50,7 +50,11 @@ describe("MongoDB change listener", () => {
             "mongo": {
                 "uri": "${mongoContainer.getConnectionString()}",
                 "db": "test",
-                "collection": \${topic}
+                "collection": \${topic},
+                "options": {
+                  "directConnection": true
+                }
+                
             },
             "kafka": {
                 "brokers": ["${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(
