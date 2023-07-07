@@ -1,6 +1,6 @@
 const {MongoMemoryServer} = require("mongodb-memory-server");
 const {describe, it, before, after} = require('mocha')
-
+const chai = require('chai');
 const {init, start} = require('../index');
 const {MongoClient} = require("mongodb");
 const assert = require("assert");
@@ -40,6 +40,20 @@ after(async function () {
 });
 
 describe('simple restlette', function () {
+
+    it('it should fail if the config document is invalid',
+        async function () {
+            init("test/config/invalid.conf").then(() => fail()).catch((err) => {
+                assert(err !== undefined);
+            });
+    })
+
+    it('it should fail if the rest config document is invalid',
+        async function () {
+            init(__dirname + "/config/bad_rest.conf").then(() => fail()).catch((err) => {
+                assert(err !== undefined);
+            });
+        })
 
     it('it should create a document ', async function () {
 

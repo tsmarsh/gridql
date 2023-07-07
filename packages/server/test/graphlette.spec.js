@@ -68,6 +68,26 @@ describe('Complex nodes', function () {
     server = await start(config.url, config.port, config.graphlettes, config.restlettes);
   })
 
+  it('it should fail if the rest config document is invalid',
+      async function () {
+        init(__dirname + "/config/bad_graph.conf").then(() => fail()).catch((err) => {
+          console.assert(err !== undefined);
+        });
+      })
+
+  it('should error politely when query is invalid', async function() {
+    const query = `{
+         getByEggs(eggs: 3") {
+               name 
+               }
+            }
+        }`;
+
+    callSubgraph("http://localhost:40001/farms", query, "getById").then(() => fail()).catch((err) => {
+      assert(err !== undefined);
+    })
+  });
+
   it('should build a server with multiple nodes', async function() {
     const farm_result = await farms_db.insertOne({name: "Emerdale"});
 

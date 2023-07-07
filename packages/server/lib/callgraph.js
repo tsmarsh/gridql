@@ -1,6 +1,5 @@
 const callSubgraph = async (url, query, queryName) => {
     const body = JSON.stringify({"query": query});
-    console.log(`Sending: ${body} to ${url}`);
 
     const response = await fetch(url, {
         method: 'POST',
@@ -14,7 +13,8 @@ const callSubgraph = async (url, query, queryName) => {
     const json = await response.json();
 
     if (json.hasOwnProperty('errors')) {
-        console.log(json);
+        console.error(json);
+        throw new Error(json['errors'][0]['message']);
     }
 
     return json["data"][queryName];
