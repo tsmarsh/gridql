@@ -1,6 +1,7 @@
 const express = require("express");
-const { graphqlHTTP } = require("express-graphql");
-const { buildSchema } = require("graphql");
+const {buildSchema} = require('graphql');
+const { createHandler } = require('graphql-http/lib/use/express');
+
 const fs = require("fs");
 const { context } = require("./lib/root");
 const { MongoClient } = require("mongodb");
@@ -89,16 +90,15 @@ const start = async (url, port, graphlettes, restlettes) => {
 
   for (let { path, graph } of graphlettes) {
     console.log("Graphing up: " + path);
-    let route = await graphqlHTTP({
+    app.all(path, createHandler({
       schema: graph.schema,
       rootValue: graph.root,
       graphiql: true,
-      customFormatErrorFn: (error) => {
+      formatError: (error) => {
         console.log(error);
         return error;
       },
-    });
-    app.use(path, route);
+    }))
   }
 
   for (let { path, db, validator, schema } of restlettes) {
