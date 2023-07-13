@@ -22,7 +22,7 @@ describe("Kafka change listener", () => {
         return body;
       });
 
-    let hen = { name: "brian", eggs: 3, operation: "CREATE" };
+    let hen = { payload: { name: "brian", eggs: 3 }, operation: "CREATE" };
 
     let message = {
       topic: "create-kafka-test",
@@ -57,7 +57,10 @@ describe("Kafka change listener", () => {
       .delete("/test/12352")
       .reply(200, "OK");
 
-    let hen = { _id: 12352, name: "brian", eggs: 3, operation: "DELETE" };
+    let hen = {
+      id: 12352,
+      operation: "DELETE",
+    };
 
     let message = {
       topic: "delete-kafka-test",
@@ -88,7 +91,11 @@ describe("Kafka change listener", () => {
     let config = await init(__dirname + "/config/update.conf");
     await start(config);
 
-    let hen = { _id: 12352, name: "brian", eggs: 3, operation: "UPDATE" };
+    let hen = {
+      id: 12352,
+      payload: { _id: 12352, name: "brian", eggs: 3 },
+      operation: "UPDATE",
+    };
 
     let apiMock = nock("http://test.foo").put("/test/12352").reply(200, "OK");
 

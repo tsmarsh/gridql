@@ -43,13 +43,13 @@ const start = async ({ apiClient, kafkaConsumer, topic }) => {
 
       switch (json_message.operation) {
         case "CREATE":
-          apiClient.create(null, json_message.value);
+          apiClient.create(null, json_message.payload);
           break;
         case "DELETE":
-          apiClient.delete(json_message._id);
+          apiClient.delete(json_message.id);
           break;
         case "UPDATE":
-          apiClient.update(json_message._id, json_message.value);
+          apiClient.update(json_message.id, json_message.payload);
           break;
       }
     },
