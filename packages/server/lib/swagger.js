@@ -20,7 +20,7 @@ const swagger = (context, schema, url) => {
                 "application/json": {
                   schema: {
                     type: "array",
-                    values: {
+                    items: {
                       $ref: "#/components/schemas/State",
                     },
                   },

@@ -53,6 +53,7 @@ const create = (db, valid, context) => async (req, res) => {
     }
     res.redirect(303, `${context}/${result.insertedId}`);
   } else {
+    //should respond with diagnostics
     res.sendStatus(400);
   }
 };
