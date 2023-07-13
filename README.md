@@ -29,7 +29,7 @@ This is how you do it.
 * [X] Bulk ReST API
 * [ ] Configurable ID on rest
 * [ ] Time aware GraphAPI
-* [ ] Kafka Listener that pushes to ReST
+* [x] Kafka Listener that pushes to ReST
 
 ## Coverage
 

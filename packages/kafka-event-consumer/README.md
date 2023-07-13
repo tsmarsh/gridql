@@ -24,7 +24,7 @@ In principle _all_ we have to do is:
 * [x] Work with any field as "ID"
 * [x] Split message out of envelope
 * [ ] Bulk changes
-* [ ] Default to picking up where the group left off
+* [x] Default to picking up where the group left off
 * [ ] Sad path
   * [ ] Dead letter queue
   * [x] validation of message

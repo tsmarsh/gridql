@@ -8,8 +8,7 @@ if (fs.existsSync(configPath)) {
   init(configPath)
     .then((config) => {
       console.log("Configuration found: ", config);
-      const { collection, kafkaProducer, topic } = config;
-      start({ collection, kafkaProducer, topic, id: "_id" }).catch((err) => {
+      start(config).catch((err) => {
         console.log("Failed to start: ", err);
       });
     })
