@@ -58,7 +58,7 @@ describe("Kafka change listener", () => {
       .reply(200, "OK");
 
     let hen = {
-      id: 12352,
+      id: "12352",
       operation: "DELETE",
     };
 
@@ -92,8 +92,8 @@ describe("Kafka change listener", () => {
     await start(config);
 
     let hen = {
-      id: 12352,
-      payload: { _id: 12352, name: "brian", eggs: 3 },
+      id: "12352",
+      payload: { _id: "12352", name: "brian", eggs: 3 },
       operation: "UPDATE",
     };
 
@@ -153,7 +153,7 @@ before(async function () {
         topic: \${topic},
         groupId: \${topic}
       },
-      schema: "${__dirname}/config/hen.schema.json}",
+      schema: "${__dirname}/config/hen.schema.json",
       swagger: "${__dirname}/config/test.swagger.json",
     }`;
 

@@ -12,6 +12,7 @@
   "dependencies": {
     "@gridql/mongo-connector": "^2.3.6",
     "@pushcorn/hocon-parser": "^1.2.6",
+    "@gridql/payload-validator": "^2.3.2",
     "kafkajs": "^2.2.4",
     "mongodb": "^5.5.0"
   },

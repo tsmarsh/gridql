@@ -2,6 +2,7 @@ const { Kafka, logLevel } = require("kafkajs");
 const parser = require("@pushcorn/hocon-parser");
 const OpenAPIClientAxios = require("openapi-client-axios").default;
 const fs = require("fs");
+const { valid } = require("@gridql/payload-validator");
 
 const init = async (configFile) => {
   const config = await parser
@@ -10,7 +11,7 @@ const init = async (configFile) => {
 
   console.log("Config: ", config);
 
-  const { kafka, swagger } = config;
+  const { kafka, swagger, schema } = config;
 
   let k = new Kafka({
     logLevel: logLevel.INFO,
@@ -24,10 +25,12 @@ const init = async (configFile) => {
   let api = new OpenAPIClientAxios({ definition: swagger_doc });
   let apiClient = await api.init();
 
-  return { apiClient, kafkaConsumer, topic: kafka.topic };
+  let validator = valid(JSON.parse(fs.readFileSync(schema)));
+
+  return { apiClient, kafkaConsumer, validator, topic: kafka.topic };
 };
 
-const start = async ({ apiClient, kafkaConsumer, topic }) => {
+const start = async ({ apiClient, kafkaConsumer, validator, topic }) => {
   await kafkaConsumer.connect();
 
   await kafkaConsumer
@@ -43,13 +46,21 @@ const start = async ({ apiClient, kafkaConsumer, topic }) => {
 
       switch (json_message.operation) {
         case "CREATE":
-          apiClient.create(null, json_message.payload);
+          if (validator(json_message.payload)) {
+            apiClient.create(null, json_message.payload);
+          } else {
+            console.error("Payload error: ", json_message.payload);
+          }
           break;
         case "DELETE":
           apiClient.delete(json_message.id);
           break;
         case "UPDATE":
-          apiClient.update(json_message.id, json_message.payload);
+          if (validator(json_message.payload)) {
+            apiClient.update(json_message.id, json_message.payload);
+          } else {
+            console.error("Payload error: ", json_message.payload);
+          }
           break;
       }
     },
