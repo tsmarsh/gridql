@@ -48,6 +48,9 @@ const start = async ({ apiClient, kafkaConsumer, topic }) => {
         case "DELETE":
           apiClient.delete(json_message._id);
           break;
+        case "UPDATE":
+          apiClient.update(json_message._id, json_message.value);
+          break;
       }
     },
   });

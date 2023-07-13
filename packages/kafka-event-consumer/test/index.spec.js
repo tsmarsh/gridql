@@ -83,6 +83,39 @@ describe("Kafka change listener", () => {
         assert(false);
       });
   }).timeout(10000);
+
+  it("should call update rest api when there is a UPDATE event", async () => {
+    let config = await init(__dirname + "/config/update.conf");
+    await start(config);
+
+    let hen = { _id: 12352, name: "brian", eggs: 3, operation: "UPDATE" };
+
+    let apiMock = nock("http://test.foo").put("/test/12352").reply(200, "OK");
+
+    let message = {
+      topic: "update-kafka-test",
+      messages: [{ key: "12352", value: JSON.stringify(hen) }],
+    };
+
+    const kafkaProducer = kafka.producer();
+
+    await kafkaProducer
+      .connect()
+      .catch((reason) =>
+        console.log("Kafka Producer failed to connect: ", reason)
+      );
+
+    await kafkaProducer.send(message);
+
+    await waitForApiCall(apiMock)
+      .then(() => {
+        assert(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        assert(false);
+      });
+  }).timeout(10000);
 });
 
 before(async function () {
