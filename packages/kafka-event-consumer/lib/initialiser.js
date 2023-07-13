@@ -34,7 +34,7 @@ const start = async ({ apiClient, kafkaConsumer, validator, topic }) => {
   await kafkaConsumer.connect();
 
   await kafkaConsumer
-    .subscribe({ topic, fromBeginning: true })
+    .subscribe({ topic })
     .then(() => {
       console.log("Subscribed");
     })
