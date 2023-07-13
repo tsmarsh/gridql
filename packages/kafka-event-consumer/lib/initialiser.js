@@ -38,14 +38,17 @@ const start = async ({ apiClient, kafkaConsumer, topic }) => {
     .catch((reason) => console.log("can't subscribe: ", reason));
 
   await kafkaConsumer.run({
-    eachMessage: async ({ partition, message }) => {
-      console.log("Event received: ", {
-        partition,
-        offset: message.offset,
-        value: message.value.toString(),
-      });
+    eachMessage: async ({ message }) => {
+      let json_message = JSON.parse(message.value);
 
-      apiClient.create(null, message.value);
+      switch (json_message.operation) {
+        case "CREATE":
+          apiClient.create(null, json_message.value);
+          break;
+        case "DELETE":
+          apiClient.delete(json_message._id);
+          break;
+      }
     },
   });
 };

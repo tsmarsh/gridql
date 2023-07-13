@@ -11,7 +11,7 @@ const nock = require("nock");
 let kafka;
 let kafkaContainer;
 
-describe("Kafia change listener", () => {
+describe("Kafka change listener", () => {
   it("should call create rest api when there is a CREATE event", async () => {
     let config = await init(__dirname + "/config/create.conf");
     await start(config);
@@ -49,13 +49,40 @@ describe("Kafia change listener", () => {
       });
   }).timeout(10000);
 
-  it("should call the update rest api a message when there is an UPDATE event", async () => {}).timeout(
-    10000
-  );
+  it("should call remove rest api when there is a DELETE event", async () => {
+    let config = await init(__dirname + "/config/delete.conf");
+    await start(config);
 
-  it("should call the delete api when there is a DELETE event", async () => {}).timeout(
-    10000
-  );
+    let apiMock = nock("http://test.foo")
+      .delete("/test/12352")
+      .reply(200, "OK");
+
+    let hen = { _id: 12352, name: "brian", eggs: 3, operation: "DELETE" };
+
+    let message = {
+      topic: "delete-kafka-test",
+      messages: [{ key: "12352", value: JSON.stringify(hen) }],
+    };
+
+    const kafkaProducer = kafka.producer();
+
+    await kafkaProducer
+      .connect()
+      .catch((reason) =>
+        console.log("Kafka Producer failed to connect: ", reason)
+      );
+
+    await kafkaProducer.send(message);
+
+    await waitForApiCall(apiMock)
+      .then(() => {
+        assert(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        assert(false);
+      });
+  }).timeout(10000);
 });
 
 before(async function () {
@@ -84,7 +111,7 @@ before(async function () {
         host: "${kafkaContainer.getHost()}",
         clientId: "kafka-event-consumer-test",
         topic: \${topic},
-        groupId: "consumer-test"
+        groupId: \${topic}
       },
       schema: "${__dirname}/config/hen.schema.json}",
       swagger: "${__dirname}/config/test.swagger.json",
