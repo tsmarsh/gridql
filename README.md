@@ -25,7 +25,7 @@ This is how you do it.
 
 At its simplest a server should try its hardest to look like this:
 
-![](./docs/black-box.svg)
+<img src="./docs/Evolving.png" width="50%" />
 
 A nice [black box](https://en.wikipedia.org/wiki/Black_box) where the application is completely unaware of the complexities inside the service.
 
@@ -41,37 +41,27 @@ Even if the use cases are the same, the way people use the apps are unique and g
 
 We already acknowledge this in a lot of practices. We often talk about Roles and Responsibilities within an application.
 
-<svg class="line-chart"></svg>
-<script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
-<script>
-    const svg = document.querySelector('.line-chart')
-
-    const lineChart = new chartXkcd.Line(svg, {
-        title: 'How complexity increases with users', // optional
-        xLabel: 'Users', // optional
-        yLabel: 'Complexity', // optional
-        data: {
-            labels: ['0','1', '10', '100', '1000', '10000', '100000'],
-            datasets: [{
-                label: 'Ideal',
-                data: [0, 100, 100, 100, 100, 100, 100, 100],
-            }, {
-                label: 'Reality',
-                data: [0, 100, 110, 150, 200, 500, 2000],
-            }],
-        },
-        options: { // optional
-            yTickCount: 3,
-            legendPosition: chartXkcd.config.positionType.upLeft
-        }
-    });
-</script>
+![](docs/complexity.png)
 
 The above graph is trying to express the differences between where you think you're going and where you end up.
 
 Ideally, you know all the features up front, its nice and simple and when you complete your feature set everyone is happy forever.
 
 In reality, by the time you get to a 100 users you're already getting feature requests that you weren't expecting, by the time you hit 1000 you've doubled the expected amount of effort and by 100000 its out of control and you're concidering a re-write.
+
+Of course, this problem isn't unique to software. It happens across all products.
+
+> You can please some of the people all of the time, you can please all of the people some of the time, but you can’t please all of the people all of the time -- [John Lydgate](https://en.wikipedia.org/wiki/John_Lydgate)
+
+### So where does that leave us?
+
+1. Stop assuming we know how people are going to consume our data.
+
+2. Focus on the interactions with our system that affect the data, not the data itself.
+
+3. Stop assuming that each interaction can only result in a single, predictable and enduring outcome.
+
+4. State is a function of time and data, not data alone.
 
 
 ## To Do
