@@ -1,10 +1,9 @@
-const {MongoMemoryServer} = require("mongodb-memory-server");
-const {describe, it, before, after} = require('mocha')
-const chai = require('chai');
-const {init, start} = require('../index');
-const {MongoClient} = require("mongodb");
+const { MongoMemoryServer } = require("mongodb-memory-server");
+const { describe, it, before, after } = require("mocha");
+const chai = require("chai");
+const { init, start } = require("../index");
+const { MongoClient } = require("mongodb");
 const assert = require("assert");
-
 
 let mongod;
 let uri;
@@ -16,107 +15,109 @@ let id;
 
 let payload;
 
-
 before(async function () {
-    mongod = await MongoMemoryServer.create({instance: {port: 60220}});
-    client = new MongoClient(mongod.getUri());
-    await client.connect();
+  mongod = await MongoMemoryServer.create({ instance: { port: 60220 } });
+  client = new MongoClient(mongod.getUri());
+  await client.connect();
 
-    uri = mongod.getUri();
+  uri = mongod.getUri();
 
-    db = client.db("test").collection("hens");
+  db = client.db("test").collection("hens");
 
-    config = await init(__dirname + "/config/simple_rest.conf");
+  config = await init(__dirname + "/config/simple_rest.conf");
 
-    payload = {
-        "sub": "1234567890",
-    }
-    server = await start(config.url, config.port, config.graphlettes, config.restlettes);
+  payload = {
+    sub: "1234567890",
+  };
+  server = await start(
+    config.url,
+    config.port,
+    config.graphlettes,
+    config.restlettes
+  );
 });
 
 after(async function () {
-    mongod.stop();
-    server.close();
+  mongod.stop();
+  server.close();
 });
 
-describe('simple restlette', function () {
+describe("simple restlette", function () {
+  it("it should fail if the config document is invalid", async function () {
+    init("test/config/invalid.conf")
+      .then(() => fail())
+      .catch((err) => {
+        assert(err !== undefined);
+      });
+  });
 
-    it('it should fail if the config document is invalid',
-        async function () {
-            init("test/config/invalid.conf").then(() => fail()).catch((err) => {
-                assert(err !== undefined);
-            });
-    })
+  it("it should fail if the rest config document is invalid", async function () {
+    init(__dirname + "/config/bad_rest.conf")
+      .then(() => fail())
+      .catch((err) => {
+        assert(err !== undefined);
+      });
+  });
 
-    it('it should fail if the rest config document is invalid',
-        async function () {
-            init(__dirname + "/config/bad_rest.conf").then(() => fail()).catch((err) => {
-                assert(err !== undefined);
-            });
-        })
+  it("it should create a document ", async function () {
+    let hen_data = { name: "chuck", eggs: 6 };
+    const hen = JSON.stringify(hen_data);
 
-    it('it should create a document ', async function () {
-
-        let hen_data = {"name": "chuck", "eggs": 6};
-        const hen = JSON.stringify(hen_data)
-
-        const response = await fetch("http://localhost:40020/hens", {
-            method: "POST",
-            body: hen,
-            redirect: "follow",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-
-        assert.equal(response.status, 200);
-        const actual = await response.json();
-        id = actual._id;
-
-        assert.equal(actual.eggs, 6);
-        assert.equal(actual.name, "chuck");
-        assert(actual._id !== undefined);
+    const response = await fetch("http://localhost:40020/hens", {
+      method: "POST",
+      body: hen,
+      redirect: "follow",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
-    it("should list all documents", async function () {
-        const response = await fetch("http://localhost:40020/hens", {
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
+    assert.equal(response.status, 200);
+    const actual = await response.json();
+    id = response.url.slice(-36);
 
-        const actual = await response.json();
+    assert.equal(actual.eggs, 6);
+    assert.equal(actual.name, "chuck");
+  });
 
-        assert.equal(actual.length, 1);
-        assert.equal(actual[0].eggs, 6);
-        assert.equal(actual[0].name, "chuck");
+  it("should list all documents", async function () {
+    const response = await fetch("http://localhost:40020/hens", {
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
-    it("should update a document", async function () {
-        const response = await fetch("http://localhost:40020/hens/" + id, {
-            method: "PUT",
-            body: JSON.stringify({"name": "chuck", "eggs": 12}),
-            redirect: "follow",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
+    const actual = await response.json();
 
-        const actual = await response.json();
+    assert.equal(actual.length, 1);
+    assert.equal(actual[0], `/hens/${id}`);
+  });
 
-        assert.equal(actual.eggs, 12);
-        assert.equal(actual.name, "chuck");
+  it("should update a document", async function () {
+    const response = await fetch("http://localhost:40020/hens/" + id, {
+      method: "PUT",
+      body: JSON.stringify({ name: "chuck", eggs: 9 }),
+      redirect: "follow",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
-    it("should delete a document", async function () {
-        const response = await fetch("http://localhost:40020/hens/" + id, {
-            method: "DELETE",
-            redirect: "follow",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
+    const actual = await response.json();
 
-        assert.equal(response.status, 200);
+    assert.equal(actual.eggs, 9);
+    assert.equal(actual.name, "chuck");
+  });
+
+  it("should delete a document", async function () {
+    const response = await fetch("http://localhost:40020/hens/" + id, {
+      method: "DELETE",
+      redirect: "follow",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
+
+    assert.equal(response.status, 200);
+  });
 });

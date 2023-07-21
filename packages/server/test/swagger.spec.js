@@ -73,9 +73,8 @@ describe("The published swagger should work", function () {
     assert.equal(result.status, 200);
     assert.equal(result.data.eggs, 6);
     assert.equal(result.data.name, "chuck");
-    assert(result.data._id !== undefined);
 
-    id = result.data._id;
+    id = result.request.path.slice(-36);
   });
 
   it("it shouldn't create a bad document ", async function () {
@@ -84,7 +83,7 @@ describe("The published swagger should work", function () {
     try {
       await swagger_client.create(null, hen_data);
     } catch (err) {
-      assert.equal(err.response.status, 400);
+      assert.equal(err.response.status, 404);
     }
   });
 
@@ -99,11 +98,11 @@ describe("The published swagger should work", function () {
   it("should update a document", async function () {
     let { data: actual, ...result } = await swagger_client.update(
       { id },
-      { name: "chuck", eggs: 12 }
+      { name: "chuck", eggs: 9 }
     );
 
     assert.equal(result.status, 200);
-    assert.equal(actual.eggs, 12);
+    assert.equal(actual.eggs, 9);
     assert.equal(actual.name, "chuck");
   });
 

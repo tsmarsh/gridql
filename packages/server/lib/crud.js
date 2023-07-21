@@ -2,7 +2,28 @@ const { ObjectId } = require("mongodb");
 const jwt = require("jsonwebtoken");
 const express = require("express");
 const swaggerUi = require("swagger-ui-express");
+const { v4: uuid } = require("uuid");
 const { swagger } = require("./swagger");
+const { PayloadRepository } = require("../lib/repository");
+
+const calculateReaders = (doc, sub) => {
+  const readers = new Set();
+
+  if (sub !== null) {
+    readers.add(sub);
+  }
+
+  return [...readers];
+};
+
+function isAuthorized(subscriber, result) {
+  return (
+    subscriber === undefined || //internal or a test (hasn't gone through gateway)
+    subscriber === null ||
+    result.authorized_readers.count === 0 || //everyone can read
+    result.authorized_readers.includes(subscriber)
+  ); //current sub is in the list
+}
 
 const getSub = (authHeader) => {
   if (authHeader === null || authHeader === undefined) {
@@ -21,51 +42,32 @@ const getSub = (authHeader) => {
   }
 };
 
-function isAuthorized(auth_header, result) {
-  return (
-    auth_header === undefined || //internal or a test (hasn't gone through gateway)
-    result._authorized_readers.count === 0 || //everyone can read
-    result._authorized_readers.includes(getSub(auth_header))
-  ); //current sub is in the list
-}
+const create = (repo, context) => async (req, res) => {
+  const payload = req.body;
 
-const calculateReaders = (doc, sub) => {
-  const readers = new Set();
+  const result = await repo.create(payload, {
+    subscriber: getSub(req.headers.authorization),
+  });
 
-  if (sub !== null) {
-    readers.add(sub);
-  }
-
-  return [...readers];
-};
-
-const create = (db, valid, context) => async (req, res) => {
-  const { _id, ...doc } = req.body;
-  if (valid(doc)) {
-    doc._authorized_readers = calculateReaders(
-      doc,
-      getSub(req.headers.authorization)
-    );
-
-    const result = await db.insertOne(doc, { writeConcern: { w: "majority" } });
+  if (result !== null) {
     if (req.headers.authorization !== undefined) {
       res.header("Authorization", req.headers.authorization);
     }
-    res.redirect(303, `${context}/${result.insertedId}`);
+    res.redirect(303, `${context}/${result}`);
   } else {
     //should respond with diagnostics
     res.sendStatus(400);
   }
 };
 
-const read = (db) => async (req, res) => {
-  let objectId = new ObjectId(req.params.id);
+const read = (repo) => async (req, res) => {
+  let id = req.params.id;
 
-  const result = await db.findOne({ _id: objectId });
+  const result = await repo.read(id, {});
 
-  if (result !== null) {
-    if (isAuthorized(req.headers.authorization, result)) {
-      res.json(result);
+  if (result !== null && result !== undefined) {
+    if (isAuthorized(getSub(req.headers.authorization), result)) {
+      res.json(result.payload);
     } else {
       res.status(403);
       res.json({});
@@ -76,15 +78,24 @@ const read = (db) => async (req, res) => {
   }
 };
 
-const update = (db) => async (req, res) => {
-  const { _id, ...doc } = req.body;
-  const result = await db.findOne({ _id: new ObjectId(req.params.id) });
-  if (result !== null) {
-    if (isAuthorized(req.headers.authorization, result)) {
-      await db
-        .replaceOne({ _id: new ObjectId(req.params.id) }, doc)
-        .catch((err) => console.log(err));
-      res.json(doc);
+const update = (repo, context) => async (req, res) => {
+  const payload = req.body;
+
+  let subscriber = getSub(req.headers.authorization);
+  let id = req.params.id;
+
+  let current = await repo.read(id, {});
+
+  if (current !== null) {
+    if (isAuthorized(subscriber, current)) {
+      await repo.create(payload, {
+        subscriber,
+        id,
+      });
+      if (req.headers.authorization !== undefined) {
+        res.header("Authorization", req.headers.authorization);
+      }
+      res.redirect(303, `${context}/${id}`);
     } else {
       res.status(403);
       res.json({});
@@ -95,14 +106,14 @@ const update = (db) => async (req, res) => {
   }
 };
 
-const remove = (db) => async (req, res) => {
-  const result = await db.findOne({ _id: new ObjectId(req.params.id) });
+const remove = (repo) => async (req, res) => {
+  let id = req.params.id;
+  const result = await repo.read(id, {});
+
   if (result !== null) {
-    if (isAuthorized(req.headers.authorization, result)) {
-      await db
-        .deleteOne({ _id: new ObjectId(req.params.id) })
-        .catch((err) => console.log(err));
-      res.json({ deleted: req.params.id });
+    if (isAuthorized(getSub(req.headers.authorization), result)) {
+      await repo.remove(id);
+      res.json({ deleted: id });
     } else {
       res.status(403);
       res.json({});
@@ -113,16 +124,12 @@ const remove = (db) => async (req, res) => {
   }
 };
 
-const list = (db) => async (req, res) => {
-  let results;
+const list = (repo, context) => async (req, res) => {
+  let subscriber = getSub(req.headers.authorization);
 
-  if (req.headers.authorization === undefined) {
-    results = await db.find().toArray();
-  } else {
-    let sub = getSub(req.headers.authorization);
-    results = await db.find({ _authorized_readers: sub }).toArray();
-  }
-  res.json(results);
+  let results = await repo.list(subscriber);
+
+  res.json(results.map((r) => `${context}/${r}`));
 };
 
 const bulk_create = (url) => async (req, res) => {
@@ -212,6 +219,8 @@ const options = {
 const init = (url, context, app, db, validate, schema) => {
   console.log("API Docks are available on: ", `${context}/api-docs`);
 
+  let repo = new PayloadRepository(db, validate);
+
   let swaggerDoc = swagger(context, schema, url);
 
   app.get(`${context}/api-docs/swagger.json`, (req, res) =>
@@ -230,15 +239,15 @@ const init = (url, context, app, db, validate, schema) => {
   app.get(`${context}/bulk`, bulk_read(url));
   app.delete(`${context}/bulk`, bulk_delete(url));
 
-  app.post(`${context}`, create(db, validate, context));
+  app.post(`${context}`, create(repo, context));
 
-  app.get(`${context}`, list(db));
+  app.get(`${context}`, list(repo, context));
 
-  app.get(`${context}/:id`, read(db));
+  app.get(`${context}/:id`, read(repo));
 
-  app.put(`${context}/:id`, update(db));
+  app.put(`${context}/:id`, update(repo, context));
 
-  app.delete(`${context}/:id`, remove(db));
+  app.delete(`${context}/:id`, remove(repo));
 
   return app;
 };

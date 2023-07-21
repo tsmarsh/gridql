@@ -1,10 +1,6 @@
 {
   "type": "object",
   "properties": {
-    "_id": {
-      "type": "string",
-      "format": "id"
-    },
     "name": {
       "type": "string",
       "faker": "animal.horse"
