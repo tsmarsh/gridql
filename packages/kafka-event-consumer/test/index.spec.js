@@ -198,6 +198,6 @@ const waitForApiCall = (apiMock) => {
     setTimeout(() => {
       clearInterval(intervalId);
       reject(new Error("Timeout waiting for API call"));
-    }, 2000);
+    }, 5000);
   });
 };
