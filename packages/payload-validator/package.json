@@ -1,6 +1,6 @@
 {
   "name": "@gridql/payload-validator",
-  "version": "2.3.2",
+  "version": "3.0.0",
   "main": "index.js",
   "license": "MIT",
   "private": false,
@@ -15,7 +15,7 @@
     "nyc": "^15.1.0"
   },
   "dependencies": {
-    "@gridql/payload-generator": "^2.3.2",
+    "@gridql/payload-generator": "^3.0.0",
     "jsonschema": "^1.4.1"
   },
   "gitHead": "bb91890717ce2829d804de9047ac787aa524dc69"
