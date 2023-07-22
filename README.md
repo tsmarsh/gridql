@@ -70,7 +70,6 @@ Of course, this problem isn't unique to software. It happens across all products
 * [X] ReST Server
 * [X] Mongo Listener that publishes to kafka
 * [X] Bulk ReST API
-* [ ] Configurable ID on rest
 * [ ] Time aware GraphAPI
 * [x] Kafka Listener that pushes to ReST
 
