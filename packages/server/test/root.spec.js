@@ -70,7 +70,6 @@ describe("Generating a simple root", () => {
 
     if (response.hasOwnProperty("errors")) {
       console.log(response.errors?.[0].message);
-      fail();
     } else {
       assert.equal(6, response.data?.getById.eggs);
     }

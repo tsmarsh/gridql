@@ -61,7 +61,7 @@ const update = (repo, context) => async (req, res) => {
 
   let current = await repo.read(id, {});
 
-  if (current !== null) {
+  if (current !== null && current !== undefined) {
     if (isAuthorized(subscriber, current)) {
       await repo.create(payload, {
         subscriber,
@@ -85,7 +85,7 @@ const remove = (repo) => async (req, res) => {
   let id = req.params.id;
   const result = await repo.read(id, {});
 
-  if (result !== null) {
+  if (result !== null && result !== undefined) {
     if (isAuthorized(getSub(req.headers.authorization), result)) {
       await repo.remove(id);
       res.json({ deleted: id });

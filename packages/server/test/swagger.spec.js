@@ -4,8 +4,9 @@ const { init, start } = require("../index");
 const { swagger } = require("../lib/swagger");
 const assert = require("assert");
 const { after, it } = require("mocha");
-const { response } = require("express");
 const OpenAPIClientAxios = require("openapi-client-axios").default;
+const jwt = require("jsonwebtoken");
+const { v4 } = require("uuid");
 
 let mongod;
 let uri;
@@ -47,7 +48,16 @@ before(async function () {
     config.url
   );
 
-  api = new OpenAPIClientAxios({ definition: swaggerdoc });
+  let token = jwt.sign(payload, "totallyASecret", { expiresIn: "1h" });
+
+  api = new OpenAPIClientAxios({
+    definition: swaggerdoc,
+    axiosConfigDefaults: {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    },
+  });
   swagger_client = await api.init();
 });
 
@@ -108,10 +118,7 @@ describe("The published swagger should work", function () {
 
   it("shouldn't update a missing document", async function () {
     try {
-      await swagger_client.update(
-        { id: new ObjectId() },
-        { name: "chuck", eggs: 12 }
-      );
+      await swagger_client.update({ id: v4() }, { name: "chuck", eggs: 12 });
     } catch (err) {
       assert.equal(err.response.status, 404);
     }
@@ -125,7 +132,7 @@ describe("The published swagger should work", function () {
 
   it("shouldn't delete a missing document", async function () {
     try {
-      await swagger_client.delete({ id: new ObjectId() });
+      await swagger_client.delete({ id: v4() });
     } catch (err) {
       assert.equal(err.response.status, 404);
     }
