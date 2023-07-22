@@ -42,38 +42,15 @@ const assignProperties = (target, source) => {
 const assignResolver = (id = "id", queryName, url) => {
   return async function (parent, args, context) {
     let foreignKey = this[id];
-    const query = processContext(foreignKey, context, queryName);
-    let ast = parse(query);
-    const typeInfo = new TypeInfo(context.schema);
-    let _timestamp = this._timestamp;
-    ast = visit(
-      ast,
-      visitWithTypeInfo(typeInfo, {
-        Field(node) {
-          if (node.name.value === queryName) {
-            if (!node.arguments.some((arg) => arg.name.value === "at")) {
-              return {
-                ...node,
-                arguments: [
-                  ...node.arguments,
-                  {
-                    kind: "Argument",
-                    name: { kind: "Name", value: "at" },
-                    value: { kind: "IntValue", value: String(_timestamp) },
-                  },
-                ],
-              };
-            }
-          }
-        },
-      })
+    const query = processContext(
+      foreignKey,
+      context,
+      queryName,
+      this._timestamp
     );
-
-    const modifiedQuery = print(ast);
-
     let header =
       typeof this._authHeader === "undefined" ? undefined : this._authHeader;
-    return callSubgraph(url, modifiedQuery, queryName, header);
+    return callSubgraph(url, query, queryName, header);
   };
 };
 
