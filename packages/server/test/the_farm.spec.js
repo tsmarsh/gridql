@@ -36,6 +36,8 @@ describe("Complex nodes", function () {
   let token;
   let sub = uuid();
 
+  let farm_id, coop1_id, coop2_id;
+
   before(async function () {
     config = await init(__dirname + "/config/complex.conf");
 
@@ -71,10 +73,6 @@ describe("Complex nodes", function () {
     hen_api = apis[0];
     coop_api = apis[1];
     farm_api = apis[2];
-  });
-
-  it("should build a server with multiple nodes", async function () {
-    let farm_id, coop1_id, coop2_id;
 
     try {
       let farm_1 = await farm_api.create(null, { name: "Emerdale" });
@@ -125,7 +123,9 @@ describe("Complex nodes", function () {
     ];
 
     await Promise.all(hens.map((hen) => hen_api.create(null, hen)));
+  });
 
+  it("should build a server with multiple nodes", async function () {
     const query = `{
          getById(id: "${farm_id}") {
                name 
