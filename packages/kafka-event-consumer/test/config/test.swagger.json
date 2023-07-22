@@ -14,6 +14,11 @@
             "get": {
                 "operationId": "list",
                 "summary": "Lists all documents",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "A list of documents",
@@ -33,6 +38,11 @@
             "post": {
                 "operationId": "create",
                 "summary": "Creates a document",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -57,6 +67,11 @@
             "get": {
                 "summary": "Retrieves a document",
                 "operationId": "read",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "parameters": [
                     {
                         "in": "path",
@@ -87,6 +102,11 @@
             "put": {
                 "summary": "Creates or updates a document",
                 "operationId": "update",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "parameters": [
                     {
                         "in": "path",
@@ -128,6 +148,11 @@
             "delete": {
                 "summary": "Deletes a document",
                 "operationId": "delete",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "parameters": [
                     {
                         "in": "path",
@@ -153,6 +178,11 @@
             "get": {
                 "summary": "Retrieves a list of all documents",
                 "operationId": "bulk_read",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "The documents were successfully retrieved.",
@@ -172,6 +202,11 @@
             "post": {
                 "summary": "Creates multiple documents",
                 "operationId": "bulk_create",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -215,6 +250,11 @@
             "delete": {
                 "summary": "Deletes multiple documents",
                 "operationId": "bulk_delete",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "The documents were successfully deleted.",
@@ -245,6 +285,13 @@
         }
     },
     "components": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
         "schemas": {
             "State": {
                 "type": "object",

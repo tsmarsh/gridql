@@ -60,7 +60,7 @@ const singleton = (db, dtoFactory, id = "id", queryTemplate) => {
       console.log(`Nothing found for: ${id}`);
       return result;
     } else {
-      if (context === undefined || isAuthorized(context.subscriber)) {
+      if (context === undefined || isAuthorized(context.subscriber, result)) {
         result.payload.id = id;
         return dtoFactory.fillOne(result.payload);
       } else {

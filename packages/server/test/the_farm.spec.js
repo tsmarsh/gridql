@@ -7,6 +7,8 @@ const { MongoClient } = require("mongodb");
 const { swagger } = require("../lib/swagger");
 const { default: OpenAPIClientAxios } = require("openapi-client-axios");
 const assert = require("assert");
+const jwt = require("jsonwebtoken");
+const { v4: uuid } = require("uuid");
 
 let mongod, client, uri;
 
@@ -31,6 +33,8 @@ describe("Complex nodes", function () {
   let farm_api;
 
   let port;
+  let token;
+  let sub = uuid();
 
   before(async function () {
     config = await init(__dirname + "/config/complex.conf");
@@ -48,9 +52,18 @@ describe("Complex nodes", function () {
       return swagger(restlette.path, restlette.schema, config.url);
     });
 
+    token = jwt.sign({ sub }, "totallyASecret", { expiresIn: "1h" });
+
     let apis = await Promise.all(
       swagger_docs.map(async (doc) => {
-        let api = new OpenAPIClientAxios({ definition: doc });
+        let api = new OpenAPIClientAxios({
+          definition: doc,
+          axiosConfigDefaults: {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          },
+        });
         return await api.init();
       })
     );
@@ -129,7 +142,8 @@ describe("Complex nodes", function () {
     const json = await callSubgraph(
       `http://localhost:${port}/farms/graph`,
       query,
-      "getById"
+      "getById",
+      "Bearer " + token
     );
 
     expect(json.name).to.equal("Emerdale");
