@@ -18,6 +18,6 @@ type Farm {
 }
 
 type Query {
-    getById(id: String!, at: Int): Farm
-    getByName(name: String!, at: Int): Farm
+    getById(id: String!, at: Float): Farm
+    getByName(name: String!, at: Float): Farm
 }

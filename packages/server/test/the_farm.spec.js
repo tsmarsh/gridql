@@ -37,6 +37,7 @@ describe("Complex nodes", function () {
   let sub = uuid();
 
   let farm_id, coop1_id, coop2_id;
+  let first_stamp, second_stamp;
 
   before(async function () {
     config = await init(__dirname + "/config/complex.conf");
@@ -95,6 +96,12 @@ describe("Complex nodes", function () {
         name: "pink",
         farm_id: `${farm_id}`,
       });
+
+      first_stamp = Date.now();
+
+      await coop_api.update({ id: coop1_id }, { name: "purple" });
+
+      second_stamp = Date.now();
     } catch (err) {
       console.log("The fuck?: ", err);
     }
@@ -149,5 +156,41 @@ describe("Complex nodes", function () {
     expect(json.name).to.equal("Emerdale");
 
     expect(json.coops.length).to.equal(3);
+  });
+
+  it("should get latest by default", async function () {
+    const query = `{
+         getById(id: "${coop1_id}") {
+              name
+         }}`;
+
+    const json = await callSubgraph(
+      `http://localhost:${port}/coops/graph`,
+      query,
+      "getById",
+      "Bearer " + token
+    );
+
+    assert.equal(json.name, "purple");
+  });
+
+  it("should obey the timestamps", async function () {
+    const query = `{
+         getById(id: "${farm_id}", at: ${first_stamp}) {
+               coops {
+                name
+               }
+            }
+        }`;
+
+    const json = await callSubgraph(
+      `http://localhost:${port}/farms/graph`,
+      query,
+      "getById",
+      "Bearer " + token
+    );
+
+    let names = json.coops.map((c) => c.name);
+    expect(names).to.not.contain("purple");
   });
 });

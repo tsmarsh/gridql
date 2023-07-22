@@ -31,15 +31,38 @@ const root = (db, dtoFactory, { singletons, scalars }) => {
 
 const processQueryTemplate = (id, queryTemplate) => {
   const queryWithId = queryTemplate.replace("${id}", id);
-  console.log("Q: ", queryWithId);
   return JSON.parse(queryWithId);
 };
 
 const scalar = (db, dtoFactory, i = "id", queryTemplate) => {
   return async (args, context, info) => {
     let id = args[i];
+    let time_filter = {
+      $lt: args.hasOwnProperty("at") ? args["at"] : Date.now(),
+    };
+
     const query = processQueryTemplate(id, queryTemplate);
-    let results = await db.find(query).toArray();
+    query.createdAt = time_filter;
+
+    let results = await db
+      .aggregate([
+        {
+          $match: query,
+        },
+        {
+          $sort: { createdAt: -1 },
+        },
+        {
+          $group: {
+            _id: "$id",
+            doc: { $first: "$$ROOT" },
+          },
+        },
+        {
+          $replaceRoot: { newRoot: "$doc" },
+        },
+      ])
+      .toArray();
     if (context !== undefined) {
       results = results.filter((r) => isAuthorized(context.subscriber, r));
     }
@@ -53,15 +76,24 @@ const scalar = (db, dtoFactory, i = "id", queryTemplate) => {
 };
 
 const singleton = (db, dtoFactory, id = "id", queryTemplate) => {
-  return async ({ id: id }, context, info) => {
-    const query = processQueryTemplate(id, queryTemplate);
-    const result = await db.findOne(query).catch((e) => console.log(e));
+  return async (args, context, info) => {
+    let i = args[id];
+    const query = processQueryTemplate(i, queryTemplate);
+    let time_filter = {
+      $lt: args.hasOwnProperty("at") ? args["at"] : Date.now(),
+    };
+    query.createdAt = time_filter;
+    console.log("Q: ", query);
+
+    const results = await db.find(query).sort({ createdAt: -1 }).toArray();
+    let result = results[0];
+
     if (result === null) {
-      console.log(`Nothing found for: ${id}`);
+      console.log(`Nothing found for: ${i}`);
       return result;
     } else {
       if (context === undefined || isAuthorized(context.subscriber, result)) {
-        result.payload.id = id;
+        result.payload.id = i;
         return dtoFactory.fillOne(result.payload);
       } else {
         return null;

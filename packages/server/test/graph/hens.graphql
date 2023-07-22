@@ -17,6 +17,6 @@ type Farm {
 }
 
 type Query {
-    getById(id: String!, at: Int): Hen
-    getByCoop(coop: String, at: Int): [Hen]
+    getById(id: String!, at: Float): Hen
+    getByCoop(coop: String, at: Float): [Hen]
 }

@@ -13,6 +13,7 @@ let db;
 let test_db = "test_db";
 let mongo_collection = "simple";
 let mongod;
+let createdAt = Date.now();
 
 before(async function () {
   mongod = await MongoMemoryServer.create();
@@ -56,6 +57,7 @@ describe("Generating a simple root", () => {
     const result = await db.insertOne({
       id: "test_id",
       payload: { foo: "bar", eggs: 6 },
+      createdAt,
     });
 
     const query = `{
@@ -111,15 +113,18 @@ describe("Generating a simple scalar root", () => {
       db.insertOne({
         id: "chick_1",
         payload: { name: "henry", eggs: 3, breed: "chicken" },
+        createdAt,
       }),
 
       db.insertOne({
         id: "chick_2",
         payload: { name: "harry", eggs: 4, breed: "chicken" },
+        createdAt,
       }),
       db.insertOne({
         id: "duck_1",
         payload: { name: "quack", eggs: 2, breed: "duck" },
+        createdAt,
       }),
     ]);
 
@@ -197,6 +202,7 @@ describe("Generating a simple scalar root with a dependency", () => {
         eggs: 1,
         coop_id: "101010",
       },
+      createdAt,
     });
 
     const query = `{

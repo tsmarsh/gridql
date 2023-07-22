@@ -65,7 +65,11 @@ describe("Single node", function () {
   });
 
   it("should build a simple server", async function () {
-    await db.insertOne({ id: "testid", payload: { foo: "bar", eggs: 6 } });
+    await db.insertOne({
+      id: "testid",
+      payload: { foo: "bar", eggs: 6 },
+      createdAt: Date.now(),
+    });
 
     const query = `{
          getById(id: "testid") {
