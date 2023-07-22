@@ -1,22 +1,22 @@
 type Coop {
-    _id: [String]
+    id: [String]
     name: String
     hens: [Hen]
     farm: [Farm]
 }
 
 type Hen {
-    _id: [String]
+    id: [String]
     name: String
     eggs: Int
 }
 
 type Farm {
-    _id: [String]
+    id: [String]
     name: String
 }
 
 type Query {
-    getById(id: String): Coop
-    getByFarm(id: String): [Coop]
+    getById(id: String!, at: Int): Coop
+    getByFarm(id: String!, at: Int): [Coop]
 }
