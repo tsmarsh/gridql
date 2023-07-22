@@ -1,5 +1,8 @@
 const { processContext } = require("./subgraph");
 const { callSubgraph } = require("./callgraph");
+const { visitWithTypeInfo, TypeInfo } = require("graphql/utilities");
+const { visit } = require("graphql/language");
+const { parse, print } = require("graphql");
 
 class DTOFactory {
   resolvers = {};
@@ -12,8 +15,8 @@ class DTOFactory {
     }
   }
 
-  fillOne(data, authHeader) {
-    let copy = { _authHeader: authHeader };
+  fillOne(data, authHeader, timestamp) {
+    let copy = { _authHeader: authHeader, _timestamp: timestamp };
 
     for (const f in this.resolvers) {
       if (typeof this.resolvers[f] === "function") {
@@ -25,8 +28,8 @@ class DTOFactory {
     return copy;
   }
 
-  fillMany(data, authHeader) {
-    return data.map((d) => this.fillOne(d, authHeader));
+  fillMany(data, authHeader, timestamp) {
+    return data.map((d) => this.fillOne(d, authHeader, timestamp));
   }
 }
 
@@ -40,9 +43,37 @@ const assignResolver = (id = "id", queryName, url) => {
   return async function (parent, args, context) {
     let foreignKey = this[id];
     const query = processContext(foreignKey, context, queryName);
+    let ast = parse(query);
+    const typeInfo = new TypeInfo(context.schema);
+    let _timestamp = this._timestamp;
+    ast = visit(
+      ast,
+      visitWithTypeInfo(typeInfo, {
+        Field(node) {
+          if (node.name.value === queryName) {
+            if (!node.arguments.some((arg) => arg.name.value === "at")) {
+              return {
+                ...node,
+                arguments: [
+                  ...node.arguments,
+                  {
+                    kind: "Argument",
+                    name: { kind: "Name", value: "at" },
+                    value: { kind: "IntValue", value: String(_timestamp) },
+                  },
+                ],
+              };
+            }
+          }
+        },
+      })
+    );
+
+    const modifiedQuery = print(ast);
+
     let header =
       typeof this._authHeader === "undefined" ? undefined : this._authHeader;
-    return callSubgraph(url, query, queryName, header);
+    return callSubgraph(url, modifiedQuery, queryName, header);
   };
 };
 

@@ -35,10 +35,11 @@ const processQueryTemplate = (id, queryTemplate) => {
 };
 
 const scalar = (db, dtoFactory, i = "id", queryTemplate) => {
-  return async (args, context, info) => {
+  return async function (args, context, info) {
     let id = args[i];
+    let timestamp = args.hasOwnProperty("at") ? args["at"] : Date.now();
     let time_filter = {
-      $lt: args.hasOwnProperty("at") ? args["at"] : Date.now(),
+      $lt: timestamp,
     };
 
     const query = processQueryTemplate(id, queryTemplate);
@@ -63,26 +64,34 @@ const scalar = (db, dtoFactory, i = "id", queryTemplate) => {
         },
       ])
       .toArray();
+
     if (context !== undefined) {
       results = results.filter((r) => isAuthorized(context.subscriber, r));
     }
     return dtoFactory.fillMany(
-      results.map((r) => {
-        r.payload.id = r.id;
-        return r.payload;
-      })
+      results.map(
+        (r) => {
+          r.payload.id = r.id;
+          return r.payload;
+        },
+        context === undefined ? null : context.auth_header,
+        timestamp
+      )
     );
   };
 };
 
 const singleton = (db, dtoFactory, id = "id", queryTemplate) => {
-  return async (args, context, info) => {
+  return async function (args, context, info) {
     let i = args[id];
     const query = processQueryTemplate(i, queryTemplate);
-    let time_filter = {
-      $lt: args.hasOwnProperty("at") ? args["at"] : Date.now(),
+
+    let timestamp = args.hasOwnProperty("at") ? args["at"] : Date.now();
+
+    query.createdAt = {
+      $lt: timestamp,
     };
-    query.createdAt = time_filter;
+
     console.log("Q: ", query);
 
     const results = await db.find(query).sort({ createdAt: -1 }).toArray();
@@ -94,7 +103,11 @@ const singleton = (db, dtoFactory, id = "id", queryTemplate) => {
     } else {
       if (context === undefined || isAuthorized(context.subscriber, result)) {
         result.payload.id = i;
-        return dtoFactory.fillOne(result.payload);
+        return dtoFactory.fillOne(
+          result.payload,
+          context === undefined ? null : context.auth_header,
+          timestamp
+        );
       } else {
         return null;
       }

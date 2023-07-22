@@ -139,7 +139,7 @@ describe("Generating a simple scalar root", () => {
     const response = await graphql({ schema, source: query, rootValue: root });
 
     if (response.hasOwnProperty("errors")) {
-      console.log(response.errors?.[0].message);
+      console.log(JSON.stringify(response.errors));
       assert.fail();
     } else {
       expect(
@@ -216,7 +216,7 @@ describe("Generating a simple scalar root with a dependency", () => {
     const response = await graphql({ schema, source: query, rootValue: root });
 
     if (response.hasOwnProperty("errors")) {
-      console.log(response.errors?.[0].message);
+      console.log(JSON.stringify(response.errors));
       assert.fail();
     } else {
       assert.equal("mega", response.data?.getById.coop.name);

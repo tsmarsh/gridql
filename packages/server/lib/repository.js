@@ -38,6 +38,7 @@ class PayloadRepository {
       console.log("Can't read: ", err);
     }
 
+    //console.log("Reading: " + JSON.stringify(results));
     return results[0];
   };
 

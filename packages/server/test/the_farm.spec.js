@@ -98,8 +98,12 @@ describe("Complex nodes", function () {
       });
 
       first_stamp = Date.now();
+      console.log("First stamp: ", first_stamp);
 
-      await coop_api.update({ id: coop1_id }, { name: "purple" });
+      await coop_api.update(
+        { id: coop1_id },
+        { name: "purple", farm_id: `${farm_id}` }
+      );
 
       second_stamp = Date.now();
     } catch (err) {
@@ -174,6 +178,22 @@ describe("Complex nodes", function () {
     assert.equal(json.name, "purple");
   });
 
+  it("should get closest to the timestamp when specified", async function () {
+    const query = `{
+         getById(id: "${coop1_id}", at: ${first_stamp}) {
+              name
+         }}`;
+
+    const json = await callSubgraph(
+      `http://localhost:${port}/coops/graph`,
+      query,
+      "getById",
+      "Bearer " + token
+    );
+
+    assert.equal(json.name, "red");
+  });
+
   it("should obey the timestamps", async function () {
     const query = `{
          getById(id: "${farm_id}", at: ${first_stamp}) {
@@ -192,5 +212,25 @@ describe("Complex nodes", function () {
 
     let names = json.coops.map((c) => c.name);
     expect(names).to.not.contain("purple");
+  });
+
+  it("should pass timestamps to next layer", async function () {
+    const query = `{
+         getById(id: "${farm_id}", at: ${Date.now()}) {
+               coops {
+                name
+               }
+            }
+        }`;
+
+    const json = await callSubgraph(
+      `http://localhost:${port}/farms/graph`,
+      query,
+      "getById",
+      "Bearer " + token
+    );
+
+    let names = json.coops.map((c) => c.name);
+    expect(names).to.contain("purple");
   });
 });
