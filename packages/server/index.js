@@ -1,6 +1,6 @@
 const express = require("express");
-const {buildSchema} = require('graphql');
-const { createHandler } = require('graphql-http/lib/use/express');
+const { buildSchema } = require("graphql");
+const { createHandler } = require("graphql-http/lib/use/express");
 
 const fs = require("fs");
 const { context } = require("./lib/root");
@@ -12,7 +12,7 @@ const parser = require("@pushcorn/hocon-parser");
 const promiseRetry = require("promise-retry");
 const { URL } = require("url");
 const { buildDb } = require("@gridql/mongo-connector");
-
+const { getSub } = require("./lib/authorization");
 
 const process_graphlettes = async (config) => {
   return await Promise.all(
@@ -90,15 +90,25 @@ const start = async (url, port, graphlettes, restlettes) => {
 
   for (let { path, graph } of graphlettes) {
     console.log("Graphing up: " + path);
-    app.all(path, createHandler({
-      schema: graph.schema,
-      rootValue: graph.root,
-      graphiql: true,
-      formatError: (error) => {
-        console.log(error);
-        return error;
-      },
-    }))
+    app.all(
+      path,
+      createHandler({
+        schema: graph.schema,
+        rootValue: graph.root,
+        graphiql: true,
+        formatError: (error) => {
+          console.log(error);
+          return error;
+        },
+        context: async (req) => {
+          let c = {
+            auth_header: req.headers.authorization,
+            subscriber: getSub(req.headers.authorization),
+          };
+          return c;
+        },
+      })
+    );
   }
 
   for (let { path, db, validator, schema } of restlettes) {

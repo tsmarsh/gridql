@@ -12,8 +12,8 @@ class DTOFactory {
     }
   }
 
-  fillOne(data) {
-    let copy = {};
+  fillOne(data, authHeader) {
+    let copy = { _authHeader: authHeader };
 
     for (const f in this.resolvers) {
       if (typeof this.resolvers[f] === "function") {
@@ -25,8 +25,8 @@ class DTOFactory {
     return copy;
   }
 
-  fillMany(data) {
-    return data.map((d) => this.fillOne(d));
+  fillMany(data, authHeader) {
+    return data.map((d) => this.fillOne(d, authHeader));
   }
 }
 
@@ -40,7 +40,9 @@ const assignResolver = (id = "id", queryName, url) => {
   return async function (parent, args, context) {
     let foreignKey = this[id];
     const query = processContext(foreignKey, context, queryName);
-    return callSubgraph(url, query, queryName);
+    let header =
+      typeof this._authHeader === "undefined" ? undefined : this._authHeader;
+    return callSubgraph(url, query, queryName, header);
   };
 };
 

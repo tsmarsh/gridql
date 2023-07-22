@@ -1,14 +1,18 @@
-const callSubgraph = async (url, query, queryName) => {
+const callSubgraph = async (url, query, queryName, authHeader) => {
   const body = JSON.stringify({ query: query });
 
   console.log("Subgraph Call: ", url, body);
+  let headers = {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  };
+  if (authHeader !== null && authHeader !== undefined) {
+    headers.Authorization = authHeader;
+  }
   const response = await fetch(url, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: body,
+    headers,
+    body,
   }).catch((err) => console.log(err));
 
   const text = await response.text();

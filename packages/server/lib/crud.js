@@ -4,7 +4,8 @@ const express = require("express");
 const swaggerUi = require("swagger-ui-express");
 const { v4: uuid } = require("uuid");
 const { swagger } = require("./swagger");
-const { PayloadRepository } = require("../lib/repository");
+const { PayloadRepository } = require("./repository");
+const { getSub, isAuthorized } = require("./authorization");
 
 const calculateReaders = (doc, sub) => {
   const readers = new Set();
@@ -14,32 +15,6 @@ const calculateReaders = (doc, sub) => {
   }
 
   return [...readers];
-};
-
-function isAuthorized(subscriber, result) {
-  return (
-    subscriber === undefined || //internal or a test (hasn't gone through gateway)
-    subscriber === null ||
-    result.authorized_readers.count === 0 || //everyone can read
-    result.authorized_readers.includes(subscriber)
-  ); //current sub is in the list
-}
-
-const getSub = (authHeader) => {
-  if (authHeader === null || authHeader === undefined) {
-    return null;
-  }
-
-  if (authHeader.startsWith("Bearer ")) {
-    const token = authHeader.substring(7, authHeader.length);
-
-    const dToken = jwt.decode(token);
-
-    return dToken["sub"];
-  } else {
-    console.log("Missing Bearer Token");
-    return null;
-  }
 };
 
 const create = (repo, context) => async (req, res) => {
@@ -283,6 +258,5 @@ async function extracted(responses) {
 
 module.exports = {
   init,
-  getSub,
   calculateReaders,
 };

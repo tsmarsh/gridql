@@ -1,4 +1,5 @@
 const { DTOFactory } = require("./DTOFactory");
+const { isAuthorized } = require("./authorization");
 
 const context = (db, config) => {
   let dtoF = new DTOFactory(config.resolvers);
@@ -35,10 +36,13 @@ const processQueryTemplate = (id, queryTemplate) => {
 };
 
 const scalar = (db, dtoFactory, i = "id", queryTemplate) => {
-  return async (vars) => {
-    const id = vars[i];
+  return async (args, context, info) => {
+    let id = args[i];
     const query = processQueryTemplate(id, queryTemplate);
-    const results = await db.find(query).toArray();
+    let results = await db.find(query).toArray();
+    if (context !== undefined) {
+      results = results.filter((r) => isAuthorized(context.subscriber, r));
+    }
     return dtoFactory.fillMany(
       results.map((r) => {
         r.payload.id = r.id;
@@ -49,15 +53,19 @@ const scalar = (db, dtoFactory, i = "id", queryTemplate) => {
 };
 
 const singleton = (db, dtoFactory, id = "id", queryTemplate) => {
-  return async ({ id: id }) => {
+  return async ({ id: id }, context, info) => {
     const query = processQueryTemplate(id, queryTemplate);
     const result = await db.findOne(query).catch((e) => console.log(e));
     if (result === null) {
       console.log(`Nothing found for: ${id}`);
       return result;
     } else {
-      result.payload.id = id;
-      return dtoFactory.fillOne(result.payload);
+      if (context === undefined || isAuthorized(context.subscriber)) {
+        result.payload.id = id;
+        return dtoFactory.fillOne(result.payload);
+      } else {
+        return null;
+      }
     }
   };
 };
