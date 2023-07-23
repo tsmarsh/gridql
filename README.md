@@ -21,48 +21,109 @@ But that's not why we're here. We want to do a native GraphQL solution. An actua
 
 This is how you do it.
 
-## Philosophy
+## Components
 
-At its simplest a server should try its hardest to look like this:
+### [Server](packages/server/README.md)
 
-<img src="./docs/Evolving.png" width="50%" />
+#### Restlettes
 
-A nice [black box](https://en.wikipedia.org/wiki/Black_box) where the application is completely unaware of the complexities inside the service.
+Responsible for event recording. They own the model, and are the only component allowed to write to the data store. 
 
-But that complexity continues to exist. 
+The provide a simple, and consistent way to store events. Simply define the swagger that describes the payload, and point them at a datastore.
 
-* What requests should the service expose?
-* What should the response format be?
-* What happens if the service is down?
+You can use them for data retrieval, but just the state that you stored. No querying, no pulling data from other services.
 
-And those questions are complex enough when there is a single application. But what we're finding is that applications are really collections of people trying to get shit done, and not universal tools that can be used by everyone.
+#### Graphlettes
 
-Even if the use cases are the same, the way people use the apps are unique and given enough users will eventually devolve to the point that multiple, distinct applications of the same data are inevitable.
+Responsible for turning a rag tag collection of restlettes and turning them into a mesh. 
 
-We already acknowledge this in a lot of practices. We often talk about Roles and Responsibilities within an application.
+Each graphlette presents the world with its own view of the data starting from the data in its restlette:
 
-![](docs/complexity.png)
+`N Restlettes == N Graphlettes`
 
-The above graph is trying to express the differences between where you think you're going and where you end up.
+The are the primary means for extracting data from the system.
 
-Ideally, you know all the features up front, its nice and simple and when you complete your feature set everyone is happy forever.
+#### Microliths
 
-In reality, by the time you get to a 100 users you're already getting feature requests that you weren't expecting, by the time you hit 1000 you've doubled the expected amount of effort and by 100000 its out of control and you're concidering a re-write.
+[Monoliths](https://en.wikipedia.org/wiki/Monolithic_application) get a bad wrap. Given enough time they tend towards [Big Ball of Mud](https://blog.codinghorror.com/the-big-ball-of-mud-and-other-architectural-disasters/) We like to talk about [S.O.L.I.D.](https://en.wikipedia.org/wiki/SOLID) 
+and [Object Orientated Programming](https://en.wikipedia.org/wiki/Object-oriented_programming) as techniques to prevent this from happening, but the reality is that they, at best, delay this inevitability. The issue is less with how we build them, and more to do with how we use them. Success breeds more users, more users have more diverse demands, eventually the model on which the monolith is built breaks and the cost to make changes increases exponentially.
 
-Of course, this problem isn't unique to software. It happens across all products.
+[Microservices](https://en.wikipedia.org/wiki/Microservices) go in the other direction by moving objects into network. Surprisingly, its much easier to follow S.O.L.I.D. principals by building a series of black box services that agree on a common way of sharing information. But microservices push the complexity into the service and network layer.  
 
-> You can please some of the people all of the time, you can please all of the people some of the time, but you can’t please all of the people all of the time -- [John Lydgate](https://en.wikipedia.org/wiki/John_Lydgate)
+We're taking a middle path. Composing monoliths with microservices.
 
-### So where does that leave us?
+We don't know your data or usage pattern. What we do know is that bundling multiple microservices in to a single service makes a lot of things easier.
 
-1. Stop assuming we know how people are going to consume our data.
+Perfectly valid microliths:
 
-2. Focus on the interactions with our system that affect the data, not the data itself.
+* A server per graphlette and restlette: true microservice
+* A single server with all graphlettes and restlettes: microlith
+* All graphlettes in one server, all restlettes in another
+* Low traffic xLettes in a microlith, high traffic xLettes in their own microservices. 
 
-3. Stop assuming that each interaction can only result in a single, predictable and enduring outcome.
+We don't know what makes sense for you, but we have made it as easy as possible to change your mind.
 
-4. State is a function of time and data, not data alone.
+We'd heavily recommend starting out with everything in a single microlith, then using data to figure out the best way to break it apart... and if you're wrong, merge them back together.
 
+### [Mongo Event Builder](packages/mongo-event-builder/README.md)
+
+Its all very well having a means for an application to get data out of the system. But how can you inform other parts of the system that your data has changed?
+
+Kafka, you use kafka.
+
+This component attaches to your [Mongo Replica Set](https://www.mongodb.com/docs/manual/replication/) and creates light weight events on public topics. 
+
+Other services are encouraged to consume those topics and then call the graph api to get the data they need to update their data.
+
+#### Example
+
+> Applications are only allowed to present data that is owner by the user they represent.
+
+In a simple case, the `authorized_users` is simply the user that created the event, but its not unusual for resources to be access by groups of users of certain roles.
+
+So if we have a `User` service an `Account` service and a `Group` service that describes the `Role` and a list of `User` in that `Group`.
+
+All services maintain a list of `authorized_users` but how users get into that list is an exercise for the system. 
+
+In this example, lets assume that we want all of the users in a group to be in the list of `authorized_users`.
+
+To achieve this we create a consumer that listens to `Group`s topic, call the groups graph to figure out the current list of users, then modify the `Account`s `authorized_user` list. Of course we may choose to listen to multiple groups, or even multiple services.
+
+
+
+### [Kafka Event Consumer](packages/kafka-event-consumer/README.md)
+
+If an application needs to create an event, calling the restlettes makes the most sense. But what if the data is coming from inside of the enterprise?
+
+In that instance we'd recommend creating an 'input topic' that keeps the data in same format as the restlette is expecting then using a `Kafka Event Consumer` to call the restlettes (single writer).
+
+Only this component should read from the topic (it is private).
+
+We don't know or care how events get into this topic, but we'd recommend something like:
+
+```
+System of Record => Change Data Capture => public topic => ksql => private topic => event consumer
+```
+
+### Utilities
+
+#### [Payload Generator](packages/payload-generator/README.md)
+
+You went to the effort of creating json schema to describe your payloads... might as well use it to generate you test data.
+
+#### [Payload Validator](packages/payload-generator/README.md)
+
+Simple wrapper around json-schema to validate payloads. 
+
+**You're probably better off using your own module.**
+
+#### [Mongo Connector](packages/mongo-connector/README.md)
+
+Mongo does an excellent job of retrying if a connection is lost, but out of the box it won't retry an initial connection. 
+
+This is not a hard problem to solve, this is how we solved.
+
+**You're probably better off using your own module.**
 
 ## To Do
 
