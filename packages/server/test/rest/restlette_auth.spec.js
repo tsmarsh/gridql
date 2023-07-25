@@ -1,7 +1,7 @@
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const { describe, it, before, after } = require("mocha");
 
-const { init, start } = require("../index");
+const { init, start } = require("../../index");
 const { MongoClient } = require("mongodb");
 const assert = require("assert");
 const jwt = require("jsonwebtoken");
@@ -28,7 +28,7 @@ before(async function () {
 
   uri = mongod.getUri();
 
-  config = await init(__dirname + "/config/rest_auth.conf");
+  config = await init(__dirname + "/../config/rest_auth.conf");
 
   payload = {
     sub: "1234567890",

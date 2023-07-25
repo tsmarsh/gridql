@@ -1,7 +1,7 @@
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const { describe, it, before, after } = require("mocha");
 const chai = require("chai");
-const { init, start } = require("../index");
+const { init, start } = require("../../index");
 const { MongoClient } = require("mongodb");
 const assert = require("assert");
 
@@ -24,7 +24,7 @@ before(async function () {
 
   db = client.db("test").collection("hens");
 
-  config = await init(__dirname + "/config/simple_rest.conf");
+  config = await init(__dirname + "/../config/simple_rest.conf");
 
   payload = {
     sub: "1234567890",
@@ -44,7 +44,7 @@ after(async function () {
 
 describe("simple restlette", function () {
   it("it should fail if the config document is invalid", async function () {
-    init("test/config/invalid.conf")
+    init("test/../config/invalid.conf")
       .then(() => fail())
       .catch((err) => {
         assert(err !== undefined);
@@ -52,7 +52,7 @@ describe("simple restlette", function () {
   });
 
   it("it should fail if the rest config document is invalid", async function () {
-    init(__dirname + "/config/bad_rest.conf")
+    init(__dirname + "/../config/bad_rest.conf")
       .then(() => fail())
       .catch((err) => {
         assert(err !== undefined);

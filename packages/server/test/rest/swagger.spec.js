@@ -1,7 +1,7 @@
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const { MongoClient, ObjectId } = require("mongodb");
-const { init, start } = require("../index");
-const { swagger } = require("../lib/swagger");
+const { init, start } = require("../../index");
+const { swagger } = require("../../lib/swagger");
 const assert = require("assert");
 const { after, it } = require("mocha");
 const OpenAPIClientAxios = require("openapi-client-axios").default;
@@ -30,7 +30,7 @@ before(async function () {
 
   db = client.db("test").collection("hens");
 
-  config = await init(__dirname + "/config/simple_swagger.conf");
+  config = await init(__dirname + "/../config/simple_swagger.conf");
 
   payload = {
     sub: "1234567890",

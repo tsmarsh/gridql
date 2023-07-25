@@ -2,9 +2,9 @@ const { MongoMemoryServer } = require("mongodb-memory-server");
 const { expect } = require("chai");
 const { describe, it, before, after } = require("mocha");
 
-const { init, start } = require("../index");
+const { init, start } = require("../../index");
 const { MongoClient } = require("mongodb");
-const { callSubgraph } = require("../lib/graph/callgraph");
+const { callSubgraph } = require("../../lib/graph/callgraph");
 const assert = require("assert");
 
 let mongod;
@@ -31,7 +31,7 @@ describe("Single node", function () {
   before(async function () {
     db = client.db("test").collection("test");
 
-    config = await init(__dirname + "/config/simple.conf");
+    config = await init(__dirname + "/../config/simple.conf");
 
     server = await start(
       config.url,
