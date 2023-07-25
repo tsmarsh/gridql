@@ -129,7 +129,6 @@ const bulk_create = (url) => async (req, res) => {
 
   const res_body = await extracted(responses);
 
-  console.log(res_body);
   res.json(res_body);
 };
 

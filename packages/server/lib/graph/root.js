@@ -92,7 +92,7 @@ const singleton = (db, dtoFactory, id = "id", queryTemplate) => {
       $lt: timestamp,
     };
 
-    console.log("Q: ", query);
+    //console.log("Q: ", query);
 
     const results = await db.find(query).sort({ createdAt: -1 }).toArray();
     let result = results[0];

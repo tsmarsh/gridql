@@ -20,7 +20,7 @@ const callSubgraph = async (url, query, queryName, authHeader) => {
   try {
     let json = JSON.parse(text);
     if (json.hasOwnProperty("errors")) {
-      console.log("Received: \n", text);
+      //console.log("Received: \n", text);
       console.error(json);
       throw new Error(json["errors"][0]["message"]);
     }
