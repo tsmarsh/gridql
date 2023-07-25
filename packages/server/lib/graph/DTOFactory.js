@@ -1,8 +1,5 @@
 const { processContext } = require("./subgraph");
 const { callSubgraph } = require("./callgraph");
-const { visitWithTypeInfo, TypeInfo } = require("graphql/utilities");
-const { visit } = require("graphql/language");
-const { parse, print } = require("graphql");
 
 class DTOFactory {
   resolvers = {};

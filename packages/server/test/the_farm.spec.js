@@ -1,6 +1,6 @@
 const { after, before, describe, it } = require("mocha");
 const { init, start } = require("../index");
-const { callSubgraph } = require("../lib/callgraph");
+const { callSubgraph } = require("../lib/graph/callgraph");
 const { expect } = require("chai");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const { MongoClient } = require("mongodb");

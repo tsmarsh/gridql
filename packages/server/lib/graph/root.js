@@ -1,5 +1,5 @@
 const { DTOFactory } = require("./DTOFactory");
-const { isAuthorized } = require("./authorization");
+const { isAuthorized } = require("../authorization");
 
 const context = (db, config) => {
   let dtoF = new DTOFactory(config.resolvers);

@@ -3,13 +3,11 @@ const { buildSchema } = require("graphql");
 const { createHandler } = require("graphql-http/lib/use/express");
 
 const fs = require("fs");
-const { context } = require("./lib/root");
-const { MongoClient } = require("mongodb");
-const { init: crud_init } = require("./lib/crud");
+const { context } = require("./lib/graph/root");
+const { init: crud_init } = require("./lib/rest/crud");
 const cors = require("cors");
 const { valid } = require("@gridql/payload-validator");
 const parser = require("@pushcorn/hocon-parser");
-const promiseRetry = require("promise-retry");
 const { URL } = require("url");
 const { buildDb } = require("@gridql/mongo-connector");
 const { getSub } = require("./lib/authorization");
