@@ -40,7 +40,7 @@ describe("Complex nodes", function () {
   let first_stamp, second_stamp;
 
   before(async function () {
-    config = await init(__dirname + "/config/complex.conf");
+    config = await init(__dirname + "/config/the_farm.conf");
 
     server = await start(
       config.url,

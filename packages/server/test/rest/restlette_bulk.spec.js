@@ -23,10 +23,6 @@ before(async function () {
   builder = builderFactory({
     type: "object",
     properties: {
-      _id: {
-        type: "string",
-        format: "id",
-      },
       name: {
         type: "string",
         faker: "animal.horse",
@@ -69,9 +65,6 @@ after(async function () {
 describe("a bulky restlette", function () {
   it("it should create n documents", async function () {
     let hen_data = builder(3);
-    for (let h of hen_data) {
-      delete h["_id"];
-    }
 
     const hen = JSON.stringify(hen_data);
 
@@ -92,9 +85,6 @@ describe("a bulky restlette", function () {
 
   it("it should create a large number of documents", async function () {
     let hen_data = builder(100);
-    for (let h of hen_data) {
-      delete h["_id"];
-    }
 
     const hen = JSON.stringify(hen_data);
 
@@ -115,13 +105,10 @@ describe("a bulky restlette", function () {
 
   it("should read n documents", async function () {
     let hen_data = builder(10);
-    for (h of hen_data) {
-      delete h["_id"];
-    }
 
     const hen = JSON.stringify(hen_data);
 
-    await fetch("http://localhost:40025/chicks/bulk", {
+    let create_response = await fetch("http://localhost:40025/chicks/bulk", {
       method: "POST",
       body: hen,
       redirect: "follow",
@@ -130,7 +117,11 @@ describe("a bulky restlette", function () {
       },
     });
 
-    const response = await fetch("http://localhost:40025/chicks", {
+    let created = await create_response.json()
+
+    let created_ids = {ids: created.OK.slice(0,5).map((h) => h.slice(-36))};
+
+    const response = await fetch(buildUrl("http://localhost:40025/chicks/bulk", created_ids).toString(), {
       headers: {
         "Content-Type": "application/json",
       },
@@ -138,33 +129,15 @@ describe("a bulky restlette", function () {
 
     let actual = await response.json();
 
-    let ids = { ids: actual.slice(0, 5).map((h) => h._id) };
-
-    let url = buildUrl("http://localhost:40025/chicks/bulk", ids).toString();
-
-    console.log("URL:", url);
-
-    const read = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    actual = await read.json();
-
-    assert.equal(actual.OK.length, 5);
+    assert.equal(actual.length, 5);
   });
 
   it("should delete n documents", async function () {
     let hen_data = builder(10);
-    for (h of hen_data) {
-      delete h["_id"];
-    }
 
     const hen = JSON.stringify(hen_data);
 
-    await fetch("http://localhost:40025/chicks/bulk", {
+    let created_response = await fetch("http://localhost:40025/chicks/bulk", {
       method: "POST",
       body: hen,
       redirect: "follow",
@@ -173,28 +146,20 @@ describe("a bulky restlette", function () {
       },
     });
 
-    const response = await fetch("http://localhost:40025/chicks", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    let actual = await created_response.json();
 
-    let actual = await response.json();
-
-    let ids = { ids: actual.slice(0, 5).map((h) => h.slice(-36)) };
+    let ids = { ids: actual.OK.slice(0, 5).map((h) => h.slice(-36)) };
 
     let url = buildUrl("http://localhost:40025/chicks/bulk", ids).toString();
 
-    console.log("URL:", url);
-
-    const read = await fetch(url, {
+    const dels = await fetch(url, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
     });
 
-    actual = await read.json();
+    actual = await dels.json();
 
     assert.equal(actual.OK.length, 5);
   });

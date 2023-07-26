@@ -107,81 +107,30 @@ const list = (repo, context) => async (req, res) => {
   res.json(results.map((r) => `${context}/${r}`));
 };
 
-const bulk_create = (url) => async (req, res) => {
-  const init = {
-    method: "POST",
-    redirect: "follow",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
+const bulk_create = (repo, context) => async (req, res) => {
 
-  if (req.headers.authorization !== undefined) {
-    init.header["Authorization"] = req.headers.authorization;
-  }
+  let docs = req.body;
 
-  let responses = await Promise.all(
-    req.body.map((doc) => {
-      init["body"] = JSON.stringify(doc);
-      return fetch(url, init);
-    })
-  );
+  let created = await repo.createMany(docs, {subscriber: getSub(req.headers.authorization)})
 
-  const res_body = await extracted(responses);
-
-  res.json(res_body);
+  created.OK = created.OK.map((id) => `${context}/${id}`)
+  res.json(created);
 };
 
-const bulk_read = (url) => async (req, res) => {
-  const init = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
+const bulk_read = (repo) => async (req, res) => {
+  let ids = req.query.ids.split(",");
 
-  if (req.headers.authorization !== undefined) {
-    init.header["Authorization"] = req.headers.authorization;
-  }
+  let found = await repo.readMany(ids, {subscriber: getSub(req.headers.authorization)});
+  res.json(found);
+};
+
+const bulk_delete = (repo) => async (req, res) => {
 
   let ids = req.query.ids.split(",");
 
-  let responses = await Promise.all(
-    ids.map((id) => {
-      let location = `${url}/${id}`;
-      return fetch(location, init);
-    })
-  );
+  let result = await repo.removeMany(ids)
 
-  const res_body = await extracted(responses);
-
-  res.json(res_body);
-};
-
-const bulk_delete = (url) => async (req, res) => {
-  const init = {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-
-  if (req.headers.authorization !== undefined) {
-    init.header["Authorization"] = req.headers.authorization;
-  }
-
-  let ids = req.query.ids.split(",");
-
-  let responses = await Promise.all(
-    ids.map((id) => {
-      let location = `${url}/${id}`;
-      return fetch(location, init);
-    })
-  );
-
-  const res_body = await extracted(responses);
-
-  res.json(res_body);
+  res.json({OK: ids});
 };
 
 const options = {
@@ -209,9 +158,9 @@ const init = (url, context, app, db, validate, schema) => {
 
   app.use(express.json());
 
-  app.post(`${context}/bulk`, bulk_create(url));
-  app.get(`${context}/bulk`, bulk_read(url));
-  app.delete(`${context}/bulk`, bulk_delete(url));
+  app.post(`${context}/bulk`, bulk_create(repo));
+  app.get(`${context}/bulk`, bulk_read(repo));
+  app.delete(`${context}/bulk`, bulk_delete(repo));
 
   app.post(`${context}`, create(repo, context));
 
