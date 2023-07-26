@@ -1,0 +1,74 @@
+digraph G {
+  // Define nodes
+  // Domain Events
+  ProfileCreated [label="Profile Created", color=orange]
+  PostCreated [label="Post Created", color=orange]
+  CommentCreated [label="Comment Created", color=orange]
+  UserFollowed [label="User Followed", color=orange]
+  HashtagCreated [label="Hashtag Created", color=orange]
+  NotificationSent [label="Notification Sent", color=orange]
+  MessageSent [label="Message Sent", color=orange]
+  ContentSearched [label="Content Searched", color=orange]
+  PostReported [label="Post Reported", color=orange]
+  UserBlocked [label="User Blocked", color=orange]
+  UserMuted [label="User Muted", color=orange]
+
+  // Commands
+  CreateProfile [label="Create Profile", color=blue]
+  CreatePost [label="Create Post", color=blue]
+  CreateComment [label="Create Comment", color=blue]
+  FollowUser [label="Follow User", color=blue]
+  CreateHashtag [label="Create Hashtag", color=blue]
+  SendNotification [label="Send Notification", color=blue]
+  SendMessage [label="Send Message", color=blue]
+  SearchContent [label="Search Content", color=blue]
+  ReportPost [label="Report Post", color=blue]
+  BlockUser [label="Block User", color=blue]
+  MuteUser [label="Mute User", color=blue]
+
+  // Aggregates
+  UserProfile [label="User Profile", color=yellow]
+  Post [label="Post", color=yellow]
+  Comment [label="Comment", color=yellow]
+  FollowerRelationship [label="Follower Relationship", color=yellow]
+  Hashtag [label="Hashtag", color=yellow]
+  Notification [label="Notification", color=yellow]
+  Message [label="Message", color=yellow]
+  Search [label="Search", color=yellow]
+  Moderation [label="Moderation", color=yellow]
+
+  // Read Models
+  ProfileDetails [label="Profile Details", color=purple]
+  PostDetails [label="Post Details", color=purple]
+  CommentDetails [label="Comment Details", color=purple]
+  FollowingList [label="Following List", color=purple]
+  HashtagList [label="Hashtag List", color=purple]
+  NotificationsList [label="Notifications List", color=purple]
+  MessageDetails [label="Message Details", color=purple]
+  SearchResults [label="Search Results", color=purple]
+  ModerationActions [label="Moderation Actions", color=purple]
+
+  // User or External System
+  User [label="User", color=green]
+
+  // Define edges (just for a couple of flows)
+  // Profile Creation Flow
+  User -> CreateProfile
+  CreateProfile -> ProfileCreated
+  ProfileCreated -> UserProfile
+  UserProfile -> ProfileDetails
+
+  // Post Creation Flow
+  User -> CreatePost
+  CreatePost -> PostCreated
+  PostCreated -> Post
+  Post -> PostDetails
+
+  // Comment Creation Flow
+  User -> CreateComment
+  CreateComment -> CommentCreated
+  CommentCreated -> Comment
+  Comment -> CommentDetails
+
+  // And so on for the rest of the flows
+}
