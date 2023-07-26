@@ -175,35 +175,6 @@ const init = (url, context, app, db, validate, schema) => {
   return app;
 };
 
-async function extracted(responses) {
-  const res_body = {};
-
-  for (let response of responses) {
-    let collection = res_body[response.statusText] || [];
-
-    let good =
-      response.status >= 200 &&
-      response.status < 300 &&
-      !Object.keys(response.body).length;
-    let value;
-
-    if (good) {
-      try {
-        value = await response.json().catch((err) => console.log(err));
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      value = response.url;
-    }
-
-    collection.push(value);
-
-    res_body[response.statusText] = collection;
-  }
-  return res_body;
-}
-
 module.exports = {
   init,
   calculateReaders,
