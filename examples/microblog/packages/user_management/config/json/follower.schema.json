@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Follower",
+  "type": "object",
+  "properties": {
+    "follower_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifier for the user who follows"
+    },
+    "user_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifier for the user being followed"
+    }
+  },
+  "required": ["follower_id", "user_id"]
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PostHashtag",
+  "type": "object",
+  "properties": {
+    "post_id": {
+      "type": "string",
+      "description": "Identifier for the post"
+    },
+    "hashtag_id": {
+      "type": "string",
+      "description": "Identifier for the hashtag"
+    }
+  },
+  "required": ["post_id", "hashtag_id"]
+}

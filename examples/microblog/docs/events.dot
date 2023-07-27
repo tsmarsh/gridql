@@ -1,6 +1,8 @@
 digraph G {
+  node [shape=box, style=filled]
   // Define nodes
   // Domain Events
+  node[color=orange, fillcolor="#FFA07A" ]
   ProfileCreated [label="Profile Created", color=orange]
   PostCreated [label="Post Created", color=orange]
   CommentCreated [label="Comment Created", color=orange]
@@ -14,6 +16,7 @@ digraph G {
   UserMuted [label="User Muted", color=orange]
 
   // Commands
+  node[color=blue, fillcolor=lightblue]
   CreateProfile [label="Create Profile", color=blue]
   CreatePost [label="Create Post", color=blue]
   CreateComment [label="Create Comment", color=blue]
@@ -27,6 +30,7 @@ digraph G {
   MuteUser [label="Mute User", color=blue]
 
   // Aggregates
+  node[color=orange, fillcolor=yellow]
   UserProfile [label="User Profile", color=yellow]
   Post [label="Post", color=yellow]
   Comment [label="Comment", color=yellow]
@@ -38,6 +42,7 @@ digraph G {
   Moderation [label="Moderation", color=yellow]
 
   // Read Models
+  node[color=purple, fillcolor="#D8BFD8"]
   ProfileDetails [label="Profile Details", color=purple]
   PostDetails [label="Post Details", color=purple]
   CommentDetails [label="Comment Details", color=purple]
@@ -49,9 +54,10 @@ digraph G {
   ModerationActions [label="Moderation Actions", color=purple]
 
   // User or External System
+  node[color=darkgreen, fillcolor=green]
   User [label="User", color=green]
 
-  // Define edges (just for a couple of flows)
+  // Define edges (for all flows)
   // Profile Creation Flow
   User -> CreateProfile
   CreateProfile -> ProfileCreated
@@ -70,5 +76,49 @@ digraph G {
   CommentCreated -> Comment
   Comment -> CommentDetails
 
-  // And so on for the rest of the flows
+  // Following Flow
+  User -> FollowUser
+  FollowUser -> UserFollowed
+  UserFollowed -> FollowerRelationship
+  FollowerRelationship -> FollowingList
+
+  // Hashtag Creation Flow
+  User -> CreateHashtag
+  CreateHashtag -> HashtagCreated
+  HashtagCreated -> Hashtag
+  Hashtag -> HashtagList
+
+  // Notification Flow
+  User -> SendNotification
+  SendNotification -> NotificationSent
+  NotificationSent -> Notification
+  Notification -> NotificationsList
+
+  // Messaging Flow
+  User -> SendMessage
+  SendMessage -> MessageSent
+  MessageSent -> Message
+  Message -> MessageDetails
+
+  // Search Flow
+  User -> SearchContent
+  SearchContent -> ContentSearched
+  ContentSearched -> Search
+  Search -> SearchResults
+
+  // Moderation Flow
+  User -> ReportPost
+  ReportPost -> PostReported
+  PostReported -> Moderation
+  Moderation -> ModerationActions
+
+  User -> BlockUser
+  BlockUser -> UserBlocked
+  UserBlocked -> Moderation
+  Moderation -> ModerationActions
+
+  User -> MuteUser
+  MuteUser -> UserMuted
+  UserMuted -> Moderation
+  Moderation -> ModerationActions
 }

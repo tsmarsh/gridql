@@ -1,0 +1,31 @@
+digraph G {
+    // Set default node styles
+  node [shape=box, style=filled, color=lightblue]
+
+// Entities
+  User [label="User\n------------------\n+ ID\n+ Handle\n+ Name"]
+Post [label="Post\n------------------\n+ ID\n+ UserID\n+ Content"]
+Comment [label="Comment\n------------------\n+ ID\n+ UserID\n+ PostID\n+ Content"]
+Follower [label="Follower\n------------------\n+ ID\n+ FollowerID\n+ FolloweeID"]
+Hashtag [label="Hashtag\n------------------\n+ ID\n+ Name"]
+PostHashtag [label="PostHashtag\n------------------\n+ ID\n+ PostID\n+ HashtagID"]
+Notification [label="Notification\n------------------\n+ ID\n+ UserID\n+ Message"]
+DirectMessage [label="DirectMessage\n------------------\n+ ID\n+ SenderID\n+ ReceiverID\n+ Message"]
+Report [label="Report\n------------------\n+ ID\n+ ReporterID\n+ ReportedPostID"]
+BlockList [label="BlockList\n------------------\n+ ID\n+ BlockerID\n+ BlockedID"]
+MuteList [label="MuteList\n------------------\n+ ID\n+ MuterID\n+ MutedID"]
+
+// Relationships
+  User -> Post [label="CREATES"]
+User -> Comment [label="WRITES"]
+User -> Follower [label="FOLLOWS"]
+User -> Notification [label="RECEIVES"]
+User -> DirectMessage [label="SENDS"]
+User -> Report [label="REPORTS"]
+User -> BlockList [label="BLOCKS"]
+User -> MuteList [label="MUTES"]
+
+Post -> Comment [label="HAS"]
+Post -> PostHashtag [label="INCLUDES"]
+Hashtag -> PostHashtag [label="TAGS"]
+}

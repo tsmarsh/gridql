@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Report",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Identifier for the user making the report"
+    },
+    "post_id": {
+      "type": "string",
+      "description": "Identifier for the post being reported"
+    }
+  },
+  "required": ["user_id", "post_id"]
+}
