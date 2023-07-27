@@ -1,6 +1,6 @@
 {
   "name": "@gridql/server",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "graphql server scaffolding",
   "main": "index.js",
   "author": "Tom Marsh",
