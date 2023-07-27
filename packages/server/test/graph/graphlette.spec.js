@@ -68,7 +68,7 @@ describe("Single node", function () {
     await db.insertOne({
       id: "testid",
       payload: { foo: "bar", eggs: 6 },
-      createdAt: Date.now(),
+      createdAt: new Date(),
     });
 
     const query = `{

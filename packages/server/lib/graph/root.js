@@ -39,7 +39,7 @@ const scalar = (db, dtoFactory, i = "id", queryTemplate) => {
     let id = args[i];
     let timestamp = args.hasOwnProperty("at") ? args["at"] : Date.now();
     let time_filter = {
-      $lt: timestamp,
+      $lt: new Date(timestamp),
     };
 
     const query = processQueryTemplate(id, queryTemplate);
@@ -89,7 +89,7 @@ const singleton = (db, dtoFactory, id = "id", queryTemplate) => {
     let timestamp = args.hasOwnProperty("at") ? args["at"] : Date.now();
 
     query.createdAt = {
-      $lt: timestamp,
+      $lt: new Date(timestamp),
     };
 
     //console.log("Q: ", query);

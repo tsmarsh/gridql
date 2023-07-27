@@ -13,7 +13,7 @@ let db;
 let test_db = "test_db";
 let mongo_collection = "simple";
 let mongod;
-let createdAt = Date.now();
+let createdAt = new Date();
 
 before(async function () {
   mongod = await MongoMemoryServer.create();

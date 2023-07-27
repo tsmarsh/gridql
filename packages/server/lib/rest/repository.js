@@ -9,7 +9,7 @@ class PayloadRepository {
   create = async (payload, { id = uuid(), subscriber = null }) => {
     let doc = {
       payload,
-      createdAt: Date.now(),
+      createdAt: new Date(),
       id,
     };
 
@@ -24,38 +24,37 @@ class PayloadRepository {
   };
 
   createMany = async (payloads, { subscriber = null }) => {
-    let createdAt = Date.now();
+    let createdAt = new Date();
     let docs = payloads.map((payload) => ({
-        payload,
-          createdAt,
-        id: uuid(),
-      authorized_readers: subscriber === null ? [] : [subscriber]
+      payload,
+      createdAt,
+      id: uuid(),
+      authorized_readers: subscriber === null ? [] : [subscriber],
     }));
 
-
-    let v = {OK: [], BAD_REQUEST: []}
+    let v = { OK: [], BAD_REQUEST: [] };
 
     let good = [];
 
     docs.forEach((doc) => {
-      if(this.valid(doc.payload)){
+      if (this.valid(doc.payload)) {
         v.OK.push(doc.id);
         good.push(doc);
-      }else{
+      } else {
         v.BAD_REQUEST.push(doc.payload);
       }
-    })
+    });
 
     try {
       await this.db.insertMany(good);
-    }catch (e) {
-      console.log(e)
+    } catch (e) {
+      console.log(e);
     }
 
     return v;
-  }
+  };
 
-  read = async (id, { createdAt = Date.now() }) => {
+  read = async (id, { createdAt = new Date() }) => {
     let results;
     try {
       results = await this.db
@@ -74,10 +73,11 @@ class PayloadRepository {
     return results[0];
   };
 
-  readMany = async (ids, { createdAt = Date.now(), subscriber =  null }) => {
+  readMany = async (ids, { createdAt = new Date(), subscriber = null }) => {
     let match = {
       id: { $in: ids },
-      deleted: { $exists: false } };
+      deleted: { $exists: false },
+    };
 
     if (subscriber !== undefined && subscriber !== null) {
       match.authorized_readers = { $in: [subscriber] };
@@ -86,37 +86,40 @@ class PayloadRepository {
     let results = [];
     try {
       results = await this.db
-          .aggregate([
-            {
-              $match: match,
+        .aggregate([
+          {
+            $match: match,
+          },
+          {
+            $sort: { createdAt: -1 },
+          },
+          {
+            $group: {
+              _id: "$id",
+              doc: { $first: "$$ROOT" },
             },
-            {
-              $sort: { createdAt: -1 },
-            },
-            {
-              $group: {
-                _id: "$id",
-                doc: { $first: "$$ROOT" },
-              },
-            },
-            {
-              $replaceRoot: { newRoot: "$doc" },
-            },
-          ])
-          .toArray();
+          },
+          {
+            $replaceRoot: { newRoot: "$doc" },
+          },
+        ])
+        .toArray();
     } catch (err) {
       console.log("Error listing: ", err);
     }
 
     return results.map((r) => r.id);
-  }
+  };
   remove = (id) => {
     return this.db.updateMany({ id }, { $set: { deleted: true } });
   };
 
   removeMany = (ids) => {
-    return this.db.updateMany({ id: { $in: ids } }, { $set: { deleted: true } });
-  }
+    return this.db.updateMany(
+      { id: { $in: ids } },
+      { $set: { deleted: true } }
+    );
+  };
 
   list = async (subscriber) => {
     let match = { deleted: { $exists: false } };
