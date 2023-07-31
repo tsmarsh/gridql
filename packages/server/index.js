@@ -11,6 +11,7 @@ const parser = require("@pushcorn/hocon-parser");
 const { URL } = require("url");
 const { buildDb } = require("@gridql/mongo-connector");
 const { getSub } = require("./lib/authorization");
+const path = require("path");
 
 const process_graphlettes = async (config) => {
   return await Promise.all(
@@ -77,6 +78,7 @@ const start = async (url, port, graphlettes, restlettes) => {
   app.use(cors());
 
   app.set("view engine", "pug");
+  app.set("views", path.join(__dirname, "views"));
 
   app.get("/", function (req, res) {
     res.render("index.pug", {
