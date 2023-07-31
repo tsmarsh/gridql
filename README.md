@@ -125,6 +125,10 @@ This is not a hard problem to solve, this is how we solved.
 
 **You're probably better off using your own module.**
 
+## Example App
+
+[MicroBlog](https://github.com/tsmarsh/microblog) is a very quick an dirty 'Twitter Clone' to demonstrate how you can use this library for rapid role out of a data layer.
+
 ## To Do
 
 * [X] Graph Nodes
