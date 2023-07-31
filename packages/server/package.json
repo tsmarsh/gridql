@@ -33,6 +33,8 @@
   "devDependencies": {
     "axios": "^1.4.0",
     "chai": "^4.3.7",
+    "chai-http": "^4.4.0",
+    "cheerio": "^1.0.0-rc.12",
     "mocha": "^10.2.0",
     "mongodb-memory-server": "^8.12.2",
     "nyc": "^15.1.0",

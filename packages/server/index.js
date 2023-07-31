@@ -88,12 +88,16 @@ const start = async (url, port, graphlettes, restlettes) => {
 
   for (let { path, graph } of graphlettes) {
     console.log("Graphing up: " + path);
+    app.get(path, (req, res) => {
+      res.render("graphiql", {
+        path,
+      });
+    });
     app.all(
       path,
       createHandler({
         schema: graph.schema,
         rootValue: graph.root,
-        graphiql: true,
         formatError: (error) => {
           console.log(error);
           return error;

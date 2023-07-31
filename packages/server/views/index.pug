@@ -1,0 +1,28 @@
+extends layout
+
+block content
+    .container
+        h1 GridQL
+        p The following services are available for your applications needs:
+
+        .container
+            .row
+                .col
+                    .card
+                        .card-title
+                            h3 Graphlettes
+                        .card-body
+                            ul#graphlettes
+                                each graph in graphlettes
+                                    li
+                                        a(href= graph.path)= graph.path
+
+                .col
+                    .card
+                        .card-title
+                            h3 Restlettes
+                        .card-body
+                            ul#restlettes
+                                each rest in restlettes
+                                    li
+                                        a(href= rest.path + "/api-docs")= rest.path

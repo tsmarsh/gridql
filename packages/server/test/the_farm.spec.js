@@ -1,7 +1,9 @@
 const { after, before, describe, it } = require("mocha");
 const { init, start } = require("../index");
 const { callSubgraph } = require("../lib/graph/callgraph");
-const { expect } = require("chai");
+const chai = require("chai");
+const expect = chai.expect;
+const chaiHttp = require("chai-http");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const { MongoClient } = require("mongodb");
 const { swagger } = require("../lib/swagger");
@@ -9,6 +11,9 @@ const { default: OpenAPIClientAxios } = require("openapi-client-axios");
 const assert = require("assert");
 const jwt = require("jsonwebtoken");
 const { v4: uuid } = require("uuid");
+const cheerio = require("cheerio");
+
+chai.use(chaiHttp);
 
 let mongod, client, uri;
 
@@ -232,5 +237,31 @@ describe("Complex nodes", function () {
 
     let names = json.coops.map((c) => c.name);
     expect(names).to.contain("purple");
+  });
+
+  it("should have built in documentation", async () => {
+    chai
+      .request(server)
+      .get("/")
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(200);
+
+        let $ = cheerio.load(res.text);
+        let graphlettes = $("#graphlettes li");
+        expect(graphlettes).to.have.length(3);
+        let restlettes = $("#restlettes li");
+        expect(restlettes).to.have.length(3);
+      });
+  });
+
+  it("should have graphiql", async () => {
+    chai
+      .request(server)
+      .get("/farms/graph")
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(200);
+      });
   });
 });
