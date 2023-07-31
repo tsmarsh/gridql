@@ -11,7 +11,7 @@ html
         script(type="text/javascript").
             const root = ReactDOM.createRoot(document.getElementById('graphiql'));
             const fetcher = GraphiQL.createFetcher({
-                url: !{path},
+                url: "!{path}",
                 headers: { 'X-Example-Header': 'foo' },
             });
             const explorerPlugin = GraphiQLPluginExplorer.explorerPlugin();
