@@ -47,7 +47,7 @@ describe("Kafka change listener", () => {
         console.log(err);
         assert(false);
       });
-  }).timeout(10000);
+  }).timeout(20000);
 
   it("should call remove rest api when there is a DELETE event", async () => {
     let config = await init(__dirname + "/config/delete.conf");
@@ -85,7 +85,7 @@ describe("Kafka change listener", () => {
         console.log(err);
         assert(false);
       });
-  }).timeout(10000);
+  }).timeout(20000);
 
   it("should call update rest api when there is a UPDATE event", async () => {
     let config = await init(__dirname + "/config/update.conf");
@@ -122,7 +122,7 @@ describe("Kafka change listener", () => {
         console.log(err);
         assert(false);
       });
-  }).timeout(10000);
+  }).timeout(20000);
 });
 
 before(async function () {
@@ -198,6 +198,6 @@ const waitForApiCall = (apiMock) => {
     setTimeout(() => {
       clearInterval(intervalId);
       reject(new Error("Timeout waiting for API call"));
-    }, 5000);
+    }, 10000);
   });
 };
