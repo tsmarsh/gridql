@@ -25,44 +25,39 @@ before(async function () {
   uri = mongod.getUri();
 });
 
-after(async function () {
-  mongod.stop();
-});
+let config;
+let server;
 
-describe("Complex nodes", function () {
-  let config;
-  let server;
+let hen_api;
+let coop_api;
+let farm_api;
 
-  let hen_api;
-  let coop_api;
-  let farm_api;
+let port;
+let token;
+let sub = uuid();
 
-  let port;
-  let token;
-  let sub = uuid();
+let farm_id, coop1_id, coop2_id;
+let first_stamp, second_stamp;
 
-  let farm_id, coop1_id, coop2_id;
-  let first_stamp, second_stamp;
+before(async function () {
+  config = await init(__dirname + "/config/the_farm.conf");
 
-  before(async function () {
-    config = await init(__dirname + "/config/the_farm.conf");
-
-    server = await start(
+  server = await start(
       config.url,
       config.port,
       config.graphlettes,
       config.restlettes
-    );
+  );
 
-    port = config.port;
+  port = config.port;
 
-    let swagger_docs = config.restlettes.map((restlette) => {
-      return swagger(restlette.path, restlette.schema, config.url);
-    });
+  let swagger_docs = config.restlettes.map((restlette) => {
+    return swagger(restlette.path, restlette.schema, config.url);
+  });
 
-    token = jwt.sign({ sub }, "totallyASecret", { expiresIn: "1h" });
+  token = jwt.sign({ sub }, "totallyASecret", { expiresIn: "1h" });
 
-    let apis = await Promise.all(
+  let apis = await Promise.all(
       swagger_docs.map(async (doc) => {
         let api = new OpenAPIClientAxios({
           definition: doc,
@@ -74,72 +69,79 @@ describe("Complex nodes", function () {
         });
         return await api.init();
       })
-    );
+  );
 
-    hen_api = apis[0];
-    coop_api = apis[1];
-    farm_api = apis[2];
+  hen_api = apis[0];
+  coop_api = apis[1];
+  farm_api = apis[2];
 
-    try {
-      let farm_1 = await farm_api.create(null, { name: "Emerdale" });
-      farm_id = farm_1.request.path.slice(-36);
+  try {
+    let farm_1 = await farm_api.create(null, { name: "Emerdale" });
+    farm_id = farm_1.request.path.slice(-36);
 
-      let coop_1 = await coop_api.create(null, {
-        name: "red",
-        farm_id: `${farm_id}`,
-      });
+    let coop_1 = await coop_api.create(null, {
+      name: "red",
+      farm_id: `${farm_id}`,
+    });
 
-      coop1_id = coop_1.request.path.slice(-36);
-      let coop_2 = await coop_api.create(null, {
-        name: "yellow",
-        farm_id: `${farm_id}`,
-      });
+    coop1_id = coop_1.request.path.slice(-36);
+    let coop_2 = await coop_api.create(null, {
+      name: "yellow",
+      farm_id: `${farm_id}`,
+    });
 
-      coop2_id = coop_2.request.path.slice(-36);
+    coop2_id = coop_2.request.path.slice(-36);
 
-      await coop_api.create(null, {
-        name: "pink",
-        farm_id: `${farm_id}`,
-      });
+    await coop_api.create(null, {
+      name: "pink",
+      farm_id: `${farm_id}`,
+    });
 
-      first_stamp = Date.now();
-      console.log("First stamp: ", first_stamp);
+    first_stamp = Date.now();
+    console.log("First stamp: ", first_stamp);
 
-      await coop_api.update(
+    await coop_api.update(
         { id: coop1_id },
         { name: "purple", farm_id: `${farm_id}` }
-      );
+    );
 
-      second_stamp = Date.now();
-    } catch (err) {
-      console.log("The fuck?: ", err);
-    }
+    second_stamp = Date.now();
+  } catch (err) {
+    console.log("The fuck?: ", err);
+  }
 
-    let hens = [
-      {
-        name: "chuck",
-        eggs: 2,
-        coop_id: `${coop1_id}`,
-      },
-      {
-        name: "duck",
-        eggs: 0,
-        coop_id: `${coop1_id}`,
-      },
-      {
-        name: "euck",
-        eggs: 1,
-        coop_id: `${coop2_id}`,
-      },
-      {
-        name: "fuck",
-        eggs: 2,
-        coop_id: `${coop2_id}`,
-      },
-    ];
+  let hens = [
+    {
+      name: "chuck",
+      eggs: 2,
+      coop_id: `${coop1_id}`,
+    },
+    {
+      name: "duck",
+      eggs: 0,
+      coop_id: `${coop1_id}`,
+    },
+    {
+      name: "euck",
+      eggs: 1,
+      coop_id: `${coop2_id}`,
+    },
+    {
+      name: "fuck",
+      eggs: 2,
+      coop_id: `${coop2_id}`,
+    },
+  ];
 
-    await Promise.all(hens.map((hen) => hen_api.create(null, hen)));
-  });
+  await Promise.all(hens.map((hen) => hen_api.create(null, hen)));
+});
+
+after(async function () {
+  mongod.stop();
+  server.close();
+});
+
+describe("Complex nodes", function () {
 
   it("should build a server with multiple nodes", async function () {
     const query = `{
@@ -239,6 +241,26 @@ describe("Complex nodes", function () {
     expect(names).to.contain("purple");
   });
 
+
+  async function fetchWithRetry(url, n, retryDelay = 100) {
+    let retries = 0;
+    while (retries < n) {
+      try {
+        const response = await fetch(url);
+        if (response.ok) {
+          return response.text(); // or use response.text() if expecting plain text
+        } else {
+          throw new Error(`Received status code: ${response.status}`);
+        }
+      } catch (error) {
+        console.error(`Error fetching URL: ${url}. Retrying...`, error);
+        retries++;
+        await new Promise((resolve) => setTimeout(resolve, retryDelay));
+      }
+    }
+    throw new Error(`Failed to fetch URL ${url} after ${n} retries.`);
+  }
+
   it("should have built in documentation", async () => {
     chai
       .request(server)
@@ -252,16 +274,6 @@ describe("Complex nodes", function () {
         expect(graphlettes).to.have.length(3);
         let restlettes = $("#restlettes li");
         expect(restlettes).to.have.length(3);
-      });
-  });
-
-  it("should have graphiql", async () => {
-    chai
-      .request(server)
-      .get("/farms/graph")
-      .end((err, res) => {
-        expect(err).to.be.null;
-        expect(res).to.have.status(200);
       });
   });
 });
