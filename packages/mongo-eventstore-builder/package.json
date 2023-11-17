@@ -1,0 +1,26 @@
+{
+  "name": "@gridql/mongo-eventstore-builder",
+  "version": "3.0.0",
+  "description": "Listens to mongo and emits events",
+  "main": "index.js",
+  "author": "Tom Marsh",
+  "license": "MIT",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@eventstore/db-client": "^6.0.0",
+    "@gridql/mongo-connector": "^3.0.0",
+    "@pushcorn/hocon-parser": "^1.2.6",
+    "mongodb": "^5.5.0"
+  },
+  "scripts": {
+    "test": "nyc mocha --exit"
+  },
+  "devDependencies": {
+    "nyc": "^15.1.0",
+    "testcontainers": "^9.8.0"
+  },
+  "gitHead": "bb91890717ce2829d804de9047ac787aa524dc69"
+}
