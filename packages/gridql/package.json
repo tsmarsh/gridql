@@ -20,5 +20,6 @@
     "nyc": "^15.1.0",
     "openapi-client-axios": "^7.2.0",
     "testcontainers": "^9.9.1"
-  }
+  },
+  "gitHead": "1ac94cf454aca73fae60101cb09565dbff3db311"
 }

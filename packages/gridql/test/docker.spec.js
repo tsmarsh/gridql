@@ -3,33 +3,34 @@ const {swagger} = require("@gridql/server/lib/swagger");
 const {OpenAPIClientAxios} = require("openapi-client-axios");
 const {builderFactory} = require("@gridql/payload-generator")
 const assert = require("assert");
-const {MongoMemoryServer} = require("mongodb-memory-server");
-const {GenericContainer} = require("testcontainers");
+const {GenericContainer, MongoDBContainer, Network} = require("testcontainers");
 
 const path = require('path');
 
-
-let mongod;
-let server;
 let swagger_clients = {};
 let config;
 
-before(async function (){
+before(async function () {
     this.timeout(50000);
-
-    mongod = await MongoMemoryServer.create();
 
     let configFile = __dirname + "/../config";
 
     const context = path.resolve(__dirname + "/../");
 
     const image = await GenericContainer.fromDockerfile(context).build();
-    let externalURL = "http://localhost:40404";
+
+    const network = await new Network().start();
+
+    const mongodbContainer = await new MongoDBContainer("mongo:6.0.1")
+        .withNetwork(network)
+        .start();
+
     const container = await image
         .withEnvironment({
-            "MONGO_URI": mongod.getUri(),
-        "EXTERNAL_URL": externalURL})
-        .withExposedPorts({container: 3000, host: 40404})
+            "MONGO_URI": `mongodb://${mongodbContainer.getNetworkId(network.getName())}:27017/`
+        })
+        .withExposedPorts(3000)
+        .withNetwork(network)
         .withBindMounts([
             {source: configFile, target: "/app/config"}
         ]).start();
@@ -38,19 +39,24 @@ before(async function (){
     logStream
         .on("data", (line) => console.log(line))
         .on("err", (line) => console.error(line));
-    config = await init(configFile);
 
-    for(let restlette of config.restlettes){
+    let externalURL = `http://localhost:${container.getMappedPort(3000)}`
+
+    process.env.MONGO_URI = mongodbContainer.getConnectionString();
+
+    config = await init(configFile + "/config.conf");
+
+    for (let restlette of config.restlettes) {
         let swaggerdoc = swagger(restlette.path, restlette.schema, externalURL)
-        let api = new OpenAPIClientAxios({ definition: swaggerdoc });
+        let api = new OpenAPIClientAxios({definition: swaggerdoc});
         swagger_clients[restlette.path] = await api.init()
     }
 
 });
 
-describe("Should fire up a base config and run", function(){
-
-    it("should create a test", async () =>{
+describe("Should fire up a base config and run", function () {
+    this.timeout(100000)
+    it("should create a test", async () => {
 
         let test_factory = builderFactory(config.restlettes[0].schema)
         test = test_factory()

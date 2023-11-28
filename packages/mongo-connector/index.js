@@ -21,6 +21,9 @@ async function buildDb(mongo) {
     return client.connect().catch(retry);
   }, promiseRetryOptions);
 
+  const response = await client.db("admin").command({ ping: 1 });
+  console.log("Ping response:", response);
+
   return client.db(mongo["db"]).collection(mongo["collection"]);
 }
 
