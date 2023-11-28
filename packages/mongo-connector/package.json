@@ -1,6 +1,6 @@
 {
   "name": "@gridql/mongo-connector",
-  "version": "3.1.3",
+  "version": "3.1.4",
   "description": "reliably connects to mongo",
   "main": "index.js",
   "license": "MIT",
