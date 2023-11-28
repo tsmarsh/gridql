@@ -1,6 +1,6 @@
 {
   "name": "@gridql/gridql",
-  "version": "1.0.0",
+  "version": "3.1.3",
   "description": "primary service",
   "main": "index.js",
   "author": "Tom Marsh",
