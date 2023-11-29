@@ -1,6 +1,6 @@
 {
   "name": "@gridql/payload-generator",
-  "version": "3.1.4",
+  "version": "3.1.5",
   "main": "index.js",
   "license": "MIT",
   "private": false,
