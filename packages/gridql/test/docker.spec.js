@@ -6,9 +6,11 @@ const assert = require("assert");
 const {GenericContainer, MongoDBContainer, Network} = require("testcontainers");
 
 const path = require('path');
+const fs = require("fs");
 
-let swagger_clients = {};
-let config;
+let schema;
+let swagger_api;
+let swagger_doc;
 
 before(async function () {
     this.timeout(50000);
@@ -23,11 +25,13 @@ before(async function () {
 
     const mongodbContainer = await new MongoDBContainer("mongo:6.0.1")
         .withNetwork(network)
+        .withNetworkAliases("mongo")
+        .withExposedPorts(27017)
         .start();
 
     const container = await image
         .withEnvironment({
-            "MONGO_URI": `mongodb://${mongodbContainer.getNetworkId(network.getName())}:27017/`
+            "MONGO_URI": `mongodb://mongo:27017/`
         })
         .withExposedPorts(3000)
         .withNetwork(network)
@@ -42,15 +46,12 @@ before(async function () {
 
     let externalURL = `http://localhost:${container.getMappedPort(3000)}`
 
-    process.env.MONGO_URI = mongodbContainer.getConnectionString();
+    schema = JSON.parse(fs.readFileSync(__dirname + "/../config/json/test.schema.json").toString());
 
-    config = await init(configFile + "/config.conf");
+    swagger_doc = swagger("/test/api", schema, externalURL)
 
-    for (let restlette of config.restlettes) {
-        let swaggerdoc = swagger(restlette.path, restlette.schema, externalURL)
-        let api = new OpenAPIClientAxios({definition: swaggerdoc});
-        swagger_clients[restlette.path] = await api.init()
-    }
+    let api = new OpenAPIClientAxios({definition: swagger_doc})
+    swagger_api = await api.init();
 
 });
 
@@ -58,10 +59,10 @@ describe("Should fire up a base config and run", function () {
     this.timeout(100000)
     it("should create a test", async () => {
 
-        let test_factory = builderFactory(config.restlettes[0].schema)
+        let test_factory = builderFactory(schema)
         test = test_factory()
 
-        const result = await swagger_clients["/test/api"].create(null, test);
+        const result = await swagger_api.create(null, test);
 
         assert.equal(result.status, 200);
         assert.equal(result.data.name, test.name);

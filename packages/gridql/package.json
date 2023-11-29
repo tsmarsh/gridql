@@ -11,15 +11,15 @@
     "test": "nyc mocha --exit"
   },
   "dependencies": {
-    "@gridql/server": "^2.3.6"
+    "@gridql/server": "^3.1.2"
   },
   "devDependencies": {
-    "@gridql/payload-generator": "^2.3.2",
+    "@gridql/payload-generator": "^3.1.4",
     "mocha": "^10.2.0",
     "mongodb-memory-server": "^8.13.0",
     "nyc": "^15.1.0",
     "openapi-client-axios": "^7.2.0",
     "testcontainers": "^9.9.1"
   },
-  "gitHead": "1ac94cf454aca73fae60101cb09565dbff3db311"
+  "gitHead": "9fac91ef53cf1ef804d4d8a4d00025e234ec8916"
 }
