@@ -110,12 +110,12 @@ class PayloadRepository {
 
     return results.map((r) => r.id);
   };
-  remove = (id) => {
-    return this.db.updateMany({ id }, { $set: { deleted: true } });
+  remove = async (id) => {
+    await this.db.updateMany({ id }, { $set: { deleted: true } });
   };
 
-  removeMany = (ids) => {
-    return this.db.updateMany(
+  removeMany = async (ids) => {
+    await this.db.updateMany(
       { id: { $in: ids } },
       { $set: { deleted: true } }
     );

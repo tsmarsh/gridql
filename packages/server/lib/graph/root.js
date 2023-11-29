@@ -34,7 +34,7 @@ const processQueryTemplate = (id, queryTemplate) => {
   return JSON.parse(queryWithId);
 };
 
-const scalar = (db, dtoFactory, i = "id", queryTemplate) => {
+const scalar = (db, dtoFactory, i, queryTemplate) => {
   return async function (args, context, info) {
     let id = args[i];
     let timestamp = args.hasOwnProperty("at") ? args["at"] : Date.now();
@@ -81,7 +81,7 @@ const scalar = (db, dtoFactory, i = "id", queryTemplate) => {
   };
 };
 
-const singleton = (db, dtoFactory, id = "id", queryTemplate) => {
+const singleton = (db, dtoFactory, id, queryTemplate) => {
   return async function (args, context, info) {
     let i = args[id];
     const query = processQueryTemplate(i, queryTemplate);
