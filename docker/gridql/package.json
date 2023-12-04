@@ -8,18 +8,17 @@
   "private": false,
   "scripts": {
     "start": "node index.js",
-    "test": "node_modules/.bin/nyc mocha --exit"
+    "test": "nyc mocha --exit"
   },
   "dependencies": {
-    "@gridql/server": "file://../../packages/server"
+    "@gridql/server": "file:../../packages/server"
   },
   "devDependencies": {
-    "@gridql/payload-generator": "file://../../packages/payload-generator",
+    "@gridql/payload-generator": "file:../../packages/payload-generator",
     "mocha": "^10.2.0",
     "mongodb-memory-server": "^8.13.0",
     "nyc": "^15.1.0",
     "openapi-client-axios": "^7.2.0",
     "testcontainers": "^9.9.1"
-  },
-  "gitHead": "b10884f65498fef773cbfd5420c9c8b000bad76a"
+  }
 }

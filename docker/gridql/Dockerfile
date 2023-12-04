@@ -1,24 +1,28 @@
 # Use the official Node.js image as the base
+FROM node:20-buster as builder
+
+WORKDIR /build
+
+COPY . .
+
+RUN yarn install
+
+WORKDIR /build/docker/gridql
+
+RUN yarn install
+
+
 FROM node:20-alpine
 
 WORKDIR /app
 
-#RUN mkdir -p config
-RUN mkdir -p views
-
 VOLUME config
-
-COPY package.json ./
-
-# Install dependencies
-RUN yarn install
-
-# Copy the rest of the application code to the working directory
-COPY views ./views
-COPY index.js ./
 
 # Expose the port that the application listens on
 EXPOSE 3000
+
+COPY --from=builder /build/docker/gridql .
+
 
 # Start the application
 CMD ["npm", "start"]

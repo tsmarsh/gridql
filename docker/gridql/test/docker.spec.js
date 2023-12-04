@@ -13,13 +13,14 @@ let swagger_api;
 let swagger_doc;
 
 before(async function () {
-    this.timeout(50000);
+    //this.timeout(120000);
 
     let configFile = __dirname + "/../config";
 
-    const context = path.resolve(__dirname + "/../");
+    const context = "docker/gridql/Dockerfile"
+    const workingDir = path.resolve(__dirname + "/../../../");
 
-    const image = await GenericContainer.fromDockerfile(context).build();
+    const image = await GenericContainer.fromDockerfile(workingDir, context).build();
 
     const network = await new Network().start();
 
@@ -55,7 +56,7 @@ before(async function () {
 
 });
 
-describe("Should fire up a base config and run", function () {
+describe("Should build docker image and run", function () {
     this.timeout(100000)
     it("should create a test", async () => {
 
