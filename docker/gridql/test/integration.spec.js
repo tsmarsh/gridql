@@ -1,4 +1,4 @@
-const {init, start} = require("@gridql/server");
+const {parse, build_app} = require("@gridql/server");
 const {swagger} = require("@gridql/server/lib/swagger");
 const {OpenAPIClientAxios} = require("openapi-client-axios");
 const {builderFactory} = require("@gridql/payload-generator")
@@ -20,14 +20,10 @@ before(async function (){
 
     let configFile = __dirname + "/../config/config.conf";
 
-    config = await init(configFile);
+    config = await parse(configFile);
+    let app = await build_app(config);
 
-    server = await start(
-        config.url,
-        config.port,
-        config.graphlettes,
-        config.restlettes
-    );
+    server = await app.listen(config.port);
 
     for(let restlette of config.restlettes){
         let swaggerdoc = swagger(restlette.path, restlette.schema, config.url)

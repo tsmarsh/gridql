@@ -8,13 +8,13 @@
   "private": false,
   "scripts": {
     "start": "node index.js",
-    "test": "nyc mocha --exit"
+    "test": "node_modules/.bin/nyc mocha --exit"
   },
   "dependencies": {
-    "@gridql/server": "^3.1.5"
+    "@gridql/server": "file://../../packages/server"
   },
   "devDependencies": {
-    "@gridql/payload-generator": "^3.1.5",
+    "@gridql/payload-generator": "file://../../packages/payload-generator",
     "mocha": "^10.2.0",
     "mongodb-memory-server": "^8.13.0",
     "nyc": "^15.1.0",

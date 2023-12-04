@@ -1,5 +1,5 @@
 const { after, before, describe, it } = require("mocha");
-const { init, start } = require("../index");
+const {parse, build_app} = require("../index")
 const { callSubgraph } = require("../lib/graph/callgraph");
 const chai = require("chai");
 const expect = chai.expect;
@@ -40,16 +40,12 @@ let farm_id, coop1_id, coop2_id;
 let first_stamp, second_stamp;
 
 before(async function () {
-  config = await init(__dirname + "/config/the_farm.conf");
-
-  server = await start(
-      config.url,
-      config.port,
-      config.graphlettes,
-      config.restlettes
-  );
+  config = await parse(__dirname + "/config/the_farm.conf");
+  let app = await build_app(config);
 
   port = config.port;
+
+  server = app.listen(port)
 
   let swagger_docs = config.restlettes.map((restlette) => {
     return swagger(restlette.path, restlette.schema, config.url);
@@ -141,7 +137,7 @@ after(async function () {
   server.close();
 });
 
-describe("Complex nodes", function () {
+describe("The Farm", function () {
 
   it("should build a server with multiple nodes", async function () {
     const query = `{
@@ -241,25 +237,6 @@ describe("Complex nodes", function () {
     expect(names).to.contain("purple");
   });
 
-
-  async function fetchWithRetry(url, n, retryDelay = 100) {
-    let retries = 0;
-    while (retries < n) {
-      try {
-        const response = await fetch(url);
-        if (response.ok) {
-          return response.text(); // or use response.text() if expecting plain text
-        } else {
-          throw new Error(`Received status code: ${response.status}`);
-        }
-      } catch (error) {
-        console.error(`Error fetching URL: ${url}. Retrying...`, error);
-        retries++;
-        await new Promise((resolve) => setTimeout(resolve, retryDelay));
-      }
-    }
-    throw new Error(`Failed to fetch URL ${url} after ${n} retries.`);
-  }
 
   it("should have built in documentation", async () => {
     chai

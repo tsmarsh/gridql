@@ -1,7 +1,7 @@
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const { describe, it, before, after } = require("mocha");
 
-const { init, start } = require("../../index");
+const { parse, build_app } = require("../../index");
 const { MongoClient } = require("mongodb");
 const assert = require("assert");
 const { builderFactory } = require("@gridql/payload-generator");
@@ -47,14 +47,10 @@ before(async function () {
 
   db = client.db("test").collection("hens");
 
-  config = await init(__dirname + "/../config/simple_rest_bulk.conf");
+  config = await parse(__dirname + "/../config/simple_rest_bulk.conf");
 
-  server = await start(
-    config.url,
-    config.port,
-    config.graphlettes,
-    config.restlettes
-  );
+  let app = await build_app(config)
+  server = await app.listen(config.port)
 });
 
 after(async function () {

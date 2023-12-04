@@ -11,6 +11,67 @@ const nock = require("nock");
 let kafka;
 let kafkaContainer;
 
+before(async function () {
+  this.timeout(360000);
+
+  kafkaContainer = await new KafkaContainer()
+      .withExposedPorts(9093)
+      .withEnvironment({ KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" })
+      .withEnvironment({ KAFKA_DELETE_TOPIC_ENABLE: "true" })
+      .start()
+      .catch((reason) =>
+          console.log("Kafka container failed to start: ", reason)
+      );
+
+  console.log(
+      `Kafka running on: ${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(
+          9093
+      )}`
+  );
+
+  let config = `{
+      kafka: {
+        brokers: [
+          "${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}",
+        ],
+        host: "${kafkaContainer.getHost()}",
+        clientId: "kafka-event-consumer-test",
+        topic: \${topic},
+        groupId: \${topic}
+      },
+      schema: "${__dirname}/config/hen.schema.json",
+      swagger: "${__dirname}/config/test.swagger.json",
+    }`;
+
+  fs.writeFileSync(__dirname + "/config/base.conf", config);
+
+  kafka = new Kafka({
+    logLevel: logLevel.INFO,
+    brokers: [
+      `${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}`,
+    ],
+    clientId: "mongo-event-builder-test",
+  });
+
+  const swaggerdoc = swagger(
+      "/test",
+      JSON.parse(
+          fs.readFileSync(__dirname + "/config/hen.schema.json").toString()
+      ),
+      "http://test.foo"
+  );
+
+  fs.writeFileSync(
+      __dirname + "/config/test.swagger.json",
+      JSON.stringify(swaggerdoc, null, 4)
+  );
+});
+
+after(async () => {
+  console.log("-----CLEANING UP------");
+  await kafkaContainer.stop();
+});
+
 describe("Kafka change listener", () => {
   it("should call create rest api when there is a CREATE event", async () => {
     let config = await init(__dirname + "/config/create.conf");
@@ -123,67 +184,6 @@ describe("Kafka change listener", () => {
         assert(false);
       });
   }).timeout(20000);
-});
-
-before(async function () {
-  this.timeout(360000);
-
-  kafkaContainer = await new KafkaContainer()
-    .withExposedPorts(9093)
-    .withEnvironment({ KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" })
-    .withEnvironment({ KAFKA_DELETE_TOPIC_ENABLE: "true" })
-    .start()
-    .catch((reason) =>
-      console.log("Kafka container failed to start: ", reason)
-    );
-
-  console.log(
-    `Kafka running on: ${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(
-      9093
-    )}`
-  );
-
-  let config = `{
-      kafka: {
-        brokers: [
-          "${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}",
-        ],
-        host: "${kafkaContainer.getHost()}",
-        clientId: "kafka-event-consumer-test",
-        topic: \${topic},
-        groupId: \${topic}
-      },
-      schema: "${__dirname}/config/hen.schema.json",
-      swagger: "${__dirname}/config/test.swagger.json",
-    }`;
-
-  fs.writeFileSync(__dirname + "/config/base.conf", config);
-
-  kafka = new Kafka({
-    logLevel: logLevel.INFO,
-    brokers: [
-      `${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}`,
-    ],
-    clientId: "mongo-event-builder-test",
-  });
-
-  const swaggerdoc = swagger(
-    "/test",
-    JSON.parse(
-      fs.readFileSync(__dirname + "/config/hen.schema.json").toString()
-    ),
-    "http://test.foo"
-  );
-
-  fs.writeFileSync(
-    __dirname + "/config/test.swagger.json",
-    JSON.stringify(swaggerdoc, null, 4)
-  );
-});
-
-after(async () => {
-  console.log("-----CLEANING UP------");
-  //await kafkaContainer.stop();
 });
 
 const waitForApiCall = (apiMock) => {

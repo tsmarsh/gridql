@@ -1,6 +1,6 @@
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const { MongoClient, ObjectId } = require("mongodb");
-const { init, start } = require("../../index");
+const { parse, build_app } = require("../../index");
 const { swagger } = require("../../lib/swagger");
 const assert = require("assert");
 const { after, it } = require("mocha");
@@ -30,17 +30,13 @@ before(async function () {
 
   db = client.db("test").collection("hens");
 
-  config = await init(__dirname + "/../config/simple_swagger.conf");
+  config = await parse(__dirname + "/../config/simple_swagger.conf");
+  let app = await build_app(config)
 
   payload = {
     sub: "1234567890",
   };
-  server = await start(
-    config.url,
-    config.port,
-    config.graphlettes,
-    config.restlettes
-  );
+  server = await app.listen(config.port);
 
   const swaggerdoc = swagger(
     config.restlettes[0].path,

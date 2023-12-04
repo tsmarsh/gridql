@@ -2,7 +2,7 @@ const { MongoMemoryServer } = require("mongodb-memory-server");
 const { expect } = require("chai");
 const { describe, it, before, after } = require("mocha");
 
-const { init, start } = require("../../index");
+const { parse, build_app } = require("../../index");
 const { MongoClient } = require("mongodb");
 const { callSubgraph } = require("../../lib/graph/callgraph");
 const assert = require("assert");
@@ -31,18 +31,16 @@ describe("Single node", function () {
   before(async function () {
     db = client.db("test").collection("test");
 
-    config = await init(__dirname + "/../config/simple.conf");
+    config = await parse(__dirname + "/../config/simple.conf");
+    let app = await build_app(config)
 
-    server = await start(
-      config.url,
-      config.port,
-      config.graphlettes,
-      config.restlettes
+    server = await app.listen(
+      config.port
     );
   });
 
   it("it should fail if the rest config document is invalid", async function () {
-    init(__dirname + "/config/bad_graph.conf")
+    parse(__dirname + "/config/bad_graph.conf")
       .then(() => fail())
       .catch((err) => {
         assert(err !== undefined);
