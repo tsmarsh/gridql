@@ -13,7 +13,7 @@ let swagger_api;
 let swagger_doc;
 
 before(async function () {
-    //this.timeout(120000);
+    this.timeout(200000);
 
     let configFile = __dirname + "/../config";
 
@@ -57,7 +57,6 @@ before(async function () {
 });
 
 describe("Should build docker image and run", function () {
-    this.timeout(100000)
     it("should create a test", async () => {
 
         let test_factory = builderFactory(schema)
