@@ -31,7 +31,20 @@ const root = (db, dtoFactory, { singletons, scalars }) => {
 
 const processQueryTemplate = (id, queryTemplate) => {
   const queryWithId = queryTemplate.replace("${id}", id);
-  return JSON.parse(queryWithId);
+  let json;
+
+  try {
+    json = JSON.parse(queryWithId);
+  } catch (e) {
+    console.error(
+        ```Failed to create query:
+      Query Template: ${queryTemplate}
+      id: ${id}
+      Updated Query: ${queryWithId}
+    ```)
+    throw e;
+  }
+  return json;
 };
 
 const scalar = (db, dtoFactory, i, queryTemplate) => {
@@ -42,7 +55,8 @@ const scalar = (db, dtoFactory, i, queryTemplate) => {
       $lt: new Date(timestamp),
     };
 
-    const query = processQueryTemplate(id, queryTemplate);
+    let query = processQueryTemplate(id, queryTemplate);
+
     query.createdAt = time_filter;
 
     let results = await db

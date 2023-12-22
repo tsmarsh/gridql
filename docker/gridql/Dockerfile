@@ -1,18 +1,18 @@
-# Use the official Node.js image as the base
-FROM node:20-buster as builder
+FROM node:21-buster as builder
 
 WORKDIR /build
 
 COPY . .
 
-RUN yarn install
+RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn  yarn install
+
+FROM builder as gridql-builder
 
 WORKDIR /build/docker/gridql
 
 RUN yarn install
 
-
-FROM node:20-alpine
+FROM node:21-alpine
 
 WORKDIR /app
 
@@ -21,7 +21,7 @@ VOLUME config
 # Expose the port that the application listens on
 EXPOSE 3000
 
-COPY --from=builder /build/docker/gridql .
+COPY --from=gridql-builder /build/docker/gridql .
 
 
 # Start the application

@@ -1,4 +1,4 @@
-## Philosophy
+    ## Philosophy
 
 At its simplest a server should try its hardest to look like this:
 

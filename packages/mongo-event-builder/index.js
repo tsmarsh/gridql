@@ -1,19 +1,55 @@
-const { init, start } = require("./lib/initialiser");
+const {init} = require("./lib/config");
 
-const fs = require("fs");
+let payloads = [];
 
-let configPath = "./config/config.conf";
+const toCRUD = (change) => {
+  const verbs = {
+    insert: "CREATE",
+    update: "UPDATE",
+    delete: "DELETE",
+  };
 
-if (fs.existsSync(configPath)) {
-  init(configPath)
-    .then((config) => {
-      console.log("Configuration found: ", config);
-      const { collection, kafkaProducer, topic } = config;
-      start({ collection, kafkaProducer, topic, id: "_id" }).catch((err) => {
-        console.log("Failed to start: ", err);
-      });
-    })
-    .catch((err) => console.log("Error parsing config: ", err));
-} else {
-  console.log("Config missing");
-}
+  return verbs[change.operationType];
+};
+
+const toPayload = (id) => (change) => {
+  const operationType = toCRUD(change);
+  if (operationType === undefined) {
+    return null;
+  }
+
+  const documentId = change.documentKey[id];
+
+  const message = {
+    id: documentId.toString(),
+    operation: operationType,
+  };
+
+  return { key: message.id, value: JSON.stringify(message) };
+};
+
+const start = async ({ collection, kafkaProducer, topic, id = "_id" }) => {
+  const changeStream = await collection.watch();
+
+  const processChange = toPayload(id);
+
+  changeStream.on("change", async (change) => {
+    console.log("Change detected:", change);
+    let payload = processChange(change);
+    if (payload !== null) {
+      payloads.push(payload);
+    }
+    if (payloads.length > 0) {
+      let message = { topic, messages: payloads };
+      console.log("Sending: ", message);
+
+      await kafkaProducer
+        .send(message)
+        .then(console.log("Sent"))
+        .catch((reason) => console.log("Can't send: ", reason));
+      payloads = [];
+    }
+  });
+};
+
+module.exports = { init, start };

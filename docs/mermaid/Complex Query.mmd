@@ -1,0 +1,17 @@
+sequenceDiagram
+    Client Application->>Graphlette: GraphQL Query
+    Graphlette->>Document Store: MongoDB Query
+    Document Store->> Graphlette: BSON
+    Graphlette->>Graphlette 2: GraphQL Query
+    Graphlette 2->>Document Store 2: MongoDB Query
+    Document Store 2 ->> Graphlette 2: BSON
+    Graphlette 2->>Graphlette 3: GraphQL Query
+    Graphlette 3->> Document Store 3: MongoDB Query
+    Document Store 3 ->> Graphlette 3: BSON
+    Graphlette 3->>Graphlette 2: JSON Response
+    Graphlette 2->>Graphlette: JSON Response
+    Graphlette->>Graphlette 4: GraphQL Query
+    Graphlette 4->>Document Store 4: MongoDB Query
+    Graphlette 4->>Graphlette: JSON Response
+    Graphlette->>Client Application: JSON Response
+

@@ -3,79 +3,16 @@ const { Kafka, logLevel } = require("kafkajs");
 
 const { KafkaContainer, MongoDBContainer } = require("testcontainers");
 
-const { start, init } = require("../lib/initialiser");
+const { start, init } = require("../index");
 const assert = require("assert");
 const fs = require("fs");
 
-function delay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+let client;
+let kafka;
+let kafkaContainer;
+let mongoContainer;
 
 describe("MongoDB change listener", () => {
-  let client;
-  let kafka;
-  let kafkaContainer;
-  let mongoContainer;
-
-  before(async function () {
-    this.timeout(360000);
-
-    mongoContainer = await new MongoDBContainer("mongo:6.0.6")
-      .withExposedPorts(27071)
-      .start();
-
-    const uri = mongoContainer.getConnectionString();
-
-    console.log("mongodb uri: ", uri);
-
-    client = await MongoClient.connect(uri, { directConnection: true }).catch(
-      (err) => console.log("Failed to connect to MongoDB, retrying...", err)
-    );
-
-    kafkaContainer = await new KafkaContainer()
-      .withExposedPorts(9093)
-      .withEnvironment({ KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" })
-      .withEnvironment({ KAFKA_DELETE_TOPIC_ENABLE: "true" })
-      .start()
-      .catch((reason) =>
-        console.log("Kafka container failed to start: ", reason)
-      );
-
-    console.log(
-      `${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}`
-    );
-
-    let config = `
-        {
-            "mongo": {
-                "uri": "${mongoContainer.getConnectionString()}",
-                "db": "test",
-                "collection": \${topic},
-                "options": {
-                  "directConnection": true
-                }
-                
-            },
-            "kafka": {
-                "brokers": ["${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(
-      9093
-    )}"],
-                    "host": "${kafkaContainer.getHost()}",
-                "clientId": "mongo-event-builder-test",
-                "topic": \${topic}
-            }
-        }`;
-
-    kafka = new Kafka({
-      logLevel: logLevel.INFO,
-      brokers: [
-        `${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}`,
-      ],
-      clientId: "mongo-event-builder-test",
-    });
-
-    fs.writeFileSync(__dirname + "/config/base.conf", config);
-  });
 
   it("should publish a message when a document is inserted", async () => {
     const { collection, kafkaProducer, topic } = await init(
@@ -214,10 +151,74 @@ describe("MongoDB change listener", () => {
     assert.equal(actual.id, actual_id);
     assert.equal(actual.operation, "DELETE");
   }).timeout(10000);
-
-  after(async () => {
-    console.log("-----CLEANING UP------");
-    await kafkaContainer.stop();
-    await mongoContainer.stop();
-  });
 });
+
+before(async function () {
+  this.timeout(360000);
+
+  mongoContainer = await new MongoDBContainer("mongo:6.0.6")
+      .withExposedPorts(27071)
+      .start().catch(err => console.log(err));
+
+  const uri = mongoContainer.getConnectionString();
+
+  console.log("mongodb uri: ", uri);
+
+  client = await MongoClient.connect(uri, { directConnection: true }).catch(
+      (err) => console.log("Failed to connect to MongoDB, retrying...", err)
+  );
+
+  kafkaContainer = await new KafkaContainer()
+      .withExposedPorts(9093)
+      .withEnvironment({ KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" })
+      .withEnvironment({ KAFKA_DELETE_TOPIC_ENABLE: "true" })
+      .start()
+      .catch((reason) =>
+          console.log("Kafka container failed to start: ", reason)
+      );
+
+  console.log(
+      `${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}`
+  );
+
+  let config = `
+        {
+            "mongo": {
+                "uri": "${mongoContainer.getConnectionString()}",
+                "db": "test",
+                "collection": \${topic},
+                "options": {
+                  "directConnection": true
+                }
+                
+            },
+            "kafka": {
+                "brokers": ["${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(
+      9093
+  )}"],
+                    "host": "${kafkaContainer.getHost()}",
+                "clientId": "mongo-event-builder-test",
+                "topic": \${topic}
+            }
+        }`;
+
+  kafka = new Kafka({
+    logLevel: logLevel.INFO,
+    brokers: [
+      `${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}`,
+    ],
+    clientId: "mongo-event-builder-test",
+  });
+
+  fs.writeFileSync(__dirname + "/config/base.conf", config);
+});
+
+after(async () => {
+  console.log("-----CLEANING UP------");
+  await kafkaContainer.stop();
+  await mongoContainer.stop();
+});
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

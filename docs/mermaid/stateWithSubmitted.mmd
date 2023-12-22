@@ -1,0 +1,12 @@
+stateDiagram-v2
+    [*] --> Pending: new
+    Pending --> Submitted: UPDATE > status > submit
+    Submitted --> Accepted: UPDATE > status > accept
+    Pending --> Pending: UPDATE
+    Pending --> Deleted: DELETE
+    Accepted --> PendingDelete: DELETE
+    PendingDelete --> Submitted: UPDATE > status > submit
+    Submitted --> Deleted: DELETE
+    Deleted --> PendingRestoration: UPDATE > status > restore
+    PendingRestoration --> Submitted: UPDATE > status > submit
+    Submitted --> Errored: UPDATE > status > error
