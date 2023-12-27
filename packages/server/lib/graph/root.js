@@ -37,12 +37,12 @@ const processQueryTemplate = (id, queryTemplate) => {
     json = JSON.parse(queryWithId);
   } catch (e) {
     console.error(
-        ```Failed to create query:
+        `Failed to create query:
       Query Template: ${queryTemplate}
       id: ${id}
       Updated Query: ${queryWithId}
-    ```)
-    throw e;
+    `)
+  throw e;
   }
   return json;
 };
