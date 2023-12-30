@@ -36,7 +36,7 @@ const parse = async (configFile) => {
         .parse({url: configFile})
         .catch((e) => console.log("Error parse config: ", e));
 
-    console.log("Config file: ", config);
+    console.log("Config file: ", JSON.stringify(config, null, 2));
 
     const url = config["url"];
     const port = config["port"];

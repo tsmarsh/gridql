@@ -17,14 +17,6 @@ chai.use(chaiHttp);
 
 let mongod, client, uri;
 
-before(async function () {
-  mongod = await MongoMemoryServer.create({ instance: { port: 60504 } });
-  client = new MongoClient(mongod.getUri());
-  await client.connect();
-
-  uri = mongod.getUri();
-});
-
 let config;
 let server;
 
@@ -40,6 +32,12 @@ let farm_id, coop1_id, coop2_id;
 let first_stamp, second_stamp;
 
 before(async function () {
+  mongod = await MongoMemoryServer.create({ instance: { port: 60504 } });
+  client = new MongoClient(mongod.getUri());
+  await client.connect();
+
+  uri = mongod.getUri();
+
   config = await parse(__dirname + "/config/the_farm.conf");
   let app = await build_app(config);
 

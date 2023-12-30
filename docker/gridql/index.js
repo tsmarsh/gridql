@@ -5,7 +5,6 @@ let configPath = "./config/config.conf";
 if(fs.existsSync(configPath)){
     parse(configPath)
         .then(config => {
-            console.log("Configuration found: ", config.url, config.port)
             console.log("Graphlettes: ", config.graphlettes.length)
             console.log("Restlettes: ", config.restlettes.length)
             build_app(config).then(app => app.listen(config.port))
