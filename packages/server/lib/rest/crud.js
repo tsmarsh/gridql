@@ -41,6 +41,7 @@ const read = (repo) => async (req, res) => {
   const result = await repo.read(id, {});
 
   if (result !== null && result !== undefined) {
+    res.header("X-Canonical-Id", result.id);
     if (isAuthorized(getSub(req.headers.authorization), result)) {
       res.json(result.payload);
     } else {

@@ -81,6 +81,7 @@ describe("The published swagger should work", function () {
     assert.equal(result.data.name, "chuck");
 
     id = result.request.path.slice(-36);
+      assert.equal(result.headers["x-canonical-id"], id)
   });
 
   it("it shouldn't create a bad document ", async function () {

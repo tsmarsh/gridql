@@ -86,6 +86,13 @@ const swagger = (context, schema, url) => {
           responses: {
             200: {
               description: "The document was successfully retrieved.",
+              headers: {
+                "X-Canonical-Id": {
+                  schema: {
+                    type: "string"
+                  }
+                }
+              },
               content: {
                 "application/json": {
                   schema: {
