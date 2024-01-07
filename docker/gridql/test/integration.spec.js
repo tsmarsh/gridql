@@ -44,7 +44,7 @@ describe("Should fire up a base config and run", function(){
 
         assert.equal(result.status, 200);
         assert.equal(result.data.name, test.name);
-        assert(result.data._id !== undefined);
+        assert(result.data.id !== undefined);
     })
 });
 

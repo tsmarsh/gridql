@@ -50,7 +50,7 @@ const processQueryTemplate = (id, queryTemplate) => {
 const scalar = (db, dtoFactory, i, queryTemplate) => {
   return async function (args, context, info) {
     let id = args[i];
-    let timestamp = args.hasOwnProperty("at") ? args["at"] : Date.now();
+    let timestamp = getTimestamp(args);
     let time_filter = {
       $lt: new Date(timestamp),
     };
@@ -95,12 +95,26 @@ const scalar = (db, dtoFactory, i, queryTemplate) => {
   };
 };
 
+function getTimestamp(args) {
+  let atArg = "at"
+  let at;
+  if(args.hasOwnProperty(atArg)){
+    at = args["at"];
+    console.log("Found 'at' and forwarding: ", at)
+  } else{
+    at = Date.now();
+    console.log("No 'at', using currentTime: ", at)
+  }
+
+  return at;
+}
+
 const singleton = (db, dtoFactory, id, queryTemplate) => {
   return async function (args, context, info) {
     let i = args[id];
     const query = processQueryTemplate(i, queryTemplate);
 
-    let timestamp = args.hasOwnProperty("at") ? args["at"] : Date.now();
+    let timestamp = getTimestamp(args);
 
     query.createdAt = {
       $lt: new Date(timestamp),
