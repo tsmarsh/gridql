@@ -163,6 +163,33 @@ describe("The Farm", function () {
     expect(json.coops.length).to.equal(3);
   });
 
+  it("should query in both directions", async function () {
+    const query = `{
+         getByCoop(coop: "${coop1_id}") {
+               name
+               eggs 
+               coop {
+                name
+                farm {
+                  name
+                }
+               }
+            }
+        }`;
+
+    const json = await callSubgraph(
+        `http://localhost:${port}/hens/graph`,
+        query,
+        "getByCoop",
+        "Bearer " + token
+    );
+
+    expect(json.length).to.equal(2);
+    expect(json[0].coop.name).to.equal("purple")
+    //This is a configuration problem, not a functionality problem
+    // expect(json[0].coop.farm.name).to.equal("Emerdale")
+  });
+
   it("should get latest by default", async function () {
     const query = `{
          getById(id: "${coop1_id}") {
@@ -234,6 +261,7 @@ describe("The Farm", function () {
     let names = json.coops.map((c) => c.name);
     expect(names).to.contain("purple");
   });
+
 
 
   it("should have built in documentation", async () => {

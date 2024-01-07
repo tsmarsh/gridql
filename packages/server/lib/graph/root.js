@@ -87,10 +87,9 @@ const scalar = (db, dtoFactory, i, queryTemplate) => {
         (r) => {
           r.payload.id = r.id;
           return r.payload;
-        },
+        }),
         context === undefined ? null : context.auth_header,
         timestamp
-      )
     );
   };
 };
@@ -100,10 +99,8 @@ function getTimestamp(args) {
   let at;
   if(args.hasOwnProperty(atArg)){
     at = args["at"];
-    console.log("Found 'at' and forwarding: ", at)
   } else{
     at = Date.now();
-    console.log("No 'at', using currentTime: ", at)
   }
 
   return at;

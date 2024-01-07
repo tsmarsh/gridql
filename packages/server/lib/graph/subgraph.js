@@ -34,7 +34,7 @@ const addTimestampToQuery = (query, schema, queryName, timestamp) => {
                 {
                   kind: "Argument",
                   name: { kind: "Name", value: "at" },
-                  value: { kind: "IntValue", value: String(timestamp) },
+                  value: { kind: "IntValue", value: timestamp },
                 },
               ],
             };
