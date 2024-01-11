@@ -9,3 +9,4 @@ coverage.json
 packages/kafka-event-consumer/test/config/base.conf
 packages/mongo-event-builder/test/config/base.conf
 
+/docker/db-events/test/queue/
