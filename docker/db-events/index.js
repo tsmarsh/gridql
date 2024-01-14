@@ -1,4 +1,4 @@
-const { init, start } = require("./lib/initialiser");
+const { init, start } = require("@gridql/mongo-event-builder");
 
 const fs = require("fs");
 

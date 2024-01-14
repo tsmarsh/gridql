@@ -1,45 +1,73 @@
 version: '3.8'
-networks:
-  redpanda_network:
-    driver: bridge
-volumes:
-  redpanda-0: null
 
 services:
   mongo:
-    image: mongo
-    restart: always
+    image: mongo:6.0.6
+    command: [
+      "--replSet",
+      "rs0",
+      "--bind_ip",
+      "localhost,mongo"
+    ]
+    ports:
+      - "27017:27017"
     hostname: mongo
+    healthcheck:
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  init-replica-set:
+    image: mongo:6.0.6
+    depends_on:
+      mongo:
+        condition: service_healthy
+    command: [
+      "mongosh",
+      "mongodb://mongo:27017/",
+      "--eval",
+      "rs.initiate();"
+    ]
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    hostname: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
 
   queue:
-    image: vectorized/redpanda:latest
-    command:
-      - redpanda start
-      - --overprovisioned
-      - --smp 1
-      - --memory 1G
-      - --reserve-memory 0M
-      - --node-id 0
-      - --check=false
+    image: confluentinc/cp-kafka:latest
     ports:
-      - "19092:9092"
-    volumes:
-      - "./queue:/var/lib/redpanda/data"
+      - "19093:19093"
+    hostname: queue
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://queue:9093,PLAINTEXT_HOST://localhost:19093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
 
   builder:
-    depends_on: [ mongo, queue ]
+    depends_on: [ init-replica-set, queue ]
     build:
       context: "../../.."
-      dockerfile: "docker/gridql/Dockerfile"
+      dockerfile: "docker/db-events/Dockerfile"
     hostname: builder
     volumes:
       - "./config:/app/config"
     environment:
       MONGO_URI: mongodb://mongo:27017
-      KAFKA_URI: queue:9092
+      KAFKA_URI: queue:9093
 
   test:
-    depends_on: [mongo]
+    depends_on: [init-replica-set]
     build:
       context: "../../.."
       dockerfile: "docker/gridql/Dockerfile"

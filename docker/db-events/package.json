@@ -14,6 +14,7 @@
     "@gridql/mongo-event-builder": "file:../../packages/mongo-event-builder"
   },
   "devDependencies": {
+    "kafkajs": "^2.2.4",
     "@gridql/payload-generator": "file:../../packages/payload-generator",
     "mocha": "^10.2.0",
     "mongodb-memory-server": "^8.13.0",
