@@ -42,29 +42,11 @@ describe("MongoDB change listener", () => {
 
     await start({ collection, kafkaProducer, topic, id: "_id" });
 
+    let tc = new TestConsumer(kafka, {groupId: "test-group-2"})
+    await tc.init(topic);
+    await tc.run();
+
     let consumer = kafka.consumer({ groupId: "test-group-2" });
-
-    await consumer.connect();
-
-    await consumer
-      .subscribe({ topic, fromBeginning: true })
-      .then(() => {
-        console.log("Subscribed");
-      })
-      .catch((reason) => console.log("can't subscribe: ", reason));
-
-    let actual;
-
-    await consumer.run({
-      eachMessage: async ({ partition, message }) => {
-        console.log("Event received: ", {
-          partition,
-          offset: message.offset,
-          value: message.value.toString(),
-        });
-        actual = JSON.parse(message.value.toString());
-      },
-    });
 
     const result = await collection.insertOne({ name: "Test" });
     let actual_id = result.insertedId.toString();
@@ -74,11 +56,7 @@ describe("MongoDB change listener", () => {
       { $set: { name: "Updated Test" } }
     );
 
-    let loop = 0;
-    while (actual === undefined && loop < 10) {
-      await delay(50);
-      loop++;
-    }
+    let actual = await tc.current()
 
     assert.equal(actual.id, actual_id);
     assert.equal(actual.operation, "UPDATE");
@@ -91,40 +69,16 @@ describe("MongoDB change listener", () => {
 
     await start({ collection, kafkaProducer, topic, id: "_id" });
 
-    let consumer = kafka.consumer({ groupId: "test-group-3" });
-
-    await consumer.connect();
-
-    await consumer
-      .subscribe({ topic, fromBeginning: true })
-      .then(() => {
-        console.log("Subscribed");
-      })
-      .catch((reason) => console.log("can't subscribe: ", reason));
-
-    let actual;
-
-    await consumer.run({
-      eachMessage: async ({ partition, message }) => {
-        console.log("Event received: ", {
-          partition,
-          offset: message.offset,
-          value: message.value.toString(),
-        });
-        actual = JSON.parse(message.value.toString());
-      },
-    });
+    let tc = new TestConsumer(kafka, {groupId: "test-group-3"})
+    await tc.init(topic);
+    await tc.run();
 
     const result = await collection.insertOne({ name: "Test" });
     let actual_id = result.insertedId.toString();
 
     await collection.deleteOne({ _id: result.insertedId });
 
-    let loop = 0;
-    while (actual === undefined && loop < 10) {
-      await delay(50);
-      loop++;
-    }
+    let actual = await tc.current();
 
     assert.equal(actual.id, actual_id);
     assert.equal(actual.operation, "DELETE");
