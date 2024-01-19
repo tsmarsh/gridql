@@ -6,6 +6,7 @@ const { KafkaContainer, MongoDBContainer } = require("testcontainers");
 const { start, init } = require("../index");
 const assert = require("assert");
 const fs = require("fs");
+const {TestConsumer} = require("@gridql/kafka-consumer");
 
 let client;
 let kafka;
@@ -20,38 +21,15 @@ describe("MongoDB change listener", () => {
     );
     await start({ collection, kafkaProducer, topic, id: "_id" });
 
-    let consumer = kafka.consumer({ groupId: "test-group-1" });
+    let tc = new TestConsumer(kafka, {groupId: "test-group-1"})
+    await tc.init(topic);
+    await tc.run();
 
-    await consumer.connect();
-
-    await consumer
-      .subscribe({ topic, fromBeginning: true })
-      .then(() => {
-        console.log("Subscribed");
-      })
-      .catch((reason) => console.log("can't subscribe: ", reason));
-
-    let actual;
-
-    await consumer.run({
-      eachMessage: async ({ partition, message }) => {
-        console.log("Event received: ", {
-          partition,
-          offset: message.offset,
-          value: message.value.toString(),
-        });
-        actual = JSON.parse(message.value.toString());
-      },
-    });
 
     const result = await collection.insertOne({ name: "Test" });
     let actual_id = (result.insertedId = result.insertedId.toString());
 
-    let loop = 0;
-    while (actual === undefined && loop < 10) {
-      await delay(50);
-      loop++;
-    }
+    let actual = await tc.current()
 
     assert.equal(actual.id, actual_id);
     assert.equal(actual.operation, "CREATE");

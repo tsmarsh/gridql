@@ -8,7 +8,7 @@ const assert = require("assert");
 const fs = require("fs");
 const {parse, build_app} = require("@gridql/server");
 const { default: OpenAPIClientAxios } = require("openapi-client-axios");
-const {TestConsumer} = require("./TestKafkaConsumer");
+const {TestConsumer} = require("@gridql/kafka-consumer");
 const {builderFactory} = require("@gridql/payload-generator");
 const {swagger} = require("@gridql/server/lib/swagger");
 

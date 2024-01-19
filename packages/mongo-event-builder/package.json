@@ -20,7 +20,8 @@
   },
   "devDependencies": {
     "nyc": "^15.1.0",
-    "testcontainers": "^9.8.0"
+    "testcontainers": "^9.8.0",
+    "@gridql/kafka-consumer": "^3.2.0"
   },
   "gitHead": "b10884f65498fef773cbfd5420c9c8b000bad76a"
 }
