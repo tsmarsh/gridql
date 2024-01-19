@@ -18,7 +18,8 @@ const toPayload = (id) => (change) => {
     return null;
   }
 
-  const documentId = change.documentKey[id];
+
+  const documentId = change.hasOwnProperty("fullDocument") ? change.fullDocument[id] : change.documentKey[id];
 
   const message = {
     id: documentId.toString(),
