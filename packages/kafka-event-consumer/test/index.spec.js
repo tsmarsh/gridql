@@ -2,7 +2,7 @@ const { Kafka, logLevel } = require("kafkajs");
 
 const { KafkaContainer } = require("testcontainers");
 
-const { start, init } = require("../lib/initialiser");
+const { start, init } = require("../index");
 const assert = require("assert");
 const fs = require("fs");
 const { swagger } = require("@gridql/server/lib/swagger");
