@@ -1,27 +1,44 @@
 {
-  "name": "@tsmarsh/server",
-  "version": "1.0.0",
+  "name": "@gridql/server",
+  "version": "3.3.0",
   "description": "graphql server scaffolding",
-  "main": "server.js",
   "author": "Tom Marsh",
   "license": "BSD",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "test": "mocha --exit"
+    "test": "nyc mocha --exit"
   },
   "dependencies": {
-    "@tsmarsh/root": "^1.0.0",
+    "@gridql/mongo-connector": "^3.2.0",
+    "@gridql/payload-generator": "^3.2.0",
+    "@gridql/payload-validator": "^3.2.0",
+    "@pushcorn/hocon-parser": "^1.2.6",
+    "cors": "^2.8.5",
     "express": "^4.18.2",
-    "express-graphql": "^0.12.0",
     "graphql": "^16.6.0",
+    "graphql-http": "^1.20.0",
     "jsonschema": "^1.4.1",
-    "mongodb": "^5.3.0"
+    "jsonwebtoken": "^9.0.0",
+    "mongodb": "^6.3.0",
+    "promise-retry": "^2.0.1",
+    "pug": "^3.0.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^4.6.3",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@tsmarsh/callgraph": "^1.0.0",
+    "axios": "^1.4.0",
     "chai": "^4.3.7",
+    "chai-http": "^4.4.0",
+    "cheerio": "^1.0.0-rc.12",
     "mocha": "^10.2.0",
-    "mongodb-memory-server": "^8.12.2"
+    "mongodb-memory-server": "^8.12.2",
+    "nyc": "^15.1.0",
+    "openapi-client-axios": "^7.2.0",
+    "sinon": "^15.1.0"
   },
-  "gitHead": "abd2a052956a027fd542997acf1adc787ca2d8b5"
+  "gitHead": "b10884f65498fef773cbfd5420c9c8b000bad76a"
 }

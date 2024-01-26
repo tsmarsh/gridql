@@ -1,16 +1,22 @@
 {
-  "name": "payload-generator",
-  "version": "1.0.0",
+  "name": "@gridql/payload-generator",
+  "version": "3.2.0",
   "main": "index.js",
   "license": "MIT",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "test": "mocha"
+    "test": "nyc mocha"
   },
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
     "json-schema-faker": "^0.5.0-rcv.46"
   },
   "devDependencies": {
-    "mocha": "^10.2.0"
-  }
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0"
+  },
+  "gitHead": "b10884f65498fef773cbfd5420c9c8b000bad76a"
 }

@@ -1,0 +1,35 @@
+flowchart TD
+    A((Client Application)) --> |ReST| B[Restlette]
+    O((Operator)) --> L
+    A --> |GraphQL| F[Graphlette]
+    B --> |Writes| C[(Document
+                      Store)]
+    C --> |Query| F
+    D --> E{{Persistent
+             Output Topic}}
+
+    subgraph Context
+        subgraph Command
+        C --> |Streams| D[Stream Listener]
+        G[Stream Writer] -->   |ReST| B
+        M --> |Consumed By| G
+        end
+        subgraph Query
+        F --> |GraphQL| H[[Other Context]]
+        F --> |GraphQL| I[[Other Context]]
+        I --> |GraphQL| J[[Other Context]]
+        end
+    end
+    subgraph React
+        Q{{Other Context
+           Output Topic}} --> |Consumed By| R[Transformer]
+           R --> |ReST| B
+    end
+    subgraph Update
+        E --> |Consumed By| K[System of Record Connector]
+        K --> |Syncs| L[[System of Record]]
+        L --> |CDC| P[Transformer]
+        P --> |Publishes| M{{Persistent
+                             Input Topic}}
+        E --> |Consumed By| N[[Other Consumers]]
+    end

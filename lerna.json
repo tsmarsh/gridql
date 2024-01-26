@@ -1,6 +1,6 @@
 {
   "useWorkspaces": true,
-  "version": "1.0.0",
+  "version": "3.3.0",
   "packages": [
     "packages/"
   ],
@@ -8,9 +8,11 @@
   "command": {
     "publish": {
       "ignoreChanges": [
-        "**/__tests__/**",
+        "**/test/**",
         "**/*.md",
-        "**/*.spec.ts"
+        "**/*.spec.js",
+        "**/.nyc_output/**",
+        ""
       ],
       "message": "chore(release): publish"
     }

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Complexity</title>
+</head>
+<body>
+<svg class="line-chart"></svg>
+<script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
+<script>
+    const svg = document.querySelector('.line-chart')
+
+    const lineChart = new chartXkcd.Line(svg, {
+        title: 'How complexity increases with users', // optional
+        xLabel: 'Users', // optional
+        yLabel: 'Complexity', // optional
+        data: {
+            labels: ['0','1', '10', '100', '1000', '10000', '100000'],
+            datasets: [{
+                label: 'Ideal',
+                data: [0, 100, 100, 100, 100, 100, 100, 100],
+            }, {
+                label: 'Reality',
+                data: [0, 100, 110, 150, 200, 500, 2000],
+            }],
+        },
+        options: { // optional
+            yTickCount: 3,
+            legendPosition: chartXkcd.config.positionType.upLeft
+        }
+    });
+</script>
+</body>
+</html>

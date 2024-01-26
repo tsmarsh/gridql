@@ -1,0 +1,19 @@
+sequenceDiagram
+    Client Application->>Restlette: Event
+    Restlette->>Document Store: BSON (Pending)
+    Restlette->>Client Application: 200
+    Document Store->>Stream Listener: BSON Event
+    System of Record Connector->>Kafka Topic: Poll
+    Stream Writer->>Kafka Input Topic: Poll
+    Stream Listener->>Kafka Topic: Publish JSON Event
+    System of Record Connector->>Kafka Topic: Poll
+    Stream Writer->>Kafka Input Topic: Poll
+    Kafka Topic->>System of Record Connector: JSON Event
+    System of Record Connector->>System of Record: Updates
+    System of Record->>Kafka Input Topic: Publish JSON Event
+    Stream Writer->>Kafka Input Topic: Poll
+    Kafka Input Topic->>Stream Writer: JSON Event
+    Stream Writer->>Restlette: Event
+    Restlette->> Document Store: BSON Event (Accepted)
+
+

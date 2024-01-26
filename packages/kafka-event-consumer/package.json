@@ -1,0 +1,28 @@
+{
+  "name": "@gridql/kafka-event-consumer",
+  "version": "3.2.0",
+  "description": "Listens to mongo and emits events",
+  "main": "index.js",
+  "author": "Tom Marsh",
+  "license": "MIT",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@gridql/mongo-connector": "^3.2.0",
+    "@gridql/payload-validator": "^3.2.0",
+    "@pushcorn/hocon-parser": "^1.2.6",
+    "kafkajs": "^2.2.4",
+    "mongodb": "^5.5.0"
+  },
+  "scripts": {
+    "test": "nyc mocha --exit"
+  },
+  "devDependencies": {
+    "nock": "^13.3.1",
+    "nyc": "^15.1.0",
+    "testcontainers": "^9.8.0"
+  },
+  "gitHead": "b10884f65498fef773cbfd5420c9c8b000bad76a"
+}

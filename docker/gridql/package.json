@@ -1,0 +1,24 @@
+{
+  "name": "@gridql/gridql",
+  "version": "3.1.5",
+  "description": "primary service",
+  "main": "index.js",
+  "author": "Tom Marsh",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "start": "node index.js",
+    "test": "nyc mocha --exit"
+  },
+  "dependencies": {
+    "@gridql/server": "file:../../packages/server"
+  },
+  "devDependencies": {
+    "@gridql/payload-generator": "file:../../packages/payload-generator",
+    "mocha": "^10.2.0",
+    "mongodb-memory-server": "^8.13.0",
+    "nyc": "^15.1.0",
+    "openapi-client-axios": "^7.2.0",
+    "testcontainers": "^9.9.1"
+  }
+}

@@ -1,0 +1,14 @@
+stateDiagram-v2
+    [*] --> Pending: new
+    Pending --> Accepted: confirmed
+    Pending --> PendingUpdate: update
+    Pending --> PendingDeletion: delete
+    PendingUpdate --> PendingUpdate: update
+    PendingUpdate --> PendingDeletion: delete
+    Accepted --> PendingUpdate: update
+    PendingUpdate --> Accepted: updated
+    Accepted --> PendingDeletion: delete
+    PendingDeletion --> Deleted: deleted
+    Deleted --> PendingRestoration: restore
+    PendingRestoration --> Accepted: restored
+    PendingRestoration --> PendingUpdate: update

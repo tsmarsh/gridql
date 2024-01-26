@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "faker": "animal.horse"
+    },
+    "eggs": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10
+
+    },
+    "coop_id": {
+      "type": "string",
+      "format": "id"
+    }
+  },
+  "required": ["name"],
+  "additionalProperties": false
+}

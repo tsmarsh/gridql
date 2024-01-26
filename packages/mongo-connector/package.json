@@ -1,0 +1,16 @@
+{
+  "name": "@gridql/mongo-connector",
+  "version": "3.2.0",
+  "description": "reliably connects to mongo",
+  "main": "index.js",
+  "license": "MIT",
+  "private": false,
+  "gitHead": "b10884f65498fef773cbfd5420c9c8b000bad76a",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "mongodb": "^5.9.2",
+    "promise-retry": "^2.0.1"
+  }
+}

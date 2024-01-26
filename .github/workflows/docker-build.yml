@@ -1,0 +1,45 @@
+name: Build and Push to Docker Hub
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/**'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB }}
+
+      - name: Build and push event builder image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker/db-events/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USER }}/db-events:${{ github.run_id }}
+
+      - name: Build and push gridql builder image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker/gridql/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USER }}/gridql:${{ github.run_id }}
+

@@ -1,0 +1,24 @@
+html
+    head
+        title GraphiQL
+        script(crossorigin, src="https://unpkg.com/react@18/umd/react.development.js")
+        script(crossorigin, src="https://unpkg.com/react-dom@18/umd/react-dom.development.js")
+        script(crossorigin, src="https://unpkg.com/graphiql/graphiql.min.js")
+        script(crossorigin, src="https://unpkg.com/@graphiql/plugin-explorer/dist/index.umd.js")
+        link(rel="stylesheet", href="https://unpkg.com/graphiql/graphiql.min.css")
+    body
+        div(id="graphiql") Reticulating splines...
+        script(type="text/javascript").
+            const root = ReactDOM.createRoot(document.getElementById('graphiql'));
+            const fetcher = GraphiQL.createFetcher({
+                url: "!{path}",
+                headers: { 'X-Example-Header': 'foo' },
+            });
+            const explorerPlugin = GraphiQLPluginExplorer.explorerPlugin();
+            root.render(
+                React.createElement(GraphiQL, {
+                    fetcher,
+                    defaultEditorToolsVisibility: true,
+                    plugins: [explorerPlugin],
+                }),
+            );

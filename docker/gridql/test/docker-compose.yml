@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo
+    restart: always
+    hostname: mongo
+
+  utility:
+    depends_on: [mongo]
+    build:
+      context: "../../.."
+      dockerfile: "docker/gridql/Dockerfile"
+    hostname: utility
+    ports:
+      - "3033:3033"
+    volumes:
+      - "./config:/app/config"
+    environment:
+      MONGO_URI: mongodb://mongo:27017

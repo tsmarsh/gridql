@@ -1,15 +1,22 @@
 {
-  "name": "@tsmarsh/payload-validator",
-  "version": "1.0.0",
+  "name": "@gridql/payload-validator",
+  "version": "3.2.0",
   "main": "index.js",
   "license": "MIT",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "test": "mocha"
+    "test": "nyc mocha"
   },
   "devDependencies": {
-    "mocha": "^10.2.0"
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0"
   },
   "dependencies": {
+    "@gridql/payload-generator": "^3.2.0",
     "jsonschema": "^1.4.1"
-  }
+  },
+  "gitHead": "b10884f65498fef773cbfd5420c9c8b000bad76a"
 }
