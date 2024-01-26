@@ -34,7 +34,7 @@ const process_restlettes = async (config) => {
 const parse = async (configFile) => {
     const config = await parser
         .parse({url: configFile})
-        .catch((e) => console.log("Error parse config: ", e));
+        .catch((e) => console.log("Error parse builder: ", e));
 
     console.log("Config file: ", JSON.stringify(config, null, 2));
 

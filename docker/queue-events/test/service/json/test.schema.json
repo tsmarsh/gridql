@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "properties": {
+    "_id": {
+      "type": "string",
+      "format": "id"
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "test": {
+      "type": "string",
+      "faker": "name.firstName"
+    }
+  },
+  "required": [
+    "id",
+    "test"
+  ]
+}

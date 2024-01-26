@@ -7,7 +7,7 @@ const { valid } = require("@gridql/payload-validator");
 const init = async (configFile) => {
   const config = await parser
     .parse({ url: configFile })
-    .catch((e) => console.log("Error parse config: ", e));
+    .catch((e) => console.log("Error parse builder: ", e));
 
   console.log("Config: ", config);
 

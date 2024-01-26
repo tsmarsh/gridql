@@ -28,7 +28,7 @@ before(async function () {
 
   uri = mongod.getUri();
 
-  config = await parse(__dirname + "/../config/rest_auth.conf");
+  config = await parse(__dirname + "/../builder/rest_auth.conf");
 
   payload = {
     sub: "1234567890",

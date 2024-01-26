@@ -17,7 +17,7 @@ describe("MongoDB change listener", () => {
 
   it("should publish a message when a document is inserted", async () => {
     const { collection, kafkaProducer, topic } = await init(
-      __dirname + "/config/create.conf"
+      __dirname + "/builder/create.conf"
     );
     await start({ collection, kafkaProducer, topic, id: "_id" });
 
@@ -37,7 +37,7 @@ describe("MongoDB change listener", () => {
 
   it("should publish a message when a document is updated", async () => {
     const { collection, kafkaProducer, topic } = await init(
-      __dirname + "/config/update.conf"
+      __dirname + "/builder/update.conf"
     );
 
     await start({ collection, kafkaProducer, topic, id: "_id" });
@@ -64,7 +64,7 @@ describe("MongoDB change listener", () => {
 
   it("should publish a message when a document is deleted", async () => {
     const { collection, kafkaProducer, topic } = await init(
-      __dirname + "/config/delete.conf"
+      __dirname + "/builder/delete.conf"
     );
 
     await start({ collection, kafkaProducer, topic, id: "_id" });
@@ -142,7 +142,7 @@ before(async function () {
     clientId: "mongo-event-builder-test",
   });
 
-  fs.writeFileSync(__dirname + "/config/base.conf", config);
+  fs.writeFileSync(__dirname + "/builder/config.conf", config);
 });
 
 after(async () => {

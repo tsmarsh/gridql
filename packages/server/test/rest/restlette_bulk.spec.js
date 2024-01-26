@@ -47,7 +47,7 @@ before(async function () {
 
   db = client.db("test").collection("hens");
 
-  config = await parse(__dirname + "/../config/simple_rest_bulk.conf");
+  config = await parse(__dirname + "/../builder/simple_rest_bulk.conf");
 
   let app = await build_app(config)
   server = await app.listen(config.port)

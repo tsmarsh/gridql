@@ -31,7 +31,7 @@ describe("Single node", function () {
   before(async function () {
     db = client.db("test").collection("test");
 
-    config = await parse(__dirname + "/../config/simple.conf");
+    config = await parse(__dirname + "/../builder/simple.conf");
     let app = await build_app(config)
 
     server = await app.listen(
@@ -39,8 +39,8 @@ describe("Single node", function () {
     );
   });
 
-  it("it should fail if the rest config document is invalid", async function () {
-    parse(__dirname + "/config/bad_graph.conf")
+  it("it should fail if the rest builder document is invalid", async function () {
+    parse(__dirname + "/builder/bad_graph.conf")
       .then(() => fail())
       .catch((err) => {
         assert(err !== undefined);

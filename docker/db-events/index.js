@@ -13,7 +13,7 @@ if (fs.existsSync(configPath)) {
         console.log("Failed to start: ", err);
       });
     })
-    .catch((err) => console.log("Error parsing config: ", err));
+    .catch((err) => console.log("Error parsing builder: ", err));
 } else {
   console.log("Config missing");
 }

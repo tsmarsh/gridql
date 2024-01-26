@@ -18,7 +18,7 @@ before(async function (){
 
     process.env.MONGO_URI = mongod.getUri();
 
-    let configFile = __dirname + "/../config/config.conf";
+    let configFile = __dirname + "/../builder/builder.conf";
 
     config = await parse(configFile);
     let app = await build_app(config);
@@ -33,7 +33,7 @@ before(async function (){
 
 });
 
-describe("Should fire up a base config and run", function(){
+describe("Should fire up a base builder and run", function(){
 
     it("should create a test", async () =>{
 

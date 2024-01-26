@@ -15,7 +15,7 @@ let swagger_clients = {}
 before(async function () {
     this.timeout(200000);
 
-    environment = await new DockerComposeEnvironment(__dirname , "db-events-test.yml").up();
+    environment = await new DockerComposeEnvironment(__dirname ).up();
 
     for(let restlette of ["test"]){
         let rest = await fetch(`http://localhost:3033/${restlette}/api/api-docs/swagger.json`)

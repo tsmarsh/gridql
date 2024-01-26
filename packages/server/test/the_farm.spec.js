@@ -38,7 +38,7 @@ before(async function () {
 
   uri = mongod.getUri();
 
-  config = await parse(__dirname + "/config/the_farm.conf");
+  config = await parse(__dirname + "/builder/the_farm.conf");
   let app = await build_app(config);
 
   port = config.port;

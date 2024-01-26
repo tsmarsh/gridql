@@ -16,7 +16,7 @@ FROM node:21-alpine
 
 WORKDIR /app
 
-RUN mkdir -p config
+RUN mkdir -p builder
 
 COPY --from=db-events /build/docker/db-events .
 

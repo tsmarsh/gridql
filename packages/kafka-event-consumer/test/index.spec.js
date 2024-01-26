@@ -43,7 +43,7 @@ before(async function () {
       swagger: "${__dirname}/config/test.swagger.json",
     }`;
 
-  fs.writeFileSync(__dirname + "/config/base.conf", config);
+  fs.writeFileSync(__dirname + "/builder/config.conf", config);
 
   kafka = new Kafka({
     logLevel: logLevel.INFO,
@@ -56,13 +56,13 @@ before(async function () {
   const swaggerdoc = swagger(
       "/test",
       JSON.parse(
-          fs.readFileSync(__dirname + "/config/hen.schema.json").toString()
+          fs.readFileSync(__dirname + "/builder/hen.schema.json").toString()
       ),
       "http://test.foo"
   );
 
   fs.writeFileSync(
-      __dirname + "/config/test.swagger.json",
+      __dirname + "/builder/test.swagger.json",
       JSON.stringify(swaggerdoc, null, 4)
   );
 });
@@ -74,7 +74,7 @@ after(async () => {
 
 describe("Kafka change listener", () => {
   it("should call create rest api when there is a CREATE event", async () => {
-    let config = await init(__dirname + "/config/create.conf");
+    let config = await init(__dirname + "/builder/create.conf");
     await start(config);
 
     let apiMock = nock("http://test.foo")
@@ -111,7 +111,7 @@ describe("Kafka change listener", () => {
   }).timeout(20000);
 
   it("should call remove rest api when there is a DELETE event", async () => {
-    let config = await init(__dirname + "/config/delete.conf");
+    let config = await init(__dirname + "/builder/delete.conf");
     await start(config);
 
     let apiMock = nock("http://test.foo")
@@ -149,7 +149,7 @@ describe("Kafka change listener", () => {
   }).timeout(20000);
 
   it("should call update rest api when there is a UPDATE event", async () => {
-    let config = await init(__dirname + "/config/update.conf");
+    let config = await init(__dirname + "/builder/update.conf");
     await start(config);
 
     let hen = {

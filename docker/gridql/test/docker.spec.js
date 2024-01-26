@@ -14,7 +14,7 @@ let environment;
 before(async function () {
     this.timeout(200000);
 
-    environment = await new DockerComposeEnvironment(__dirname )
+    environment = await new DockerComposeEnvironment(__dirname , "gridql-test.yml")
         .up();
 
     for(let restlette of ["test"]){
@@ -24,7 +24,7 @@ before(async function () {
         swagger_clients[`/${restlette}/api`] = await api.init()
     }
 
-    schema = JSON.parse(fs.readFileSync(__dirname + "/config/json/test.schema.json").toString());
+    schema = JSON.parse(fs.readFileSync(__dirname + "/builder/json/test.schema.json").toString());
 
 });
 

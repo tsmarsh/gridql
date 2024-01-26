@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   mongo:
-    image: mongo
+    image: mongo:6.0.1
     restart: always
     hostname: mongo
 
@@ -14,6 +14,6 @@ services:
     ports:
       - "3033:3033"
     volumes:
-      - "./config:/app/config"
+      - "./config:/app/config:ro"
     environment:
       MONGO_URI: mongodb://mongo:27017

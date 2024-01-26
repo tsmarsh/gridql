@@ -23,7 +23,7 @@ before(async function () {
 
     db = client.db("test").collection("hens");
 
-    config = await parse(__dirname + "/../config/simple_rest.conf");
+    config = await parse(__dirname + "/../builder/simple_rest.conf");
     let app = await build_app(config)
 
     payload = {
@@ -40,16 +40,16 @@ after(async function () {
 });
 
 describe("simple restlette", function () {
-    it("it should fail if the config document is invalid", async function () {
-        parse("test/../config/invalid.conf")
+    it("it should fail if the builder document is invalid", async function () {
+        parse("test/../builder/invalid.conf")
             .then(() => fail())
             .catch((err) => {
                 assert(err !== undefined);
             });
     });
 
-    it("it should fail if the rest config document is invalid", async function () {
-        parse(__dirname + "/../config/bad_rest.conf")
+    it("it should fail if the rest builder document is invalid", async function () {
+        parse(__dirname + "/../builder/bad_rest.conf")
             .then(() => fail())
             .catch((err) => {
                 assert(err !== undefined);
