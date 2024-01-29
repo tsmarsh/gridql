@@ -14,7 +14,7 @@ let environment;
 before(async function () {
     this.timeout(200000);
 
-    environment = await new DockerComposeEnvironment(__dirname )
+    environment = await new DockerComposeEnvironment(__dirname , "gridql-test-compose.yml")
         .up();
 
     for(let restlette of ["test"]){
