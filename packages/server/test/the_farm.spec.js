@@ -32,6 +32,7 @@ let farm_id, coop1_id, coop2_id;
 let first_stamp, second_stamp;
 
 before(async function () {
+  this.timeout(20000)
   mongod = await MongoMemoryServer.create({ instance: { port: 60504 } });
   client = new MongoClient(mongod.getUri());
   await client.connect();
@@ -136,7 +137,7 @@ after(async function () {
 });
 
 describe("The Farm", function () {
-
+  this.timeout(20000)
   it("should build a server with multiple nodes", async function () {
     const query = `{
          getById(id: "${farm_id}") {
