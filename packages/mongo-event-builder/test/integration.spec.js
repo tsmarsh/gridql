@@ -32,7 +32,7 @@ describe("Integrating with the rest of gridql", () => {
         let savedTest = await swagger_clients["/test/api"].create(null, test);
         let saved_id = savedTest.headers["x-canonical-id"];
 
-        let actual = await tc.current()
+        let actual = await tc.current(100)
 
         assert.equal(actual.id, saved_id);
         assert.equal(actual.operation, "CREATE");
@@ -66,7 +66,7 @@ before(async function () {
         );
 
     console.log(
-        `${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}`
+        `Kafka uri: ${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}`
     );
 
     process.env.KAFKA_BROKERS = `${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}`
@@ -81,11 +81,11 @@ before(async function () {
     });
 
     //Given an event builder
-    const {collection, kafkaProducer, topic} = await init(
+    const {collection, kafkaProducer, topic, id} = await init(
         __dirname + "/config/config.conf"
     );
 
-    await start({collection, kafkaProducer, topic, id: "id"});
+    await start({collection, kafkaProducer, topic, id});
 
     //Given a gridql server
     let configFile = __dirname + "/server/config.conf";

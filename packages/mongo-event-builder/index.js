@@ -29,7 +29,9 @@ const toPayload = (id) => (change) => {
   return { key: message.id, value: JSON.stringify(message) };
 };
 
-const start = async ({ collection, kafkaProducer, topic, id = "_id" }) => {
+const start = async ({ collection, kafkaProducer, topic, id = "id" }) => {
+  console.log("Starting builder: ", collection, kafkaProducer, topic, id)
+
   const changeStream = await collection.watch();
 
   const processChange = toPayload(id);
@@ -42,11 +44,11 @@ const start = async ({ collection, kafkaProducer, topic, id = "_id" }) => {
     }
     if (payloads.length > 0) {
       let message = { topic, messages: payloads };
-      console.log("Sending: ", message);
+      console.log("Sending: ", JSON.stringify(message));
 
       await kafkaProducer
         .send(message)
-        .then(console.log("Sent"))
+        .then(() => console.log("Sent: ", JSON.stringify(message)))
         .catch((reason) => console.log("Can't send: ", reason));
       payloads = [];
     }

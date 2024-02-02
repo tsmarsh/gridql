@@ -1,15 +1,17 @@
-const { Kafka, logLevel } = require("kafkajs");
+const {Kafka, logLevel} = require("kafkajs");
 const parser = require("@pushcorn/hocon-parser");
-const { buildDb } = require("@gridql/mongo-connector");
+const {buildDb} = require("@gridql/mongo-connector");
 
 const init = async (configFile) => {
     const config = await parser
-        .parse({ url: configFile })
+        .parse({url: configFile})
         .catch((e) => console.log("Error parse config: ", e));
 
     console.log("Config: ", config);
 
-    const { mongo, kafka } = config;
+    const {mongo, kafka} = config;
+
+    //console.log(kafka);
 
     let k = new Kafka({
         logLevel: logLevel.INFO,
@@ -23,13 +25,16 @@ const init = async (configFile) => {
 
     await kafkaProducer
         .connect()
-        .catch((reason) =>
-            console.log("Kafka Producer failed to connect: ", reason)
+        .then(() => console.log("Connected to Kafka"))
+        .catch((reason) => {
+                console.log("Kafka Producer failed to connect: ", reason);
+                throw new Error(reason);
+            }
         );
 
-    return { collection, kafkaProducer, topic: kafka.topic, id: config.id };
+    return {collection, kafkaProducer, topic: kafka.topic, id: kafka.id};
 };
 
-module.exports= {
+module.exports = {
     init
 }

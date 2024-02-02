@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "kafkajs": "^2.2.4",
+    "kafka-consumer": "file:../../packages/kafka-consumer",
     "@gridql/payload-generator": "file:../../packages/payload-generator",
     "mocha": "^10.2.0",
     "mongodb-memory-server": "^8.13.0",

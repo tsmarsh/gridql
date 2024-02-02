@@ -6,11 +6,36 @@ const { Kafka, logLevel } = require("kafkajs");
 
 const path = require('path');
 const fs = require("fs");
+const {TestConsumer} = require("@gridql/kafka-consumer");
 
 let environment;
 let schema;
 let kafka;
 let swagger_clients = {}
+
+async function createKafkaTopic(topicName, numPartitions = 1, replicationFactor = 1) {
+    const admin = kafka.admin();
+
+    try {
+        await admin.connect();
+        await admin.createTopics({
+            topics: [
+                {
+                    topic: topicName,
+                    numPartitions,
+                    replicationFactor,
+                },
+            ],
+        });
+
+        console.log(`Topic "${topicName}" created successfully.`);
+    } catch (error) {
+        console.error(`Error creating topic "${topicName}":`, error);
+    } finally {
+        await admin.disconnect();
+    }
+}
+
 
 before(async function () {
     this.timeout(200000);
@@ -32,33 +57,16 @@ before(async function () {
         clientId: "db-events-test",
     });
 
+    await createKafkaTopic("test")
 });
 
 describe("Should build docker image and run", function () {
+    this.timeout(20000);
     it("should create a test", async () => {
-        let actual;
-        let topic = "docker-test";
-        let consumer = kafka.consumer({ groupId: topic });
-
         //Given I have a consumer
-        await consumer
-            .subscribe({ topic, fromBeginning: true })
-            .then(() => {
-                console.log("Subscribed");
-            })
-            .catch((reason) => console.log("can't subscribe: ", reason));
-
-        //When the consumer gets a message
-        await consumer.run({
-            eachMessage: async ({ partition, message }) => {
-                console.log("Event received: ", {
-                    partition,
-                    offset: message.offset,
-                    value: message.value.toString(),
-                });
-                actual = JSON.parse(message.value.toString());
-            },
-        });
+        let tc = new TestConsumer(kafka, {groupId: "docker-test"})
+        await tc.init("test");
+        await tc.run();
 
         //When an event is sent to a context
 
@@ -67,13 +75,9 @@ describe("Should build docker image and run", function () {
 
         const result = await swagger_clients["/test/api"].create(null, test);
 
-        let actual_id = result.request.path.slice(-36);
+        let actual_id = result.headers["x-canonical-id"];
 
-        let loop = 0;
-        while (actual === undefined && loop < 10) {
-            await delay(100);
-            loop++;
-        }
+        const actual = await tc.current(500);
 
         assert.notEqual(actual, undefined);
 

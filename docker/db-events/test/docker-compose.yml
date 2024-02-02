@@ -1,5 +1,5 @@
 version: '3.8'
-
+name: db-events-test
 services:
   mongo:
     image: mongo:6.0.6
@@ -31,14 +31,14 @@ services:
     ]
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:latest
+    image: confluentinc/cp-zookeeper:7.4.0
     hostname: zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
   queue:
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka:7.4.0
     ports:
       - "19093:19093"
     hostname: queue
@@ -55,19 +55,34 @@ services:
       - zookeeper
 
   builder:
-    depends_on: [ init-replica-set, queue ]
+    depends_on:
+      init-replica-set:
+        condition: service_started
+      queue:
+        condition: service_started
+      mongo:
+        condition: service_healthy
     build:
       context: "../../.."
       dockerfile: "docker/db-events/Dockerfile"
     hostname: builder
+    ports:
+      - "9229:9229"
     volumes:
       - "./config:/app/config"
     environment:
+      NODE_OPTIONS: --inspect=0.0.0.0:9229
       MONGO_URI: mongodb://mongo:27017
       KAFKA_URI: queue:9093
+      KAFKA_HOST: queue
 
   test:
     depends_on: [init-replica-set]
+    healthcheck:
+      test: "wget -q localhost:3033"
+      interval: 10s
+      timeout: 10s
+      retries: 5
     build:
       context: "../../.."
       dockerfile: "docker/gridql/Dockerfile"

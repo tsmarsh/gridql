@@ -8,13 +8,13 @@ class TestConsumer {
         await this.consumer
             .subscribe({topic, fromBeginning: true})
             .then(() => {
-                console.log("Subscribed to ", topic);
+                console.log("Test Consumer subscribed to ", topic);
             })
             .catch((reason) => console.log("can't subscribe: ", reason));
     }
 
     run = async () => {
-        console.log("Listening: ")
+        console.log(" Test Listening: ")
         await this.consumer.run({
             eachMessage: async ({partition, message}) => {
                 console.log("Event received: ", {
@@ -27,10 +27,10 @@ class TestConsumer {
         })
     }
 
-    current = async ()=> {
+    current = async (d = 50)=> {
         let loop = 0;
         while (this.actual === undefined && loop < 10) {
-            await this.delay(50);
+            await this.delay(d);
             loop++;
         }
         if (this.actual === undefined) {
@@ -42,6 +42,10 @@ class TestConsumer {
 
     delay = (ms) => {
         return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    destroy = async () => {
+        this.consumer.destroy();
     }
 }
 
