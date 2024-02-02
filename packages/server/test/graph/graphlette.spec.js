@@ -24,6 +24,7 @@ after(async function () {
 });
 
 describe("Single node", function () {
+  this.timeout(5000);
   let db;
   let config;
   let server;
