@@ -18,7 +18,7 @@ before(async function (){
 
     process.env.MONGO_URI = mongod.getUri();
 
-    let configFile = __dirname + "/../config/config.conf";
+    let configFile = __dirname + "/config/integration.conf";
 
     config = await parse(configFile);
     let app = await build_app(config);
@@ -32,6 +32,12 @@ before(async function (){
     }
 
 });
+
+after(async function() {
+    console.log("------Cleaning Up------")
+    server.close();
+    mongod.stop();
+})
 
 describe("Should fire up a base config and run", function(){
 
