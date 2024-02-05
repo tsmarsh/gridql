@@ -11,6 +11,24 @@ const nock = require("nock");
 let kafka;
 let kafkaContainer;
 
+async function createTopics(topic_names) {
+  const admin = kafka.admin();
+  await admin.connect();
+
+  const topics = topic_names.map((t) => {return {
+    topic: t,
+    numPartitions: 1,
+    replicationFactor: 1
+  }})
+
+  await admin.createTopics({
+    topics: topics
+  });
+
+  console.log('Topics created');
+  await admin.disconnect();
+}
+
 before(async function () {
   this.timeout(360000);
 
@@ -65,6 +83,8 @@ before(async function () {
       __dirname + "/config/test.swagger.json",
       JSON.stringify(swaggerdoc, null, 4)
   );
+
+  await createTopics(["create-kafka-test", "update-kafka-test", "delete-kafka-test"])
 });
 
 after(async () => {
@@ -192,6 +212,8 @@ const waitForApiCall = (apiMock) => {
       if (apiMock.isDone()) {
         clearInterval(intervalId);
         resolve();
+      } else {
+        console.log("Message not received, retrying")
       }
     }, 100);
 
