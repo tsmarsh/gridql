@@ -14,7 +14,8 @@
     "@gridql/payload-validator": "^3.2.0",
     "@pushcorn/hocon-parser": "^1.2.6",
     "kafkajs": "^2.2.4",
-    "mongodb": "^5.5.0"
+    "mongodb": "^5.5.0",
+    "axios": "^1.4.0"
   },
   "scripts": {
     "test": "nyc mocha --exit"
