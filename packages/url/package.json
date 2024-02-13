@@ -1,0 +1,9 @@
+{
+  "name": "@gridql/url",
+  "version": "1.0.0",
+  "description": "Picks between file and http[s] urls and pulls them appropriately",
+  "main": "index.js",
+  "author": "Tom Marsh",
+  "license": "MIT",
+  "private": false
+}
