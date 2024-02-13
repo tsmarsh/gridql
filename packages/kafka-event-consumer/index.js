@@ -3,6 +3,7 @@ const parser = require("@pushcorn/hocon-parser");
 const OpenAPIClientAxios = require("openapi-client-axios").default;
 const fs = require("fs");
 const { valid } = require("@gridql/payload-validator");
+const {parseUrl} = require("@gridql/url");
 
 const init = async (configFile) => {
   const config = await parser
@@ -21,7 +22,7 @@ const init = async (configFile) => {
 
   const kafkaConsumer = k.consumer({ groupId: kafka.groupId });
 
-  let swagger_doc = JSON.parse(fs.readFileSync(swagger).toString());
+  let swagger_doc = JSON.parse(await parseUrl(swagger));
   let api = new OpenAPIClientAxios({ definition: swagger_doc });
   let apiClient = await api.init();
 

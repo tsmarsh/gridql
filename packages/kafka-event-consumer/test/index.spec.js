@@ -58,7 +58,7 @@ before(async function () {
         groupId: \${topic}
       },
       schema: "${__dirname}/config/hen.schema.json",
-      swagger: "${__dirname}/config/test.swagger.json",
+      swagger: "file://${__dirname}/config/test.swagger.json",
     }`;
 
   fs.writeFileSync(__dirname + "/config/base.conf", config);
