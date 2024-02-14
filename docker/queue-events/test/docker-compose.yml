@@ -1,6 +1,5 @@
 version: '3.8'
-name: db-events-test
-
+name: queue-events-test
 services:
   mongo:
     image: mongo:6.0.6
@@ -72,49 +71,34 @@ services:
     volumes:
       - "./builder:/app/config"
     environment:
+      NODE_OPTIONS: --inspect=0.0.0.0:9229
       MONGO_URI: mongodb://mongo:27017
       KAFKA_URI: queue:9093
       KAFKA_HOST: queue
 
-  test-in:
-    depends_on: [ init-replica-set ]
-    image: tsmarsh/gridql:dockertest
-    hostname: in
-    build:
-      context: "../../.."
-      dockerfile: "docker/gridql/Dockerfile"
+  service:
+    depends_on: [init-replica-set]
+    hostname: service
     healthcheck:
       test: "wget -q localhost:3033"
       interval: 10s
       timeout: 10s
       retries: 5
+    build:
+      context: "../../.."
+      dockerfile: "docker/gridql/Dockerfile"
     ports:
       - "3033:3033"
     volumes:
       - "./service:/app/config"
     environment:
       MONGO_URI: mongodb://mongo:27017
-
-  test-out:
-    depends_on: [ init-replica-set, test-in ]
-    image: tsmarsh/gridql:dockertest
-    hostname: out
-    healthcheck:
-      test: "wget -q localhost:3044"
-      interval: 10s
-      timeout: 10s
-      retries: 5
-    ports:
-      - "3044:3033"
-    volumes:
-      - "./service:/app/config"
-    environment:
-      MONGO_URI: mongodb://mongo:27017
+      MONGO_COLLECTION: "test"
 
   queue-event:
     depends_on:
       - queue
-      - test-out
+      - service
     build:
       context: "../../.."
       dockerfile: "docker/queue-events/Dockerfile"

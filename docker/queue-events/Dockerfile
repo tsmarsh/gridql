@@ -4,13 +4,13 @@ WORKDIR /build
 
 COPY . .
 
-RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn  yarn install
+RUN yarn install
 
 FROM builder as queue-events
 
 WORKDIR /build/docker/queue-events
 
-RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn  yarn install
+RUN yarn install
 
 FROM node:21-alpine
 

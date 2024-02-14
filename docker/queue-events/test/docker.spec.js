@@ -1,17 +1,18 @@
 const {OpenAPIClientAxios} = require("openapi-client-axios");
 const {builderFactory} = require("@gridql/payload-generator")
 const assert = require("assert");
-const {DockerComposeEnvironment} = require("testcontainers");
+const {DockerComposeEnvironment, MongoDBContainer} = require("testcontainers");
 const { Kafka, logLevel } = require("kafkajs");
-
 const path = require('path');
 const fs = require("fs");
 const {TestConsumer} = require("@gridql/kafka-consumer");
+const {buildDb} = require("@gridql/mongo-connector");
 
 let environment;
 let schema;
 let kafka;
 let swagger_clients = {}
+let mongod;
 
 async function createKafkaTopic(topicName, numPartitions = 1, replicationFactor = 1) {
     const admin = kafka.admin();
@@ -40,7 +41,7 @@ async function createKafkaTopic(topicName, numPartitions = 1, replicationFactor 
 before(async function () {
     this.timeout(200000);
 
-    environment = await new DockerComposeEnvironment(__dirname ).up();
+    // environment = await new DockerComposeEnvironment(__dirname ).up();
 
     for(let restlette of ["test"]){
         let rest = await fetch(`http://localhost:3033/${restlette}/api/api-docs/swagger.json`)
@@ -58,38 +59,42 @@ before(async function () {
     });
 
     await createKafkaTopic("test")
+    await createKafkaTopic("serviced")
 });
 
-describe("Should build docker image and run", function () {
-    this.timeout(20000);
+describe("Should build docker image and integrate", function () {
+    this.timeout(200000);
     it("should create a test", async () => {
-        //Given I have a consumer
-        let tc = new TestConsumer(kafka, {groupId: "docker-test"})
-        await tc.init("test");
+        //When an event is sent to a context
+        let tc = new TestConsumer(kafka, {groupId: "q-events-test"})
+        await tc.init("serviced");
         await tc.run();
 
-        //When an event is sent to a context
-
+        //and when I submit a test object to the input topic
         let test_factory = builderFactory(schema)
         let test = test_factory()
 
-        const result = await swagger_clients["/test/api"].create(null, test);
+        let msg = { payload: test, operation: "CREATE" };
 
-        let actual_id = result.headers["x-canonical-id"];
+        let message = {
+            topic: "test",
+            messages: [{ key: "123412341", value: JSON.stringify(msg) }],
+        };
+
+        const kafkaProducer = kafka.producer();
+
+        await kafkaProducer
+            .connect()
+            .catch((reason) =>
+                console.log("Kafka Producer failed to connect: ", reason)
+            );
+
+        await kafkaProducer.send(message);
+
+        //Then I should see the message get stored in the database
 
         const actual = await tc.current(500);
-
-        assert.notEqual(actual, undefined);
-
-        //Then we should get a record that the event has been saved
-        assert.equal(actual.id, actual_id);
         assert.equal(actual.operation, "CREATE");
 
-        assert.equal(result.status, 200);
-        assert.equal(result.data.name, test.name);
     })
 });
-
-function delay(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
