@@ -5,7 +5,7 @@
   "main": "index.js",
   "license": "MIT",
   "private": false,
-  "gitHead": "b10884f65498fef773cbfd5420c9c8b000bad76a",
+  "gitHead": "c480d620f24013ae2822640d70374df7fc9dbd5e",
   "publishConfig": {
     "access": "public"
   },
