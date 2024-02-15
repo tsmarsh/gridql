@@ -1,6 +1,6 @@
 {
   "name": "@gridql/kafka-consumer",
-  "version": "3.4.1",
+  "version": "3.4.2",
   "description": "Listens to mongo and emits events",
   "main": "index.js",
   "author": "Tom Marsh",

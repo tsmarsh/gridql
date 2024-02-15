@@ -1,6 +1,6 @@
 {
   "name": "@gridql/server",
-  "version": "3.4.1",
+  "version": "3.4.2",
   "description": "graphql server scaffolding",
   "author": "Tom Marsh",
   "license": "BSD",
@@ -12,9 +12,9 @@
     "test": "nyc mocha --exit"
   },
   "dependencies": {
-    "@gridql/mongo-connector": "^3.4.1",
-    "@gridql/payload-generator": "^3.4.1",
-    "@gridql/payload-validator": "^3.4.1",
+    "@gridql/mongo-connector": "^3.4.2",
+    "@gridql/payload-generator": "^3.4.2",
+    "@gridql/payload-validator": "^3.4.2",
     "@pushcorn/hocon-parser": "^1.2.6",
     "cors": "^2.8.5",
     "express": "^4.18.2",

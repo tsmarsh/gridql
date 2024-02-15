@@ -1,6 +1,6 @@
 {
   "name": "@gridql/kafka-event-consumer",
-  "version": "3.4.1",
+  "version": "3.4.2",
   "description": "Listens to mongo and emits events",
   "main": "index.js",
   "author": "Tom Marsh",
@@ -10,9 +10,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@gridql/mongo-connector": "^3.4.1",
-    "@gridql/payload-validator": "^3.4.1",
-    "@gridql/url": "^3.4.1",
+    "@gridql/mongo-connector": "^3.4.2",
+    "@gridql/payload-validator": "^3.4.2",
+    "@gridql/url": "^3.4.2",
     "@pushcorn/hocon-parser": "^1.2.6",
     "axios": "^1.4.0",
     "kafkajs": "^2.2.4",
