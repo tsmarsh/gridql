@@ -80,7 +80,7 @@ services:
     depends_on: [init-replica-set]
     hostname: service
     healthcheck:
-      test: "wget -q localhost:3033"
+      test: "wget -q -O- localhost:3033"
       interval: 10s
       timeout: 10s
       retries: 5
@@ -97,8 +97,10 @@ services:
 
   queue-event:
     depends_on:
-      - queue
-      - service
+      service:
+        condition: service_started
+      queue:
+        condition: service_started
     build:
       context: "../../.."
       dockerfile: "docker/queue-events/Dockerfile"
@@ -107,3 +109,4 @@ services:
     environment:
       KAFKA_URI: queue:9093
       KAFKA_HOST: queue
+
