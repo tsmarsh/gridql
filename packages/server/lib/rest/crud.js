@@ -28,9 +28,11 @@ const create = (repo, context) => async (req, res) => {
     if (req.headers.authorization !== undefined) {
       res.header("Authorization", req.headers.authorization);
     }
+    console.log("Created: ", result)
     res.redirect(303, `${context}/${result}`);
   } else {
     //should respond with diagnostics
+    console.log("Failed to create: ", payload)
     res.sendStatus(400);
   }
 };
@@ -64,13 +66,14 @@ const update = (repo, context) => async (req, res) => {
 
   if (current !== null && current !== undefined) {
     if (isAuthorized(subscriber, current)) {
-      await repo.create(payload, {
+      const result = await repo.create(payload, {
         subscriber,
         id,
       });
       if (req.headers.authorization !== undefined) {
         res.header("Authorization", req.headers.authorization);
       }
+      console.log("Updated: ", result)
       res.redirect(303, `${context}/${id}`);
     } else {
       res.status(403);
@@ -89,6 +92,7 @@ const remove = (repo) => async (req, res) => {
   if (result !== null && result !== undefined) {
     if (isAuthorized(getSub(req.headers.authorization), result)) {
       await repo.remove(id);
+      console.log("Deleted: ", id)
       res.json({ deleted: id });
     } else {
       res.status(403);
