@@ -98,7 +98,7 @@ services:
   queue-event:
     depends_on:
       service:
-        condition: service_started
+        condition: service_healthy
       queue:
         condition: service_started
     build:

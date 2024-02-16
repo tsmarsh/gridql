@@ -12,7 +12,6 @@ let environment;
 let schema;
 let kafka;
 let swagger_clients = {}
-let mongod;
 
 async function createKafkaTopic(topicName, numPartitions = 1, replicationFactor = 1) {
     const admin = kafka.admin();
@@ -41,7 +40,7 @@ async function createKafkaTopic(topicName, numPartitions = 1, replicationFactor 
 before(async function () {
     this.timeout(200000);
 
-    // environment = await new DockerComposeEnvironment(__dirname ).up();
+    environment = await new DockerComposeEnvironment(__dirname ).up();
 
     for(let restlette of ["test"]){
         let rest = await fetch(`http://localhost:3033/${restlette}/api/api-docs/swagger.json`)
