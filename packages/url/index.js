@@ -1,18 +1,30 @@
-const { URL,   fileURLToPath } = require('url');
 const fs = require('fs');
+const { URL, fileURLToPath } = require('url');
 
-async function parseUrl(inputUrl) {
+async function parseUrl(inputUrl, maxRetries = 3, retryDelay = 1000) {
     try {
         const urlObj = new URL(inputUrl);
 
         if (urlObj.protocol === 'file:') {
             const filePath = fileURLToPath(inputUrl);
             console.log(`File path: ${filePath}`);
-            return fs.readFileSync(filePath, {encoding: 'utf8'});
+            return fs.readFileSync(filePath, { encoding: 'utf8' });
         } else if (urlObj.protocol === 'http:' || urlObj.protocol === 'https:') {
             console.log(`Service URL: ${inputUrl}`);
-            const response = await fetch(inputUrl);
-            return await response.text(); // or response.json() based on expected content type
+            for (let attempt = 1; attempt <= maxRetries; attempt++) {
+                try {
+                    const response = await fetch(inputUrl);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return await response.text(); // or response.json() based on expected content type
+                } catch (error) {
+                    console.error(`Attempt ${attempt} failed: ${error}`);
+                    if (attempt === maxRetries) throw error;
+                    console.log(`Retrying in ${retryDelay}ms...`);
+                    await new Promise(resolve => setTimeout(resolve, retryDelay));
+                }
+            }
         } else {
             throw new Error('Unsupported URL protocol');
         }
@@ -21,6 +33,9 @@ async function parseUrl(inputUrl) {
         throw error; // Rethrow or handle as needed
     }
 }
+
+
+
 
 module.exports = {
     parseUrl

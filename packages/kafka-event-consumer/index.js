@@ -23,8 +23,13 @@ const init = async (configFile) => {
   const kafkaConsumer = k.consumer({ groupId: kafka.groupId });
 
   let swagger_doc = JSON.parse(await parseUrl(swagger));
+
+  console.log("Swagger doc: ", swagger_doc)
+
   let api = new OpenAPIClientAxios({ definition: swagger_doc });
-  let apiClient = await api.init();
+  let apiClient = await api.init().catch((err) => {
+    console.error("Failed to create client: ", err)
+  });
 
   let validator = valid(JSON.parse(fs.readFileSync(schema)));
 
