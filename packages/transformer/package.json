@@ -1,0 +1,14 @@
+{
+  "name": "transformer",
+  "version": "1.0.0",
+  "dependencies": {},
+  "description": "Reacts to events and pushes the results",
+  "main": "index.js",
+  "author": "Tom Marsh",
+  "license": "BSD",
+  "private": false,
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "typescript": "^5.3.3"
+  }
+}
