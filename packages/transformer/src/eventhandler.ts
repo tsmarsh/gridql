@@ -1,4 +1,4 @@
-import {Message} from "./model/payload";
+import {Message} from "./model/message";
 
 export interface EventHandler<T> {
     onCreate(message: Message<T>): Promise<void>;
