@@ -5,7 +5,7 @@ const swaggerUi = require("swagger-ui-express");
 const { v4: uuid } = require("uuid");
 const { swagger } = require("../swagger");
 const { PayloadRepository } = require("./repository");
-const { getSub, isAuthorized } = require("../authorization");
+const { getSub, isAuthorized } = require("@gridql/auth");
 
 const calculateReaders = (doc, sub) => {
   const readers = new Set();

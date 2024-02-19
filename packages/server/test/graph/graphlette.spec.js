@@ -4,7 +4,7 @@ const { describe, it, before, after } = require("mocha");
 
 const { parse, build_app } = require("../../index");
 const { MongoClient } = require("mongodb");
-const { callSubgraph } = require("../../lib/graph/callgraph");
+const { callSubgraph } = require("@gridql/graph");
 const assert = require("assert");
 
 let mongod;

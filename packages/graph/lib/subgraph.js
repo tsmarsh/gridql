@@ -1,6 +1,7 @@
 const { parse, print } = require("graphql/index");
 const { TypeInfo, visitWithTypeInfo } = require("graphql/utilities");
 const { visit } = require("graphql/language");
+
 const processSelectionSet = (selectionSet) => {
   return selectionSet.selections.reduce(
     (q, field) => q + processFieldNode(field),

@@ -1,7 +1,7 @@
 const path = require("path");
 const {URL} = require("url");
 const {createHandler} = require("graphql-http/lib/use/express");
-const {getSub} = require("../authorization");
+const {getSub} = require("@gridql/auth");
 const {init: crud_init} = require("../rest/crud");
 const express = require("express");
 const cors = require("cors");

@@ -16,6 +16,8 @@
     "@gridql/mongo-connector": "^3.4.2",
     "@gridql/payload-generator": "^3.4.2",
     "@gridql/payload-validator": "^3.4.2",
+    "@gridql/auth": "^1.0.0",
+    "@gridql/graph": "^1.0.0",
     "@pushcorn/hocon-parser": "^1.2.6",
     "cors": "^2.8.5",
     "express": "^4.18.2",

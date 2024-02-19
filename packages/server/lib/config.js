@@ -1,6 +1,6 @@
 const parser = require("@pushcorn/hocon-parser");
 const {buildDb} = require("@gridql/mongo-connector");
-const {context} = require("./graph/root");
+const {context} = require("@gridql/graph");
 const fs = require("fs");
 const {buildSchema} = require("graphql/index");
 const {valid} = require("@gridql/payload-validator");

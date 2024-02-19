@@ -1,0 +1,23 @@
+{
+  "name": "@gridql/graph",
+  "version": "1.0.0",
+  "description": "Utilities for calling graphql inside the mesh",
+  "main": "index.js",
+  "author": "Tom Marsh",
+  "license": "BSD",
+  "private": false,
+  "scripts": {
+    "test": "nyc mocha --exit"
+  },
+  "dependencies": {
+    "@gridql/auth": "1.0.0",
+
+    "graphql": "^16.6.0"
+  },
+
+  "devDependencies": {
+    "mocha": "^10.2.0",
+    "mongodb-memory-server": "^8.12.2",
+    "nyc": "^15.1.0"
+  }
+}

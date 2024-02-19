@@ -1,6 +1,6 @@
 const { after, before, describe, it } = require("mocha");
 const {parse, build_app} = require("../index")
-const { callSubgraph } = require("../lib/graph/callgraph");
+const { callSubgraph } = require("@gridql/graph");
 const chai = require("chai");
 const expect = chai.expect;
 const chaiHttp = require("chai-http");

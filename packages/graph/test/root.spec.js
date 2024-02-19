@@ -1,19 +1,19 @@
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const { MongoClient } = require("mongodb");
 
-const { context } = require("../../lib/graph/root");
+const { context } = require("../lib/root");
 
 const { graphql, buildSchema } = require("graphql");
 const { expect } = require("chai");
 const sinon = require("sinon");
-
-const assert = require("assert");
 
 let db;
 let test_db = "test_db";
 let mongo_collection = "simple";
 let mongod;
 let createdAt = new Date();
+
+const assert = require("assert");
 
 before(async function () {
   mongod = await MongoMemoryServer.create();
