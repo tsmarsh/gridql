@@ -16,7 +16,8 @@
     "@pushcorn/hocon-parser": "^1.2.6",
     "axios": "^1.4.0",
     "kafkajs": "^2.2.4",
-    "mongodb": "^5.5.0"
+    "mongodb": "^5.5.0",
+    "node-jq": "^4.3.0"
   },
   "scripts": {
     "test": "nyc mocha --exit"

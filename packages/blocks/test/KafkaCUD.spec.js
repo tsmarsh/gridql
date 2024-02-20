@@ -1,6 +1,6 @@
-const {KafkaCUD} = require("../../lib/KafkaCUD");
+const {KafkaCUD} = require("../lib/KafkaCUD");
 const assert = require("assert");
-const {GotIt} = require("GotIt");
+const {GotIt} = require("./GotIt");
 
 describe("switching on operation type", async function(){
     it("should forward on create", async () => {

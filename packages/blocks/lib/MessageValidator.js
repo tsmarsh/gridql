@@ -5,7 +5,7 @@ class MessageValidator {
     }
 
     execute = async (data) => {
-        if(this.validator(data)){
+        if(this.validator(data.payload)){
             this.modules.success.execute(data)
         }else {
             this.modules.error.execute(data)
