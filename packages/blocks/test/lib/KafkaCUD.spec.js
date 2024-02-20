@@ -1,18 +1,6 @@
 const {KafkaCUD} = require("../../lib/KafkaCUD");
 const assert = require("assert");
-
-class GotIt {
-    constructor(expected) {
-        this.expected = expected;
-    }
-
-    called = false;
-
-    execute = async (data) => {
-        this.called = true;
-        assert.equal(this.expected, data);
-    }
-}
+const {GotIt} = require("GotIt");
 
 describe("switching on operation type", async function(){
     it("should forward on create", async () => {
