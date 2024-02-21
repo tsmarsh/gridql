@@ -30,7 +30,7 @@ class TestConsumer {
     current = async (d = 50)=> {
         let loop = 0;
         while (this.actual === undefined && loop < 10) {
-            await this.delay(d);
+            await this.delay(d* loop);
             loop++;
         }
         if (this.actual === undefined) {
