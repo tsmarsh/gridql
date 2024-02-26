@@ -1,7 +1,13 @@
+
+
 [![CI](https://github.com/tsmarsh/gridql/actions/workflows/node.js.yml/badge.svg)](https://github.com/tsmarsh/gridql/actions/workflows/node.js.yml)
 [![codecov](https://codecov.io/gh/tsmarsh/gridql/branch/main/graph/badge.svg?token=b9wLrKB3dU)](https://codecov.io/gh/tsmarsh/gridql)
 
 # gridql
+
+
+<img src="./docs/gridql_logo.png" width="200" align="left" />
+
 Scaffolding for converting event documents into a mesh
 
 GraphQL has a [Conway's Law](https://en.wikipedia.org/wiki/Conway%27s_law) problem: its built by a company that has lots of smaller business units that are controlled, synchronised and presetend by a single umbrella company [Meta](https://about.meta.com). So they solved the distributed nature of GraphQL with a single point of failure [Apollo](https://www.apollographql.com/). 
@@ -20,6 +26,7 @@ Apollo Server is a developer tool that gets a poor-to-mid solution to market qui
 But that's not why we're here. We want to do a native GraphQL solution. An actual GraphQL solution that is genuinely distributed, performant and fast to market. 
 
 This is how you do it.
+
 
 ## Components
 
