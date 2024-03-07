@@ -1,0 +1,13 @@
+{
+  "name": "@gridql/mermaidurator",
+  "version": "1.0.0",
+  "description": "Converts mermaid class diagrams to json and graph schema",
+  "main": "index.js",
+  "type": "module",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {},
+  "dependencies": {
+    "chevrotain": "^11.0.3"
+  }
+}
