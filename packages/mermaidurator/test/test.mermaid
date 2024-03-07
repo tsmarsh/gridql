@@ -3,7 +3,7 @@ classDiagram
     Farm *-- Coop
     class Farm {
         id: String
-        name: String
+        name: String!
 
         getById(id: String): Farm
         getByName(name: String): Farm
@@ -13,8 +13,8 @@ classDiagram
     Coop *-- Hen
     class Coop {
         id: String
-        name: String
-        farm_id: String
+        name: String!
+        farm_id: String!
 
         getById(id: String): Coop
         getByName(name: String): Coop
@@ -23,8 +23,8 @@ classDiagram
 
     class Hen {
         id: String
-        name: String
-        coop_id: String
+        name: String!
+        coop_id: String!
 
         getById(id: String): Hen
         getByName(city: String): [Hen]

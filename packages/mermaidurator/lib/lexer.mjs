@@ -6,9 +6,15 @@ const DiagramType = createToken({
     group: Lexer.SKIPPED
 })
 
+export const RequiredType = createToken({
+    name: "RequiredType",
+    pattern: /[A-Z][a-zA-Z]*!/,
+})
+
 export const Type = createToken({
     name: "Type",
-    pattern: /[A-Z]\w*!?/,
+    pattern: /[A-Z][a-zA-Z]*/,
+    longer_alt: RequiredType
 })
 
 export const Identifier = createToken({
@@ -44,7 +50,7 @@ const WhiteSpace = createToken({
 });
 
 export const allTokens = [
-    WhiteSpace, DiagramType, Class, Type, Identifier,
+    WhiteSpace, DiagramType, Class, RequiredType, Type, Identifier,
     OpenBlock, CloseBlock, OpenArray, CloseArray,
     Colon, ComposedOf, OpenArgList, CloseArgList,
 ]

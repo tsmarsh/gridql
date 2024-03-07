@@ -1,4 +1,4 @@
-import { CstParser} from "chevrotain";
+import {CstParser, Lexer} from "chevrotain";
 import {
     allTokens,
     Class, CloseArgList,
@@ -8,14 +8,14 @@ import {
     ComposedOf,
     Identifier, OpenArgList,
     OpenArray,
-    OpenBlock,
+    OpenBlock, RequiredType,
     Type
 } from "./lexer.mjs";
 
 export class RepositoryDiagram extends CstParser {
     constructor() {
         super(allTokens);
-
+        this.lexer = new Lexer(allTokens)
         const $ = this;
 
         $.RULE("statementClause", () => {
@@ -47,7 +47,7 @@ export class RepositoryDiagram extends CstParser {
         })
 
         $.RULE("typeClause", () => {
-            $.OR([{ALT: () => $.CONSUME(Type)}, {ALT: () => $.SUBRULE($.arrayClause)}])
+            $.OR([{ALT: () => $.CONSUME(RequiredType)}, {ALT: () => $.CONSUME2(Type)}, {ALT: () => $.SUBRULE($.arrayClause)}])
         })
 
         $.RULE("arrayClause", () => {
@@ -73,4 +73,21 @@ export class RepositoryDiagram extends CstParser {
 
         this.performSelfAnalysis()
     }
+
+    parseInput(text){
+        let result = this.lexer.tokenize(text);
+
+        this.input = result.tokens
+        const ctx = this.statementClause()
+
+        if(parser.errors.length > 0){
+            console.error(JSON.stringify(parser.errors, null, 2))
+            throw new Error("ERRORS!\n" + parser.errors[0].message)
+        }
+
+        return ctx;
+    }
 }
+
+export const parser = new RepositoryDiagram();
+export const BaseCstVisitor = parser.getBaseCstVisitorConstructor();
