@@ -1,53 +1,87 @@
 import {BaseCstVisitor} from "./parser.mjs";
+import pluralize from "pluralize";
 
 export class GraphSchemaVisitor extends BaseCstVisitor {
     constructor() {
         super();
-
         this.validateVisitor()
     }
 
     statementClause(ctx) {
-        console.log("STATEMENT")
-        const compositions = ctx.compositionClause.map((cc)=> this.compositionClause(cc))
-        const classes = ctx.classClause.map( (klass) => this.classClause(klass))
+        let types = {}
+        ctx.classClause.map( (klass) => this.classClause(klass, types))
+        ctx.compositionClause.map( (comp) => this.compositionClause(comp, types))
+        let files = {}
+
+        for(let current_type in types){
+            files[current_type] = []
+            for(let type in types){
+                let fs;
+                if(current_type === type){
+                    fs = types[type].fields.filter((field) => !field.includes(current_type))
+                    files[current_type].push(`type Query {\n\t${types[type].methods.join("\n\t")}\n}`)
+                } else {
+                    fs = types[type].fields
+                }
+                files[current_type].push(
+                `type ${type} {\n\t${fs.join("\n\t")}}`)
+            }
+        }
+
+        console.log(files)
     }
 
-    compositionClause(ctx) {
-        console.log("COMPOSITION")
-        console.log(ctx.children.lhs[0].image)
-        console.log(ctx.children.rhs[0].image)
-        //console.log(JSON.stringify(ctx, null, 2))
+    compositionClause(ctx, types) {
+        const host = ctx.children.lhs[0].image
+        let type = ctx.children.rhs[0].image;
+
+        const nme = pluralize( type.charAt(0).toLowerCase() + type.slice(1), 2);
+
+
+        types[host].fields.push(`${nme}: [${type}]`)
+        return types;
     }
 
-    classClause(ctx) {
-        console.log("CLASS")
-        console.log(ctx.children.Type)
-        console.log(JSON.stringify(ctx, null, 2))
+    classClause(ctx, types) {
+        let type = ctx.children.Type[0].image
+        let fields = ctx.children.fieldClause.map((fc)=> this.fieldClause(fc))
+        let methods = ctx.children.methodClause.map((mc) => this.methodClause(mc))
+        types[type] = {fields, methods}
+        return types
     }
 
-    fieldClause(ctx) {
-        console.log("FIELD")
-        console.log(JSON.stringify(ctx, null, 2))
+    fieldClause(ctx, schema) {
+        let name = ctx.children.Identifier[0].image
+        let type = this.typeClause(ctx.children.typeClause[0])
+        return `${name}: ${type}`
     }
 
     typeClause(ctx) {
-        console.log("TYPE")
-        console.log(JSON.stringify(ctx, null, 2))
+        if("Type" in ctx.children) {
+            return ctx.children.Type[0].image
+        }else if("RequiredType" in ctx.children){
+            return ctx.children.RequiredType[0].image;
+        }else {
+            return this.arrayClause(ctx.children.arrayClause[0])
+        }
     }
 
     arrayClause(ctx) {
-        console.log("ARRAY")
-        console.log(JSON.stringify(ctx, null, 2))
+        let value = ctx.children.Type[0].image;
+        return `[${value}]`
     }
 
     methodClause(ctx) {
-        console.log("METHOD")
-        console.log(JSON.stringify(ctx, null, 2))
+        let fn = ctx.children.Identifier[0].image
+        let returnType = this.typeClause(ctx.children.typeClause[0])
+        let argList = this.argList(ctx.children.argList[0])
+        return `${fn}(${argList.join(",")}): ${returnType}}`
     }
 
     argList(ctx) {
-        console.log("ARG_LIST")
-        console.log(JSON.stringify(ctx, null, 2))
+        let arg = ctx.children.Identifier[0].image
+        let type = this.typeClause(ctx.children.typeClause[0])
+
+        return [`${arg}: ${type}`] //need to fix the grammar here
     }
 }

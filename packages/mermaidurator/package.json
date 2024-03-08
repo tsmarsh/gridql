@@ -8,6 +8,7 @@
   "private": false,
   "devDependencies": {},
   "dependencies": {
-    "chevrotain": "^11.0.3"
+    "chevrotain": "^11.0.3",
+    "pluralize": "^8.0.0"
   }
 }

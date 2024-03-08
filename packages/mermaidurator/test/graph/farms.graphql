@@ -1,18 +1,18 @@
 type Coop {
-    id: [String]
+    id: String
     name: String
     hens: [Hen]
 }
 
 type Hen {
-    id: [String]
+    id: String
     name: String
     eggs: Int
     coop: Coop
 }
 
 type Farm {
-    id: [String]
+    id: String
     name: String
     coops: [Coop]
 }

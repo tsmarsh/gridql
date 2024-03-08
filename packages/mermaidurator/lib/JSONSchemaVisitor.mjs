@@ -39,8 +39,6 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
         if("Type" in ctx.children) {
             return {type: ctx.children.Type[0].image.toLowerCase()}
         }else if("RequiredType" in ctx.children){
-            schema.required.push()
-
             let image = ctx.children.RequiredType[0].image;
             let important = image.substring(0, image.length -1 ).toLowerCase();
             schema.required.push(name)
