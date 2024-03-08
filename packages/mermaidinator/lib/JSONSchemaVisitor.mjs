@@ -9,7 +9,7 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
 
     statementClause(ctx) {
         ctx.classClause.map( (klass) => this.classClause(klass))
-        console.log(JSON.stringify(this.schemas, null, 2))
+        return this.schemas;
     }
 
     compositionClause(ctx) {

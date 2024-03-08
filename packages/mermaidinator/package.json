@@ -1,5 +1,5 @@
 {
-  "name": "@gridql/mermaidurator",
+  "name": "@gridql/mermaidinator",
   "version": "1.0.0",
   "description": "Converts mermaid class diagrams to json and graph schema",
   "main": "index.js",
@@ -9,6 +9,7 @@
   "devDependencies": {},
   "dependencies": {
     "chevrotain": "^11.0.3",
+    "commander": "^12.0.0",
     "pluralize": "^8.0.0"
   }
 }

@@ -18,17 +18,18 @@ export class GraphSchemaVisitor extends BaseCstVisitor {
             for(let type in types){
                 let fs;
                 if(current_type === type){
-                    fs = types[type].fields.filter((field) => !field.includes(current_type))
-                    files[current_type].push(`type Query {\n\t${types[type].methods.join("\n\t")}\n}`)
-                } else {
+                    files[current_type].push(`type Query {\n  ${types[type].methods.join("\n  ")}\n}`)
                     fs = types[type].fields
+                } else {
+                    fs = types[type].fields.filter((field) => !field.includes(current_type))
+
                 }
                 files[current_type].push(
-                `type ${type} {\n\t${fs.join("\n\t")}}`)
+                `type ${type} {\n  ${fs.join("\n  ")}\n}`)
             }
         }
 
-        console.log(files)
+        return files;
     }
 
     compositionClause(ctx, types) {
@@ -75,13 +76,13 @@ export class GraphSchemaVisitor extends BaseCstVisitor {
         let fn = ctx.children.Identifier[0].image
         let returnType = this.typeClause(ctx.children.typeClause[0])
         let argList = this.argList(ctx.children.argList[0])
-        return `${fn}(${argList.join(",")}): ${returnType}}`
+        return `${fn}(${argList.join(", ")}): ${returnType}`
     }
 
     argList(ctx) {
         let arg = ctx.children.Identifier[0].image
         let type = this.typeClause(ctx.children.typeClause[0])
 
-        return [`${arg}: ${type}`] //need to fix the grammar here
+        return [`${arg}: ${type}`, "at: Float"] //need to fix the grammar here
     }
 }

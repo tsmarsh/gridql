@@ -17,7 +17,7 @@ classDiagram
         farm_id: String!
 
         getById(id: String): Coop
-        getByName(name: String): Coop
+        getByName(id: String): Coop
         getByFarm(id: String): [Coop]
     }
 
@@ -27,6 +27,6 @@ classDiagram
         coop_id: String!
 
         getById(id: String): Hen
-        getByName(city: String): [Hen]
+        getByName(name: String): [Hen]
         getByCoop(id: String): [Hen]
     }
