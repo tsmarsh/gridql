@@ -1,6 +1,6 @@
 {
   "name": "@gridql/merminator",
-  "version": "1.0.0",
+  "version": "3.6.0",
   "description": "Converts mermaid class diagrams to json and graph schema",
   "main": "index.js",
   "bin": {
@@ -13,12 +13,12 @@
   "license": "MIT",
   "private": false,
   "devDependencies": {
-    "@gridql/server": "^3.5.0",
-    "mocha": "^10.3.0",
+    "@gridql/server": "^3.6.0",
     "axios": "^1.4.0",
     "chai": "^4.3.7",
     "chai-http": "^4.4.0",
     "cheerio": "^1.0.0-rc.12",
+    "mocha": "^10.3.0",
     "mongodb-memory-server": "^8.12.2",
     "nyc": "^15.1.0",
     "openapi-client-axios": "^7.2.0",

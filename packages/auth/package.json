@@ -1,6 +1,6 @@
 {
   "name": "@gridql/auth",
-  "version": "3.5.0",
+  "version": "3.6.0",
   "description": "Sets the convention for thinking about auth",
   "main": "index.js",
   "author": "Tom Marsh",
