@@ -47,7 +47,7 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
         types[host.toLowerCase()].resolvers.push({
             name: nme,
             id: "id",
-            queryName: "getById",
+            queryName: "getBy" + type,
             url: this.graphUrl(service)
         })
         return types;
@@ -71,7 +71,7 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
             let service = name.substring(0, name.length - 3);
             dto.resolvers.push({
                 name: service,
-                id: "id",
+                id: name,
                 queryName: "getById",
                 url: this.graphUrl(service)
             })

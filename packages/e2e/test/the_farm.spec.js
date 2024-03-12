@@ -185,7 +185,7 @@ describe("The Farm", function () {
 
   it("should query in both directions", async function () {
     const query = `{
-         getByCoop(coop: "${coop1_id}") {
+         getByCoop(id: "${coop1_id}") {
                name
                eggs 
                coop {
