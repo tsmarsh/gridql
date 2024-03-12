@@ -122,7 +122,7 @@ const singleton = (db, dtoFactory, id, queryTemplate) => {
     const results = await db.find(query).sort({ createdAt: -1 }).toArray();
     let result = results[0];
 
-    if (result === null) {
+    if (result === null || result === undefined) {
       console.log(`Nothing found for: ${i}`);
       return result;
     } else {
