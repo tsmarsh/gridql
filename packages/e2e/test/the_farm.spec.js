@@ -1,12 +1,12 @@
 const { after, before, describe, it } = require("mocha");
-const {parse, build_app} = require("../index")
+const {parse, build_app} = require("@gridql/server")
 const { callSubgraph } = require("@gridql/graph");
 const chai = require("chai");
 const expect = chai.expect;
 const chaiHttp = require("chai-http");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const { MongoClient } = require("mongodb");
-const { swagger } = require("../lib/swagger");
+const { swagger } = require("@gridql/server/lib/swagger");
 const { default: OpenAPIClientAxios } = require("openapi-client-axios");
 const assert = require("assert");
 const jwt = require("jsonwebtoken");
@@ -33,13 +33,23 @@ let first_stamp, second_stamp;
 
 before(async function () {
   this.timeout(20000)
+  const {merminate} = await import("@gridql/merminator/lib/processor.mjs")
+
   mongod = await MongoMemoryServer.create({ instance: { port: 60504 } });
-  client = new MongoClient(mongod.getUri());
+  uri = mongod.getUri();
+  client = new MongoClient(uri);
+
+  process.env["MONGO_URI"] = uri;
+  process.env["ENV"] = "test"
+  process.env["PREFIX"] = "farm"
+  process.env["PLATFORM_URL"] = "http://localhost:3033"
+
   await client.connect();
 
-  uri = mongod.getUri();
+  merminate(__dirname + "/test.mermaid", __dirname, "http://localhost:3033")
+  process.chdir(__dirname)
 
-  config = await parse(__dirname + "/config/the_farm.conf");
+  config = await parse(__dirname + "/config/config.conf");
   let app = await build_app(config);
 
   port = config.port;
@@ -66,9 +76,17 @@ before(async function () {
       })
   );
 
-  hen_api = apis[0];
-  coop_api = apis[1];
-  farm_api = apis[2];
+  for (let api of apis){
+    if(Object.keys(api.paths)[0].includes("hen")){
+      hen_api = api
+    }
+    else if(Object.keys(api.paths)[0].includes("coop")){
+      coop_api = api
+    }
+    else if(Object.keys(api.paths)[0].includes("farm")){
+      farm_api = api
+    }
+  }
 
   try {
     let farm_1 = await farm_api.create(null, { name: "Emerdale" });
@@ -134,6 +152,7 @@ before(async function () {
 after(async function () {
   mongod.stop();
   server.close();
+  process.chdir(__dirname + "/..")
 });
 
 describe("The Farm", function () {

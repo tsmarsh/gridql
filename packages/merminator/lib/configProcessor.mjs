@@ -1,8 +1,8 @@
 const mongo = (name) => {
     return {
         uri: "${?MONGO_URI}",
-        collection: '"$\{?PREFIX}-"${?ENV}"-' + name + '"',
-        db: `"$\{?PREFIX}_"$\{?ENV}`,
+        collection: '$\{?PREFIX}"-"${\?ENV}"-' + name + '"',
+        db: `$\{?PREFIX}"_"$\{?ENV}`,
         options: {
             directConnection: true
         }

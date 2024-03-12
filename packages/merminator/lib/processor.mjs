@@ -1,14 +1,11 @@
+import {JSONSchemaVisitor} from "./JSONSchemaVisitor.mjs";
 import fs from "fs";
-import {GraphSchemaVisitor} from "./lib/GraphSchemaVisitor.mjs";
-import {RepositoryDiagram} from "./lib/parser.mjs";
-import {JSONSchemaVisitor} from "./lib/JSONSchemaVisitor.mjs";
-import {ConfiguratorConfigVisitor} from "./lib/ConfiguratorConfigVisitor.mjs";
-import {processConfig} from "./lib/configProcessor.mjs";
+import {GraphSchemaVisitor} from "./GraphSchemaVisitor.mjs";
+import {ConfiguratorConfigVisitor} from "./ConfiguratorConfigVisitor.mjs";
+import {processConfig} from "./configProcessor.mjs";
+import {RepositoryDiagram} from "./parser.mjs";
 
-import {program} from "commander"
-
-
-function processJsonSchema(ctx, destinationPath) {
+export function processJsonSchema(ctx, destinationPath) {
     const jsonSchemaVisitor = new JSONSchemaVisitor();
     let jsonschemas = jsonSchemaVisitor.visit(ctx);
     for (let schema in jsonschemas) {
@@ -16,7 +13,7 @@ function processJsonSchema(ctx, destinationPath) {
     }
 }
 
-function processGraphQLSchema(ctx, destinationPath) {
+export function processGraphQLSchema(ctx, destinationPath) {
     const graphSchemaVisitor = new GraphSchemaVisitor();
     let graphSchema = graphSchemaVisitor.visit(ctx);
     for (let schema in graphSchema) {
@@ -24,12 +21,12 @@ function processGraphQLSchema(ctx, destinationPath) {
     }
 }
 
-function processClusterConfig(ctx, host, destinationPath) {
+export function processClusterConfig(ctx, host, destinationPath) {
     const configuratorConfigVisitor = new ConfiguratorConfigVisitor(host)
     fs.writeFileSync(`${destinationPath}/config/config.conf`, processConfig(configuratorConfigVisitor.visit(ctx)))
 }
 
-const process = (filePath, destinationPath, url) => {
+export const merminate = (filePath, destinationPath, url) => {
     let mermaid = fs.readFileSync(filePath, {encoding: 'utf-8'});
 
     let parser = new RepositoryDiagram();
@@ -42,13 +39,3 @@ const process = (filePath, destinationPath, url) => {
     processGraphQLSchema(ctx, destinationPath);
     processClusterConfig(ctx, url, destinationPath);
 }
-
-program
-    .name("Mermaidinator")
-    .description("Takes a mermaid classdiagram and parses it into configuration for a gridql cluster")
-    .option('-f, --file <file>', 'Mermaid file')
-    .option("-d, --dest <dest>", "destination path", ".")
-    .option("-u, --url <url>", "internal host", "localhost:3033")
-    .action((options) => process(options.file, options.dest, options.url))
-
-program.parse()

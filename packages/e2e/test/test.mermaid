@@ -22,9 +22,11 @@ classDiagram
     }
 
     class Hen {
+
         id: String
         name: String!
-        coop_id: String!
+        coop_id: String
+        eggs: Int
 
         getById(id: String): Hen
         getByName(name: String): [Hen]

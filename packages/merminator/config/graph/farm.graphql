@@ -1,0 +1,23 @@
+type Query {
+  getById(id: String, at: Float): Farm
+  getByName(name: String, at: Float): Farm
+}
+
+type Farm {
+  id: String
+  name: String!
+  coops: [Coop]
+}
+
+type Coop {
+  id: String
+  name: String!
+  farm_id: String!
+  hens: [Hen]
+}
+
+type Hen {
+  id: String
+  name: String!
+  coop_id: String!
+}
