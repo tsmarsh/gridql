@@ -47,14 +47,14 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
         types[host.toLowerCase()].resolvers.push({
             name: nme,
             id: "id",
-            queryName: "getBy" + type,
+            queryName: "getBy" + host,
             url: this.graphUrl(service)
         })
         return types;
     }
 
     classClause(ctx, types) {
-        let dtoConfig = {singletons: [], scalar: [], resolvers: []}
+        let dtoConfig = {singletons: [], scalars: [], resolvers: []}
 
         let type = ctx.children.Type[0].image.toLowerCase()
 
@@ -104,7 +104,7 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
 
             return ctx.children.Type[0].image
         } else if ("arrayClause" in ctx.children) {
-            dtoConfig.scalar.push({
+            dtoConfig.scalars.push({
                 name: fn,
                 id: "id",
                 query: this.getByXid(fn)

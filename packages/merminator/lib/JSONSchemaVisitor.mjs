@@ -28,9 +28,12 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
 
     fieldClause(ctx, schema) {
         let name = ctx.children.Identifier[0].image
-        let type;
-
-        schema.properties[name] = this.typeClause(ctx.children.typeClause[0], schema, name)
+        let type = this.typeClause(ctx.children.typeClause[0], schema, name);
+        if(name.endsWith("_id")){
+            schema.properties[name] = {type: "string"}
+        }else {
+            schema.properties[name] = type
+        }
     }
 
     typeClause(ctx, schema, name) {
