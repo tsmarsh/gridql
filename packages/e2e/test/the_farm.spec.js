@@ -172,7 +172,7 @@ describe("The Farm", function () {
         }`;
 
     const json = await callSubgraph(
-      `http://localhost:${port}/farms/graph`,
+      `http://localhost:${port}/farm/graph`,
       query,
       "getById",
       "Bearer " + token
@@ -198,7 +198,7 @@ describe("The Farm", function () {
         }`;
 
     const json = await callSubgraph(
-        `http://localhost:${port}/hens/graph`,
+        `http://localhost:${port}/hen/graph`,
         query,
         "getByCoop",
         "Bearer " + token
@@ -217,7 +217,7 @@ describe("The Farm", function () {
          }}`;
 
     const json = await callSubgraph(
-      `http://localhost:${port}/coops/graph`,
+      `http://localhost:${port}/coop/graph`,
       query,
       "getById",
       "Bearer " + token
@@ -233,7 +233,7 @@ describe("The Farm", function () {
          }}`;
 
     const json = await callSubgraph(
-      `http://localhost:${port}/coops/graph`,
+      `http://localhost:${port}/coop/graph`,
       query,
       "getById",
       "Bearer " + token
@@ -252,7 +252,7 @@ describe("The Farm", function () {
         }`;
 
     const json = await callSubgraph(
-      `http://localhost:${port}/farms/graph`,
+      `http://localhost:${port}/farm/graph`,
       query,
       "getById",
       "Bearer " + token
@@ -272,7 +272,7 @@ describe("The Farm", function () {
         }`;
 
     const json = await callSubgraph(
-      `http://localhost:${port}/farms/graph`,
+      `http://localhost:${port}/farm/graph`,
       query,
       "getById",
       "Bearer " + token
