@@ -53,6 +53,9 @@ export class GraphSchemaVisitor extends BaseCstVisitor {
 
     fieldClause(ctx, schema) {
         let name = ctx.children.Identifier[0].image
+        if(name.endsWith("_id")){
+            name = name.slice(0, -3)
+        }
         let type = this.typeClause(ctx.children.typeClause[0])
         return `${name}: ${type}`
     }

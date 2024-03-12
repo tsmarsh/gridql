@@ -8,7 +8,7 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
         this.validateVisitor()
     }
 
-    graphUrl(node){return `http://${this.host}/${node}/graph`}
+    graphUrl(node){return `${this.host}/${node}/graph`}
 
     getById = {
         name: "getById",
@@ -40,14 +40,15 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
         const host = ctx.children.lhs[0].image
         let type = ctx.children.rhs[0].image;
 
-        const nme = pluralize(type.charAt(0).toLowerCase() + type.slice(1), 2);
+        let service = type.charAt(0).toLowerCase() + type.slice(1);
+        const nme = pluralize(service, 2);
 
 
         types[host.toLowerCase()].resolvers.push({
             name: nme,
             id: "id",
             queryName: "getById",
-            url: this.graphUrl(nme)
+            url: this.graphUrl(service)
         })
         return types;
     }
@@ -70,7 +71,7 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
             let service = name.substring(0, name.length - 3);
             dto.resolvers.push({
                 name: service,
-                id: name,
+                id: "id",
                 queryName: "getById",
                 url: this.graphUrl(service)
             })
@@ -92,11 +93,7 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
 
         if ("Type" in ctx.children) {
             if(fn === "getById") {
-                dtoConfig.singletons.push({
-                    name: fn,
-                    id: id,
-                    query: this.getById
-                })
+                dtoConfig.singletons.push(this.getById)
             } else {
                 dtoConfig.singletons.push({
                     name: fn,
