@@ -15,17 +15,19 @@ async function createTopics(topic_names) {
   const admin = kafka.admin();
   await admin.connect();
 
-  const topics = topic_names.map((t) => {return {
-    topic: t,
-    numPartitions: 1,
-    replicationFactor: 1
-  }})
-
-  await admin.createTopics({
-    topics: topics
+  const topics = topic_names.map((t) => {
+    return {
+      topic: t,
+      numPartitions: 1,
+      replicationFactor: 1,
+    };
   });
 
-  console.log('Topics created');
+  await admin.createTopics({
+    topics: topics,
+  });
+
+  console.log("Topics created");
   await admin.disconnect();
 }
 
@@ -33,18 +35,18 @@ before(async function () {
   this.timeout(360000);
 
   kafkaContainer = await new KafkaContainer()
-      .withExposedPorts(9093)
-      .withEnvironment({ KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" })
-      .withEnvironment({ KAFKA_DELETE_TOPIC_ENABLE: "true" })
-      .start()
-      .catch((reason) =>
-          console.log("Kafka container failed to start: ", reason)
-      );
+    .withExposedPorts(9093)
+    .withEnvironment({ KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" })
+    .withEnvironment({ KAFKA_DELETE_TOPIC_ENABLE: "true" })
+    .start()
+    .catch((reason) =>
+      console.log("Kafka container failed to start: ", reason),
+    );
 
   console.log(
-      `Kafka running on: ${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(
-          9093
-      )}`
+    `Kafka running on: ${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(
+      9093,
+    )}`,
   );
 
   let config = `{
@@ -72,19 +74,23 @@ before(async function () {
   });
 
   const swaggerdoc = swagger(
-      "/test",
-      JSON.parse(
-          fs.readFileSync(__dirname + "/config/hen.schema.json").toString()
-      ),
-      "http://test.foo"
+    "/test",
+    JSON.parse(
+      fs.readFileSync(__dirname + "/config/hen.schema.json").toString(),
+    ),
+    "http://test.foo",
   );
 
   fs.writeFileSync(
-      __dirname + "/config/test.swagger.json",
-      JSON.stringify(swaggerdoc, null, 4)
+    __dirname + "/config/test.swagger.json",
+    JSON.stringify(swaggerdoc, null, 4),
   );
 
-  await createTopics(["create-kafka-test", "update-kafka-test", "delete-kafka-test"])
+  await createTopics([
+    "create-kafka-test",
+    "update-kafka-test",
+    "delete-kafka-test",
+  ]);
 });
 
 after(async () => {
@@ -115,7 +121,7 @@ describe("Kafka change listener", () => {
     await kafkaProducer
       .connect()
       .catch((reason) =>
-        console.log("Kafka Producer failed to connect: ", reason)
+        console.log("Kafka Producer failed to connect: ", reason),
       );
 
     await kafkaProducer.send(message);
@@ -153,7 +159,7 @@ describe("Kafka change listener", () => {
     await kafkaProducer
       .connect()
       .catch((reason) =>
-        console.log("Kafka Producer failed to connect: ", reason)
+        console.log("Kafka Producer failed to connect: ", reason),
       );
 
     await kafkaProducer.send(message);
@@ -190,7 +196,7 @@ describe("Kafka change listener", () => {
     await kafkaProducer
       .connect()
       .catch((reason) =>
-        console.log("Kafka Producer failed to connect: ", reason)
+        console.log("Kafka Producer failed to connect: ", reason),
       );
 
     await kafkaProducer.send(message);
@@ -213,7 +219,7 @@ const waitForApiCall = (apiMock) => {
         clearInterval(intervalId);
         resolve();
       } else {
-        console.log("Message not received, retrying")
+        console.log("Message not received, retrying");
       }
     }, 100);
 

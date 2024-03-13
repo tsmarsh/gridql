@@ -28,11 +28,11 @@ const create = (repo, context) => async (req, res) => {
     if (req.headers.authorization !== undefined) {
       res.header("Authorization", req.headers.authorization);
     }
-    console.log("Created: ", result)
+    console.log("Created: ", result);
     res.redirect(303, `${context}/${result}`);
   } else {
     //should respond with diagnostics
-    console.log("Failed to create: ", payload)
+    console.log("Failed to create: ", payload);
     res.sendStatus(400);
   }
 };
@@ -73,7 +73,7 @@ const update = (repo, context) => async (req, res) => {
       if (req.headers.authorization !== undefined) {
         res.header("Authorization", req.headers.authorization);
       }
-      console.log("Updated: ", result)
+      console.log("Updated: ", result);
       res.redirect(303, `${context}/${id}`);
     } else {
       res.status(403);
@@ -92,7 +92,7 @@ const remove = (repo) => async (req, res) => {
   if (result !== null && result !== undefined) {
     if (isAuthorized(getSub(req.headers.authorization), result)) {
       await repo.remove(id);
-      console.log("Deleted: ", id)
+      console.log("Deleted: ", id);
       res.json({ deleted: id });
     } else {
       res.status(403);
@@ -113,29 +113,31 @@ const list = (repo, context) => async (req, res) => {
 };
 
 const bulk_create = (repo, context) => async (req, res) => {
-
   let docs = req.body;
 
-  let created = await repo.createMany(docs, {subscriber: getSub(req.headers.authorization)})
+  let created = await repo.createMany(docs, {
+    subscriber: getSub(req.headers.authorization),
+  });
 
-  created.OK = created.OK.map((id) => `${context}/${id}`)
+  created.OK = created.OK.map((id) => `${context}/${id}`);
   res.json(created);
 };
 
 const bulk_read = (repo) => async (req, res) => {
   let ids = req.query.ids.split(",");
 
-  let found = await repo.readMany(ids, {subscriber: getSub(req.headers.authorization)});
+  let found = await repo.readMany(ids, {
+    subscriber: getSub(req.headers.authorization),
+  });
   res.json(found);
 };
 
 const bulk_delete = (repo) => async (req, res) => {
-
   let ids = req.query.ids.split(",");
 
-  let result = await repo.removeMany(ids)
+  let result = await repo.removeMany(ids);
 
-  res.json({OK: ids});
+  res.json({ OK: ids });
 };
 
 const options = {
@@ -152,13 +154,13 @@ const init = (url, context, app, db, validate, schema) => {
   let swaggerDoc = swagger(context, schema, url);
 
   app.get(`${context}/api-docs/swagger.json`, (req, res) =>
-    res.json(swaggerDoc)
+    res.json(swaggerDoc),
   );
 
   app.use(
     `${context}/api-docs`,
     swaggerUi.serveFiles(swaggerDoc, options),
-    swaggerUi.setup(swaggerDoc, options)
+    swaggerUi.setup(swaggerDoc, options),
   );
 
   app.use(express.json());

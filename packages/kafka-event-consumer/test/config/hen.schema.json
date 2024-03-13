@@ -13,7 +13,6 @@
       "type": "integer",
       "minimum": 0,
       "maximum": 10
-
     },
     "coop_id": {
       "type": "string",

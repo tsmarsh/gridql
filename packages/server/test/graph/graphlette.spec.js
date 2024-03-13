@@ -33,11 +33,9 @@ describe("Single node", function () {
     db = client.db("test").collection("test");
 
     config = await parse(__dirname + "/../config/simple.conf");
-    let app = await build_app(config)
+    let app = await build_app(config);
 
-    server = await app.listen(
-      config.port
-    );
+    server = await app.listen(config.port);
   });
 
   it("it should fail if the rest config document is invalid", async function () {
@@ -79,7 +77,7 @@ describe("Single node", function () {
     const json = await callSubgraph(
       "http://localhost:40000/test",
       query,
-      "getById"
+      "getById",
     );
 
     expect(json.eggs).to.equal(6);

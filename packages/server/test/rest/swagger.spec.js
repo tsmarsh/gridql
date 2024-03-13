@@ -31,7 +31,7 @@ before(async function () {
   db = client.db("test").collection("hens");
 
   config = await parse(__dirname + "/../config/simple_swagger.conf");
-  let app = await build_app(config)
+  let app = await build_app(config);
 
   payload = {
     sub: "1234567890",
@@ -41,7 +41,7 @@ before(async function () {
   const swaggerdoc = swagger(
     config.restlettes[0].path,
     config.restlettes[0].schema,
-    config.url
+    config.url,
   );
 
   let token = jwt.sign(payload, "totallyASecret", { expiresIn: "1h" });
@@ -81,7 +81,7 @@ describe("The published swagger should work", function () {
     assert.equal(result.data.name, "chuck");
 
     id = result.request.path.slice(-36);
-      assert.equal(result.headers["x-canonical-id"], id)
+    assert.equal(result.headers["x-canonical-id"], id);
   });
 
   it("it shouldn't create a bad document ", async function () {
@@ -105,7 +105,7 @@ describe("The published swagger should work", function () {
   it("should update a document", async function () {
     let { data: actual, ...result } = await swagger_client.update(
       { id },
-      { name: "chuck", eggs: 9 }
+      { name: "chuck", eggs: 9 },
     );
 
     assert.equal(result.status, 200);

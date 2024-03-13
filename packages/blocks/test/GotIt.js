@@ -1,16 +1,16 @@
 const assert = require("assert");
 
 class GotIt {
-    constructor(expected) {
-        this.expected = expected;
-    }
+  constructor(expected) {
+    this.expected = expected;
+  }
 
-    called = false;
+  called = false;
 
-    execute = async (data) => {
-        this.called = true;
-        assert.equal(this.expected, data);
-    }
+  execute = async (data) => {
+    this.called = true;
+    assert.equal(this.expected, data);
+  };
 }
 
-module.exports = {GotIt}
+module.exports = { GotIt };

@@ -37,12 +37,13 @@ const processQueryTemplate = (id, queryTemplate) => {
     json = JSON.parse(queryWithId);
   } catch (e) {
     console.error(
-        `Failed to create query:
+      `Failed to create query:
       Query Template: ${queryTemplate}
       id: ${id}
       Updated Query: ${queryWithId}
-    `)
-  throw e;
+    `,
+    );
+    throw e;
   }
   return json;
 };
@@ -83,23 +84,22 @@ const scalar = (db, dtoFactory, i, queryTemplate) => {
       results = results.filter((r) => isAuthorized(context.subscriber, r));
     }
     return dtoFactory.fillMany(
-      results.map(
-        (r) => {
-          r.payload.id = r.id;
-          return r.payload;
-        }),
-        context === undefined ? null : context.auth_header,
-        timestamp
+      results.map((r) => {
+        r.payload.id = r.id;
+        return r.payload;
+      }),
+      context === undefined ? null : context.auth_header,
+      timestamp,
     );
   };
 };
 
 function getTimestamp(args) {
-  let atArg = "at"
+  let atArg = "at";
   let at;
-  if(args.hasOwnProperty(atArg)){
+  if (args.hasOwnProperty(atArg)) {
     at = args["at"];
-  } else{
+  } else {
     at = Date.now();
   }
 
@@ -131,7 +131,7 @@ const singleton = (db, dtoFactory, id, queryTemplate) => {
         return dtoFactory.fillOne(
           result.payload,
           context === undefined ? null : context.auth_header,
-          timestamp
+          timestamp,
         );
       } else {
         return null;

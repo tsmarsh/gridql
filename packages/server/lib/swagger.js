@@ -89,9 +89,9 @@ const swagger = (context, schema, url) => {
               headers: {
                 "X-Canonical-Id": {
                   schema: {
-                    type: "string"
-                  }
-                }
+                    type: "string",
+                  },
+                },
               },
               content: {
                 "application/json": {

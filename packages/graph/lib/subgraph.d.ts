@@ -1,6 +1,6 @@
 // YourModuleName.d.ts
 
-import {GraphQLSchema, ASTNode, FieldNode, SelectionSetNode} from "graphql";
+import { GraphQLSchema, ASTNode, FieldNode, SelectionSetNode } from "graphql";
 
 /**
  * Process a GraphQL SelectionSet.
@@ -24,7 +24,12 @@ export function processFieldNode(field: FieldNode): string;
  * @param timestamp - The timestamp to add.
  * @returns The modified query string.
  */
-export function addTimestampToQuery(query: string, schema: GraphQLSchema, queryName: string, timestamp: number): string;
+export function addTimestampToQuery(
+  query: string,
+  schema: GraphQLSchema,
+  queryName: string,
+  timestamp: number,
+): string;
 
 /**
  * Processes the GraphQL context to construct a query.
@@ -34,4 +39,9 @@ export function addTimestampToQuery(query: string, schema: GraphQLSchema, queryN
  * @param timestamp - The timestamp to add.
  * @returns The constructed GraphQL query.
  */
-export function processContext(id: string, context: any, queryName: string, timestamp: number): string;
+export function processContext(
+  id: string,
+  context: any,
+  queryName: string,
+  timestamp: number,
+): string;

@@ -1,4 +1,4 @@
-const {init} = require("./lib/config");
+const { init } = require("./lib/config");
 
 let payloads = [];
 
@@ -18,8 +18,9 @@ const toPayload = (id) => (change) => {
     return null;
   }
 
-
-  const documentId = change.hasOwnProperty("fullDocument") ? change.fullDocument[id] : change.documentKey[id];
+  const documentId = change.hasOwnProperty("fullDocument")
+    ? change.fullDocument[id]
+    : change.documentKey[id];
 
   const message = {
     id: documentId.toString(),
@@ -30,7 +31,7 @@ const toPayload = (id) => (change) => {
 };
 
 const start = async ({ collection, kafkaProducer, topic, id = "id" }) => {
-  console.log("Starting builder: ", collection, kafkaProducer, topic, id)
+  console.log("Starting builder: ", collection, kafkaProducer, topic, id);
 
   const changeStream = await collection.watch();
 

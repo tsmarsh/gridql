@@ -6,7 +6,7 @@ const { KafkaContainer, MongoDBContainer } = require("testcontainers");
 const { start, init } = require("../index");
 const assert = require("assert");
 const fs = require("fs");
-const {TestConsumer} = require("@gridql/kafka-consumer");
+const { TestConsumer } = require("@gridql/kafka-consumer");
 
 let client;
 let kafka;
@@ -14,22 +14,20 @@ let kafkaContainer;
 let mongoContainer;
 
 describe("MongoDB change listener", () => {
-
   it("should publish a message when a document is inserted", async () => {
     const { collection, kafkaProducer, topic } = await init(
-      __dirname + "/config/create.conf"
+      __dirname + "/config/create.conf",
     );
     await start({ collection, kafkaProducer, topic, id: "_id" });
 
-    let tc = new TestConsumer(kafka, {groupId: "test-group-1"})
+    let tc = new TestConsumer(kafka, { groupId: "test-group-1" });
     await tc.init(topic);
     await tc.run();
-
 
     const result = await collection.insertOne({ name: "Test" });
     let actual_id = (result.insertedId = result.insertedId.toString());
 
-    let actual = await tc.current()
+    let actual = await tc.current();
 
     assert.equal(actual.id, actual_id);
     assert.equal(actual.operation, "CREATE");
@@ -37,12 +35,12 @@ describe("MongoDB change listener", () => {
 
   it("should publish a message when a document is updated", async () => {
     const { collection, kafkaProducer, topic } = await init(
-      __dirname + "/config/update.conf"
+      __dirname + "/config/update.conf",
     );
 
     await start({ collection, kafkaProducer, topic, id: "_id" });
 
-    let tc = new TestConsumer(kafka, {groupId: "test-group-2"})
+    let tc = new TestConsumer(kafka, { groupId: "test-group-2" });
     await tc.init(topic);
     await tc.run();
 
@@ -53,10 +51,10 @@ describe("MongoDB change listener", () => {
 
     await collection.updateOne(
       { _id: result.insertedId },
-      { $set: { name: "Updated Test" } }
+      { $set: { name: "Updated Test" } },
     );
 
-    let actual = await tc.current()
+    let actual = await tc.current();
 
     assert.equal(actual.id, actual_id);
     assert.equal(actual.operation, "UPDATE");
@@ -64,12 +62,12 @@ describe("MongoDB change listener", () => {
 
   it("should publish a message when a document is deleted", async () => {
     const { collection, kafkaProducer, topic } = await init(
-      __dirname + "/config/delete.conf"
+      __dirname + "/config/delete.conf",
     );
 
     await start({ collection, kafkaProducer, topic, id: "_id" });
 
-    let tc = new TestConsumer(kafka, {groupId: "test-group-3"})
+    let tc = new TestConsumer(kafka, { groupId: "test-group-3" });
     await tc.init(topic);
     await tc.run();
 
@@ -89,28 +87,29 @@ before(async function () {
   this.timeout(360000);
 
   mongoContainer = await new MongoDBContainer("mongo:6.0.6")
-      .withExposedPorts(27071)
-      .start().catch(err => console.log(err));
+    .withExposedPorts(27071)
+    .start()
+    .catch((err) => console.log(err));
 
   const uri = mongoContainer.getConnectionString();
 
   console.log("mongodb uri: ", uri);
 
   client = await MongoClient.connect(uri, { directConnection: true }).catch(
-      (err) => console.log("Failed to connect to MongoDB, retrying...", err)
+    (err) => console.log("Failed to connect to MongoDB, retrying...", err),
   );
 
   kafkaContainer = await new KafkaContainer()
-      .withExposedPorts(9093)
-      .withEnvironment({ KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" })
-      .withEnvironment({ KAFKA_DELETE_TOPIC_ENABLE: "true" })
-      .start()
-      .catch((reason) =>
-          console.log("Kafka container failed to start: ", reason)
-      );
+    .withExposedPorts(9093)
+    .withEnvironment({ KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" })
+    .withEnvironment({ KAFKA_DELETE_TOPIC_ENABLE: "true" })
+    .start()
+    .catch((reason) =>
+      console.log("Kafka container failed to start: ", reason),
+    );
 
   console.log(
-      `${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}`
+    `${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}`,
   );
 
   let config = `
@@ -126,8 +125,8 @@ before(async function () {
             },
             "kafka": {
                 "brokers": ["${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(
-      9093
-  )}"],
+                  9093,
+                )}"],
                     "host": "${kafkaContainer.getHost()}",
                 "clientId": "mongo-event-builder-test",
                 "topic": \${topic}

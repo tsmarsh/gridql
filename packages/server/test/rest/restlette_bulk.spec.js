@@ -49,8 +49,8 @@ before(async function () {
 
   config = await parse(__dirname + "/../config/simple_rest_bulk.conf");
 
-  let app = await build_app(config)
-  server = await app.listen(config.port)
+  let app = await build_app(config);
+  server = await app.listen(config.port);
 });
 
 after(async function () {
@@ -113,15 +113,18 @@ describe("a bulky restlette", function () {
       },
     });
 
-    let created = await create_response.json()
+    let created = await create_response.json();
 
-    let created_ids = {ids: created.OK.slice(0,5).map((h) => h.slice(-36))};
+    let created_ids = { ids: created.OK.slice(0, 5).map((h) => h.slice(-36)) };
 
-    const response = await fetch(buildUrl("http://localhost:40025/chicks/bulk", created_ids).toString(), {
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      buildUrl("http://localhost:40025/chicks/bulk", created_ids).toString(),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-    });
+    );
 
     let actual = await response.json();
 
@@ -164,7 +167,7 @@ describe("a bulky restlette", function () {
 function buildUrl(baseUrl, params) {
   const url = new URL(baseUrl);
   Object.keys(params).forEach((key) =>
-    url.searchParams.append(key, params[key])
+    url.searchParams.append(key, params[key]),
   );
   return url;
 }

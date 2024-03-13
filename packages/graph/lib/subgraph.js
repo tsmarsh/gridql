@@ -5,7 +5,7 @@ const { visit } = require("graphql/language");
 const processSelectionSet = (selectionSet) => {
   return selectionSet.selections.reduce(
     (q, field) => q + processFieldNode(field),
-    ""
+    "",
   );
 };
 
@@ -42,7 +42,7 @@ const addTimestampToQuery = (query, schema, queryName, timestamp) => {
           }
         }
       },
-    })
+    }),
   );
 
   return print(ast);

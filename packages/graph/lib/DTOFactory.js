@@ -43,7 +43,7 @@ const assignResolver = (id = "id", queryName, url) => {
       foreignKey,
       context,
       queryName,
-      this._timestamp
+      this._timestamp,
     );
     let header =
       typeof this._authHeader === "undefined" ? undefined : this._authHeader;

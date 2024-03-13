@@ -115,10 +115,7 @@ class PayloadRepository {
   };
 
   removeMany = async (ids) => {
-    await this.db.updateMany(
-      { id: { $in: ids } },
-      { $set: { deleted: true } }
-    );
+    await this.db.updateMany({ id: { $in: ids } }, { $set: { deleted: true } });
   };
 
   list = async (subscriber) => {

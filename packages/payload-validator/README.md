@@ -27,7 +27,7 @@ All this does is wrap json-schema. We just needed the same function in multiple 
     };
 
     const valid = valid(schema);
-    
+
     if(valid(payload)){
         ...
     }

@@ -50,7 +50,7 @@ describe("Generating a simple root", () => {
         }
         type Query {
           getById(id: String): Test
-        }`
+        }`,
   );
 
   it("should create a simple root", async () => {
@@ -105,7 +105,7 @@ describe("Generating a simple scalar root", () => {
         type Query {
           getById(id: String): Test
           getByBreed(breed: String): [Test]
-        }`
+        }`,
   );
 
   it("should create a simple scalr root", async () => {
@@ -143,7 +143,7 @@ describe("Generating a simple scalar root", () => {
       assert.fail();
     } else {
       expect(
-        response.data?.getByBreed.map((d) => d["name"])
+        response.data?.getByBreed.map((d) => d["name"]),
       ).to.include.members(["henry", "harry"]);
     }
   });
@@ -184,14 +184,14 @@ describe("Generating a simple scalar root with a dependency", () => {
         }
         type Query {
           getById(id: String): Test
-        }`
+        }`,
   );
 
   it("should call the dependency", async () => {
     sinon.stub(global, "fetch").resolves({
       text: () =>
         Promise.resolve(
-          JSON.stringify({ data: { getById: { name: "mega" } } })
+          JSON.stringify({ data: { getById: { name: "mega" } } }),
         ),
     });
 

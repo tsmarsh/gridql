@@ -1,4 +1,4 @@
-import { DTOFactory } from './DTOFactory';
+import { DTOFactory } from "./DTOFactory";
 
 /**
  * Creates a context with a DTOFactory and root object.
@@ -6,7 +6,10 @@ import { DTOFactory } from './DTOFactory';
  * @param config - The configuration object.
  * @returns An object containing the DTOFactory and root object.
  */
-export function context(db: any, config: any): { dtoFactory: DTOFactory, root: any };
+export function context(
+  db: any,
+  config: any,
+): { dtoFactory: DTOFactory; root: any };
 
 /**
  * Creates the root object with singletons and scalars.
@@ -33,7 +36,12 @@ export function processQueryTemplate(id: string, queryTemplate: string): any;
  * @param queryTemplate - The query template string.
  * @returns A scalar resolver function.
  */
-export function scalar(db: any, dtoFactory: DTOFactory, id: string, queryTemplate: string): (args: any, context: any, info: any) => Promise<any>;
+export function scalar(
+  db: any,
+  dtoFactory: DTOFactory,
+  id: string,
+  queryTemplate: string,
+): (args: any, context: any, info: any) => Promise<any>;
 
 /**
  * Creates a singleton resolver function.
@@ -43,4 +51,9 @@ export function scalar(db: any, dtoFactory: DTOFactory, id: string, queryTemplat
  * @param queryTemplate - The query template string.
  * @returns A singleton resolver function.
  */
-export function singleton(db: any, dtoFactory: DTOFactory, id: string, queryTemplate: string): (args: any, context: any, info: any) => Promise<any>;
+export function singleton(
+  db: any,
+  dtoFactory: DTOFactory,
+  id: string,
+  queryTemplate: string,
+): (args: any, context: any, info: any) => Promise<any>;

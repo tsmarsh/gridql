@@ -40,11 +40,11 @@ before(async function () {
       sub: "0987654321",
     },
     "not a secret",
-    { expiresIn: "1h" }
+    { expiresIn: "1h" },
   );
 
   let app = await build_app(config);
-  server = app.listen(config.port)
+  server = app.listen(config.port);
 });
 
 after(async function () {

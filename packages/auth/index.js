@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const isAuthorized = (subscriber, result) => {
-  if(result === undefined) throw new Error("Nothing to Authorize")
+  if (result === undefined) throw new Error("Nothing to Authorize");
   return (
     subscriber === undefined || //internal or a test (hasn't gone through gateway)
     subscriber === null ||

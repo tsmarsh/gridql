@@ -8,4 +8,9 @@
  * @param authHeader - The authorization header, if any.
  * @returns The data returned from the subgraph query.
  */
-export function callSubgraph(url: string, query: string, queryName: string, authHeader?: string | null): Promise<any>;
+export function callSubgraph(
+  url: string,
+  query: string,
+  queryName: string,
+  authHeader?: string | null,
+): Promise<any>;

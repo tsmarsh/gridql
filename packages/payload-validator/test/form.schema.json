@@ -28,9 +28,5 @@
       "faker": "internet.email"
     }
   },
-  "required": [
-    "firstName",
-    "lastName",
-    "email"
-  ]
+  "required": ["firstName", "lastName", "email"]
 }
