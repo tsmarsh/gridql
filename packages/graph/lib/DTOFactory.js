@@ -1,7 +1,9 @@
-const { processContext } = require("./subgraph");
-const { callSubgraph } = require("./callgraph");
+import {processContext} from "./subgraph";
 
-class DTOFactory {
+import {callSubgraph} from "./callgraph";
+
+
+export class DTOFactory {
   resolvers = {};
 
   constructor(config) {
@@ -49,8 +51,4 @@ const assignResolver = (id = "id", queryName, url) => {
       typeof this._authHeader === "undefined" ? undefined : this._authHeader;
     return callSubgraph(url, query, queryName, header);
   };
-};
-
-module.exports = {
-  DTOFactory,
 };

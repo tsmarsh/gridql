@@ -1,7 +1,9 @@
-const { DTOFactory } = require("./DTOFactory");
-const { isAuthorized } = require("@gridql/auth");
+import {DTOFactory} from "./DTOFactory";
 
-const context = (db, config) => {
+import {isAuthorized} from "@gridql/auth";
+
+
+export const context = (db, config) => {
   let dtoF = new DTOFactory(config.resolvers);
   let rt = root(db, dtoF, config);
 
@@ -11,7 +13,7 @@ const context = (db, config) => {
   };
 };
 
-const root = (db, dtoFactory, { singletons, scalars }) => {
+export const root = (db, dtoFactory, { singletons, scalars }) => {
   let base = {};
 
   if (singletons !== undefined) {
@@ -29,7 +31,7 @@ const root = (db, dtoFactory, { singletons, scalars }) => {
   return base;
 };
 
-const processQueryTemplate = (id, queryTemplate) => {
+export const processQueryTemplate = (id, queryTemplate) => {
   const queryWithId = queryTemplate.replace("${id}", id);
   let json;
 
@@ -48,7 +50,7 @@ const processQueryTemplate = (id, queryTemplate) => {
   return json;
 };
 
-const scalar = (db, dtoFactory, i, queryTemplate) => {
+export const scalar = (db, dtoFactory, i, queryTemplate) => {
   return async function (args, context, info) {
     let id = args[i];
     let timestamp = getTimestamp(args);
@@ -94,7 +96,7 @@ const scalar = (db, dtoFactory, i, queryTemplate) => {
   };
 };
 
-function getTimestamp(args) {
+export function getTimestamp(args) {
   let atArg = "at";
   let at;
   if (args.hasOwnProperty(atArg)) {
@@ -106,7 +108,7 @@ function getTimestamp(args) {
   return at;
 }
 
-const singleton = (db, dtoFactory, id, queryTemplate) => {
+export const singleton = (db, dtoFactory, id, queryTemplate) => {
   return async function (args, context, info) {
     let i = args[id];
     const query = processQueryTemplate(i, queryTemplate);
@@ -138,11 +140,4 @@ const singleton = (db, dtoFactory, id, queryTemplate) => {
       }
     }
   };
-};
-
-module.exports = {
-  singleton,
-  scalar,
-  root,
-  context,
 };

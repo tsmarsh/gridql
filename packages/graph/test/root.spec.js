@@ -1,20 +1,24 @@
-const { MongoMemoryServer } = require("mongodb-memory-server");
-const { MongoClient } = require("mongodb");
+import {MongoMemoryServer} from "mongodb-memory-server";
 
-const { context } = require("../lib/root");
+import {MongoClient} from "mongodb";
 
-const { graphql, buildSchema } = require("graphql");
-const { expect } = require("chai");
-const sinon = require("sinon");
+
+import {context} from "../lib/root";
+
+
+import {buildSchema, graphql} from "graphql";
+
+import {expect} from "chai";
+
+import sinon from "sinon";
+
+import assert from "assert";
 
 let db;
 let test_db = "test_db";
 let mongo_collection = "simple";
 let mongod;
 let createdAt = new Date();
-
-const assert = require("assert");
-
 before(async function () {
   mongod = await MongoMemoryServer.create();
 

@@ -5,6 +5,7 @@
   "main": "index.js",
   "author": "Tom Marsh",
   "license": "BSD",
+  "type": "module",
   "private": false,
   "scripts": {
     "test": "nyc mocha --exit"

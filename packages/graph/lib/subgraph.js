@@ -1,15 +1,18 @@
-const { parse, print } = require("graphql/index");
-const { TypeInfo, visitWithTypeInfo } = require("graphql/utilities");
-const { visit } = require("graphql/language");
+import {parse, print} from "graphql/index";
 
-const processSelectionSet = (selectionSet) => {
+import {TypeInfo, visitWithTypeInfo} from "graphql/utilities";
+
+import {visit} from "graphql/language";
+
+
+export const processSelectionSet = (selectionSet) => {
   return selectionSet.selections.reduce(
     (q, field) => q + processFieldNode(field),
     "",
   );
 };
 
-const processFieldNode = (field) => {
+export const processFieldNode = (field) => {
   if (field.selectionSet !== undefined) {
     return `${field.name.value} {
                 ${processSelectionSet(field.selectionSet)}
@@ -19,7 +22,7 @@ const processFieldNode = (field) => {
   }
 };
 
-const addTimestampToQuery = (query, schema, queryName, timestamp) => {
+export const addTimestampToQuery = (query, schema, queryName, timestamp) => {
   let ast = parse(query);
   const typeInfo = new TypeInfo(schema);
   ast = visit(
@@ -48,7 +51,7 @@ const addTimestampToQuery = (query, schema, queryName, timestamp) => {
   return print(ast);
 };
 
-const processContext = (id, context, queryName, timestamp) => {
+export const processContext = (id, context, queryName, timestamp) => {
   if (context.fieldNodes.length > 0) {
     const firstNode = context.fieldNodes[0];
     if (firstNode.selectionSet !== undefined) {
@@ -61,10 +64,4 @@ const processContext = (id, context, queryName, timestamp) => {
     }
   }
   throw Error("Context is malformed");
-};
-
-module.exports = {
-  processFieldNode,
-  processSelectionSet,
-  processContext,
 };

@@ -1,4 +1,4 @@
-const callSubgraph = async (url, query, queryName, authHeader) => {
+export const callSubgraph = async (url, query, queryName, authHeader) => {
   const body = JSON.stringify({ query: query });
 
   console.log("Subgraph Call: ", url, body);
@@ -29,8 +29,4 @@ const callSubgraph = async (url, query, queryName, authHeader) => {
     console.log("Error parsing json from response: ", err);
     throw err;
   }
-};
-
-module.exports = {
-  callSubgraph,
 };
