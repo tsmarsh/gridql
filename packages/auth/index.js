@@ -1,6 +1,6 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
-const isAuthorized = (subscriber, result) => {
+export const isAuthorized = (subscriber, result) => {
   if (result === undefined) throw new Error("Nothing to Authorize");
   return (
     subscriber === undefined || //internal or a test (hasn't gone through gateway)
@@ -10,7 +10,7 @@ const isAuthorized = (subscriber, result) => {
   ); //current sub is in the list
 };
 
-const getSub = (authHeader) => {
+export const getSub = (authHeader) => {
   if (authHeader === null || authHeader === undefined) {
     return null;
   }
@@ -25,9 +25,4 @@ const getSub = (authHeader) => {
     console.log("Missing Bearer Token");
     return null;
   }
-};
-
-module.exports = {
-  getSub,
-  isAuthorized,
 };

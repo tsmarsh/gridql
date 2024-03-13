@@ -9,7 +9,8 @@
   "scripts": {
     "test": "lerna run test",
     "coverage:merge": "mkdir -p ./.nyc_output && cp -R packages/*/.nyc_output/* .nyc_output && nyc merge .nyc_output && nyc report --reporter=lcov",
-    "format": "prettier --write \"packages/**/*.{js,jsx,mjs,ts,tsx,json,css,md}\""
+    "format": "prettier --write \"packages/**/*.{js,jsx,mjs,ts,tsx,json,css,md}\"",
+    "lint": "eslint \"packages/**/*.{js,mjs}\""
   },
   "devDependencies": {
     "eslint": "^8.57.0",
