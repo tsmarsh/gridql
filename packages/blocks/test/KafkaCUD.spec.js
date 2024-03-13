@@ -1,6 +1,9 @@
-const { KafkaCUD } = require("../lib/KafkaCUD");
-const assert = require("assert");
-const { GotIt } = require("./GotIt");
+import {KafkaCUD} from "../lib/KafkaCUD";
+
+import assert from "assert";
+
+import {GotIt} from "./GotIt";
+
 
 describe("switching on operation type", async function () {
   it("should forward on create", async () => {

@@ -1,6 +1,8 @@
-const { KafkaCUD } = require("./lib/KafkaCUD");
-const { ReSTFullMessage } = require("./lib/ReSTFullMessage");
-const { MessageValidator } = require("./lib/MessageValidator");
+import {KafkaCUD} from "./lib/KafkaCUD";
+
+import {ReSTFullMessage} from "./lib/ReSTFullMessage";
+
+import {MessageValidator} from "./lib/MessageValidator";
 
 module.exports = {
   KafkaCUD,

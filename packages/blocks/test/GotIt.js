@@ -1,6 +1,6 @@
-const assert = require("assert");
+import assert from "assert";
 
-class GotIt {
+export class GotIt {
   constructor(expected) {
     this.expected = expected;
   }
@@ -12,5 +12,3 @@ class GotIt {
     assert.equal(this.expected, data);
   };
 }
-
-module.exports = { GotIt };

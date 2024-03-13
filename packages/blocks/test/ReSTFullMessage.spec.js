@@ -1,8 +1,11 @@
-const { ReSTFullMessage } = require("../lib/ReSTFullMessage");
-const assert = require("assert");
-const { GotIt } = require("./GotIt");
+import {ReSTFullMessage} from "../lib/ReSTFullMessage";
 
-class FakeClient {
+import assert from "assert";
+
+import {GotIt} from "./GotIt";
+
+
+export class FakeClient {
   called = false;
   constructor(id, payload) {
     this.id = id;

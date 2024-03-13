@@ -1,4 +1,4 @@
-class KafkaCUD {
+export class KafkaCUD {
   constructor(kafkaConsumer, topic, modules) {
     this.kafkaConsumer = kafkaConsumer;
     this.topic = topic;
@@ -44,5 +44,3 @@ class KafkaCUD {
     });
   };
 }
-
-module.exports = { KafkaCUD };

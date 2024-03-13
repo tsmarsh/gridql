@@ -1,6 +1,6 @@
-const jq = require("node-jq");
+import jq from "node-jq";
 
-class JSONTransformer {
+export class JSONTransformer {
   constructor(filter, modules, options = { input: "json" }) {
     this.filter = filter;
     this.modules = modules;
@@ -26,5 +26,3 @@ class JSONTransformer {
       });
   }
 }
-
-module.exports = { JSONTransformer };

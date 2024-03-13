@@ -1,8 +1,10 @@
-const { MessageValidator } = require("../lib/MessageValidator");
-const { valid } = require("@gridql/payload-validator");
-const { GotIt } = require("./GotIt");
+import {MessageValidator} from "../lib/MessageValidator";
 
-const assert = require("assert");
+import {valid} from "@gridql/payload-validator";
+
+import {GotIt} from "./GotIt";
+
+import assert from "assert";
 
 const validator = valid({
   $schema: "http://json-schema.org/draft-04/schema#",

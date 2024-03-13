@@ -1,4 +1,4 @@
-class ReSTFullMessage {
+export class ReSTFullMessage {
   constructor(apiClient, modules) {
     this.apiClient = apiClient;
     this.modules = modules;
@@ -29,5 +29,3 @@ class ReSTFullMessage {
     }
   };
 }
-
-module.exports = { ReSTFullMessage };

@@ -1,7 +1,11 @@
-const { GraphCall } = require("../lib/GraphCall");
-const assert = require("assert");
-const fetchMock = require("fetch-mock");
-const { GotIt } = require("./GotIt");
+import {GraphCall} from "../lib/GraphCall";
+
+import assert from "assert";
+
+import fetchMock from "fetch-mock";
+
+import {GotIt} from "./GotIt";
+
 
 describe("Should create a query from a template and forward the results", async function () {
   const data = {

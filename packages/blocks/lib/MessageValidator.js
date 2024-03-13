@@ -1,4 +1,4 @@
-class MessageValidator {
+export class MessageValidator {
   constructor(validator, modules) {
     this.validator = validator;
     this.modules = modules;
@@ -12,5 +12,3 @@ class MessageValidator {
     }
   };
 }
-
-module.exports = { MessageValidator };

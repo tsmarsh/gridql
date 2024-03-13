@@ -1,4 +1,4 @@
-class GraphCall {
+export class GraphCall {
   constructor(url, query_name, queryTemplate, modules) {
     this.url = url;
     this.queryTemplate = queryTemplate;

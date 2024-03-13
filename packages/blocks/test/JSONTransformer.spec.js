@@ -1,9 +1,8 @@
-const { MessageValidator } = require("../lib/MessageValidator");
-const { valid } = require("@gridql/payload-validator");
-const { GotIt } = require("./GotIt");
+import {GotIt} from "./GotIt";
 
-const assert = require("assert");
-const { JSONTransformer } = require("../lib/JSONTransformer");
+import assert from "assert";
+
+import {JSONTransformer} from "../lib/JSONTransformer";
 
 describe("should validate the data", async function () {
   it("should call the success module if the json is valid", async () => {
