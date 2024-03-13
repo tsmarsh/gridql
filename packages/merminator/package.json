@@ -2,9 +2,9 @@
   "name": "@gridql/merminator",
   "version": "3.6.0",
   "description": "Converts mermaid class diagrams to json and graph schema",
-  "main": "index.js",
+  "main": "index.mjs",
   "bin": {
-    "merminator": "index.js"
+    "merminator": "index.mjs"
   },
   "scripts": {
     "test": "nyc mocha --exit"
