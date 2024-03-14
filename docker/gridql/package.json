@@ -3,21 +3,31 @@
   "version": "3.1.5",
   "description": "primary service",
   "main": "index.js",
+  "type": "module",
   "author": "Tom Marsh",
   "license": "MIT",
   "private": false,
   "scripts": {
     "start": "node index.js",
-    "test": "mocha --exit"
+    "test": "mocha --exit",
+    "format": "prettier --write index.js \"test/**/*.{js,jsx,mjs,ts,tsx,json,css,md}\"",
+    "lint": "eslint index.js \"test/**/*.{js,jsx,mjs,ts,tsx,json,css,md}\""
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint && npm run format"
+    }
   },
   "dependencies": {
     "@gridql/server": "file:../../packages/server"
   },
   "devDependencies": {
     "@gridql/payload-generator": "file:../../packages/payload-generator",
+    "eslint": "^8.57.0",
     "mocha": "^10.2.0",
     "mongodb-memory-server": "^8.13.0",
     "openapi-client-axios": "^7.2.0",
+    "prettier": "^3.2.5",
     "testcontainers": "^9.9.1"
   }
 }
