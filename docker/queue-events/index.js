@@ -1,8 +1,7 @@
-const { init, start } = require("@gridql/kafka-event-consumer/index");
+import fs from "fs";
+import { init, start } from "@gridql/kafka-event-consumer";
 
-const fs = require("fs");
-
-let configPath = "./config/config.conf";
+const configPath = "./config/config.conf";
 
 if (fs.existsSync(configPath)) {
   init(configPath)

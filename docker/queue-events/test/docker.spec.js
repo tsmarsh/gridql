@@ -1,17 +1,25 @@
-const { OpenAPIClientAxios } = require("openapi-client-axios");
-const { builderFactory } = require("@gridql/payload-generator");
-const assert = require("assert");
-const {
-  DockerComposeEnvironment,
-  MongoDBContainer,
-} = require("testcontainers");
-const { Kafka, logLevel } = require("kafkajs");
-const path = require("path");
-const fs = require("fs");
-const { TestConsumer } = require("@gridql/kafka-consumer");
-const { buildDb } = require("@gridql/mongo-connector");
+import { OpenAPIClientAxios } from "openapi-client-axios";
 
-let environment;
+import { builderFactory } from "@gridql/payload-generator";
+
+import assert from "assert";
+
+import { DockerComposeEnvironment } from "testcontainers";
+
+import { Kafka } from "kafkajs";
+
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+import fs from "fs";
+
+import { TestConsumer } from "@gridql/kafka-consumer";
+
+import { before, describe, it } from "mocha";
+
 let schema;
 let kafka;
 let swagger_clients = {};
@@ -46,7 +54,7 @@ async function createKafkaTopic(
 before(async function () {
   this.timeout(200000);
 
-  environment = await new DockerComposeEnvironment(__dirname).up();
+  await new DockerComposeEnvironment(__dirname).up();
 
   for (let restlette of ["test"]) {
     let rest = await fetch(

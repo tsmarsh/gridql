@@ -3,6 +3,7 @@
   "version": "3.2.2",
   "description": "Pulls data from mongo and puts it in a kafka topic",
   "main": "index.js",
+  "type": "module",
   "author": "Tom Marsh",
   "license": "MIT",
   "private": false,
