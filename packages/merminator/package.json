@@ -1,6 +1,6 @@
 {
   "name": "@gridql/merminator",
-  "version": "3.7.0",
+  "version": "3.7.1",
   "description": "Converts mermaid class diagrams to json and graph schema",
   "main": "index.mjs",
   "bin": {
