@@ -1,11 +1,7 @@
-import {KafkaCUD} from "./lib/KafkaCUD";
+import { KafkaCUD } from "./lib/KafkaCUD";
 
-import {ReSTFullMessage} from "./lib/ReSTFullMessage";
+import { ReSTFullMessage } from "./lib/ReSTFullMessage";
 
-import {MessageValidator} from "./lib/MessageValidator";
+import { MessageValidator } from "./lib/MessageValidator";
 
-export {
-  KafkaCUD,
-  ReSTFullMessage,
-  MessageValidator,
-};
+export { KafkaCUD, ReSTFullMessage, MessageValidator };

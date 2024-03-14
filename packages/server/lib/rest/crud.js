@@ -2,12 +2,11 @@ import express from "express";
 
 import swaggerUi from "swagger-ui-express";
 
-import {swagger} from "../swagger.js";
+import { swagger } from "../swagger.js";
 
-import {PayloadRepository} from "./repository.js";
+import { PayloadRepository } from "./repository.js";
 
-import {getSub, isAuthorized} from "@gridql/auth";
-
+import { getSub, isAuthorized } from "@gridql/auth";
 
 export const calculateReaders = (doc, sub) => {
   const readers = new Set();

@@ -1,9 +1,5 @@
-import {callSubgraph} from "./lib/callgraph.js";
+import { callSubgraph } from "./lib/callgraph.js";
 
-import {context} from "./lib/root.js";
+import { context } from "./lib/root.js";
 
-
-export {
-  callSubgraph,
-  context,
-};
+export { callSubgraph, context };

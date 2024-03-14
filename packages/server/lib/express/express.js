@@ -1,12 +1,12 @@
-import path, {dirname} from "path";
+import path, { dirname } from "path";
 
-import {fileURLToPath, URL} from "url";
+import { fileURLToPath, URL } from "url";
 
-import {createHandler} from "graphql-http/lib/use/express";
+import { createHandler } from "graphql-http/lib/use/express";
 
-import {getSub} from "@gridql/auth";
+import { getSub } from "@gridql/auth";
 
-import {init as crud_init} from "../rest/crud.js";
+import { init as crud_init } from "../rest/crud.js";
 
 import express from "express";
 

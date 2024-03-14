@@ -1,12 +1,11 @@
-import {GraphCall} from "../lib/GraphCall.js";
+import { GraphCall } from "../lib/GraphCall.js";
 
-import {describe, it} from "mocha";
+import { describe, it } from "mocha";
 import assert from "assert";
 
 import fetchMock from "fetch-mock";
 
-import {GotIt} from "./GotIt.js";
-
+import { GotIt } from "./GotIt.js";
 
 describe("Should create a query from a template and forward the results", async function () {
   const data = {

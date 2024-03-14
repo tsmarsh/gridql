@@ -16,7 +16,7 @@ export class JSONTransformer {
             this.modules.success.execute(out);
           }
         } else {
-          if (Object.hasOwnProperty.call(this.modules,"error")) {
+          if (Object.hasOwnProperty.call(this.modules, "error")) {
             this.modules.error.execute(data);
           }
         }

@@ -1,21 +1,19 @@
-import {MongoMemoryServer} from "mongodb-memory-server";
+import { MongoMemoryServer } from "mongodb-memory-server";
 
-import {after, before, describe, it} from "mocha";
+import { after, before, describe, it } from "mocha";
 
+import { build_app, parse } from "../../index.js";
 
-import {build_app, parse} from "../../index.js";
-
-import {MongoClient} from "mongodb";
+import { MongoClient } from "mongodb";
 
 import assert from "assert";
 
 import jwt from "jsonwebtoken";
-import {fileURLToPath} from "url";
-import {dirname} from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
 
 let mongod;
 let client;

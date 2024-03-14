@@ -1,14 +1,12 @@
-import {MongoMemoryServer} from "mongodb-memory-server";
+import { MongoMemoryServer } from "mongodb-memory-server";
 
-import {MongoClient} from "mongodb";
+import { MongoClient } from "mongodb";
 
+import { context } from "../lib/root.js";
 
-import {context} from "../lib/root.js";
+import { buildSchema, graphql } from "graphql";
 
-
-import {buildSchema, graphql} from "graphql";
-
-import {expect} from "chai";
+import { expect } from "chai";
 
 import sinon from "sinon";
 
@@ -20,7 +18,7 @@ let mongo_collection = "simple";
 let mongod;
 let createdAt = new Date();
 
-import {after, afterEach, before, describe, it} from "mocha";
+import { after, afterEach, before, describe, it } from "mocha";
 before(async function () {
   mongod = await MongoMemoryServer.create();
 
@@ -144,7 +142,7 @@ describe("Generating a simple scalar root", () => {
 
     const response = await graphql({ schema, source: query, rootValue: root });
 
-    if (Object.hasOwnProperty.call(response,"errors")) {
+    if (Object.hasOwnProperty.call(response, "errors")) {
       console.log(JSON.stringify(response.errors));
       assert.fail();
     } else {
@@ -221,7 +219,7 @@ describe("Generating a simple scalar root with a dependency", () => {
 
     const response = await graphql({ schema, source: query, rootValue: root });
 
-    if (Object.hasOwnProperty.call(response,"errors")) {
+    if (Object.hasOwnProperty.call(response, "errors")) {
       console.log(JSON.stringify(response.errors));
       assert.fail();
     } else {

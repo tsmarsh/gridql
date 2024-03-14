@@ -1,14 +1,13 @@
-import {parseUrl} from "../index.js";
+import { parseUrl } from "../index.js";
 
 import assert from "assert";
 
-import {describe, it} from "mocha";
-import {fileURLToPath} from "url";
-import {dirname} from "path";
+import { describe, it } from "mocha";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
 
 describe("reading uri", async function () {
   it("should read a test file", async () => {

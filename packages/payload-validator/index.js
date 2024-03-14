@@ -1,5 +1,4 @@
-import {Validator} from "jsonschema";
-
+import { Validator } from "jsonschema";
 
 export const valid = (schema) => {
   const v = new Validator();

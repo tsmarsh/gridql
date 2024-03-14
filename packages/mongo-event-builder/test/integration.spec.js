@@ -1,26 +1,25 @@
-import {Kafka, logLevel} from "kafkajs";
+import { Kafka, logLevel } from "kafkajs";
 
-import {after, before, describe, it} from "mocha";
+import { after, before, describe, it } from "mocha";
 
-import {KafkaContainer, MongoDBContainer} from "testcontainers";
+import { KafkaContainer, MongoDBContainer } from "testcontainers";
 
-
-import {start} from "../index.js";
-import {init} from "../lib/config.js"
+import { start } from "../index.js";
+import { init } from "../lib/config.js";
 
 import assert from "assert";
 
-import {build_app, parse} from "@gridql/server";
+import { build_app, parse } from "@gridql/server";
 
-import {OpenAPIClientAxios} from "openapi-client-axios";
+import { OpenAPIClientAxios } from "openapi-client-axios";
 
-import {TestConsumer} from "@gridql/kafka-consumer";
+import { TestConsumer } from "@gridql/kafka-consumer";
 
-import {builderFactory} from "@gridql/payload-generator";
+import { builderFactory } from "@gridql/payload-generator";
 
-import {swagger} from "@gridql/server/lib/swagger.js";
-import {fileURLToPath} from "url";
-import {dirname} from "path";
+import { swagger } from "@gridql/server/lib/swagger.js";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

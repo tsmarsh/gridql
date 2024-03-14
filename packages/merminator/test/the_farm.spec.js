@@ -290,7 +290,6 @@ async function buildModels() {
       { id: coop1_id },
       { name: "purple", farm_id: `${farm_id}` },
     );
-
   } catch (err) {
     console.log("The fuck?: ", err);
   }

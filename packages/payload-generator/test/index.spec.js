@@ -1,7 +1,7 @@
-import {builderFactory} from "../index.js";
+import { builderFactory } from "../index.js";
 import assert from "assert";
 
-import {describe, it} from "mocha";
+import { describe, it } from "mocha";
 
 describe("creates a valid payload given a schema", function () {
   it("assumes id are uuids", function () {

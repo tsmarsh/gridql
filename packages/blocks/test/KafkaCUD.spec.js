@@ -1,10 +1,9 @@
-import {KafkaCUD} from "../lib/KafkaCUD.js";
+import { KafkaCUD } from "../lib/KafkaCUD.js";
 
-import { describe, it} from "mocha";
+import { describe, it } from "mocha";
 import assert from "assert";
 
-import {GotIt} from "./GotIt.js";
-
+import { GotIt } from "./GotIt.js";
 
 describe("switching on operation type", async function () {
   it("should forward on create", async () => {

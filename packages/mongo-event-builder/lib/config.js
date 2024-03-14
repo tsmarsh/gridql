@@ -1,9 +1,8 @@
-import {Kafka, logLevel} from "kafkajs";
+import { Kafka, logLevel } from "kafkajs";
 
 import parser from "@pushcorn/hocon-parser";
 
-import {buildDb} from "@gridql/mongo-connector";
-
+import { buildDb } from "@gridql/mongo-connector";
 
 export const init = async (configFile) => {
   const config = await parser

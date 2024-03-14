@@ -1,7 +1,6 @@
 import fs from "fs";
 
-import {fileURLToPath, URL} from "url";
-
+import { fileURLToPath, URL } from "url";
 
 export async function parseUrl(inputUrl, maxRetries = 3, retryDelay = 1000) {
   try {

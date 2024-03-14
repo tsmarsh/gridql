@@ -1,7 +1,6 @@
-import {DTOFactory} from "./DTOFactory.js";
+import { DTOFactory } from "./DTOFactory.js";
 
-import {isAuthorized} from "@gridql/auth";
-
+import { isAuthorized } from "@gridql/auth";
 
 export const context = (db, config) => {
   let dtoF = new DTOFactory(config.resolvers);

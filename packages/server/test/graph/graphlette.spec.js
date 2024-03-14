@@ -1,23 +1,21 @@
-import {MongoMemoryServer} from "mongodb-memory-server";
+import { MongoMemoryServer } from "mongodb-memory-server";
 
-import {expect} from "chai";
+import { expect } from "chai";
 
-import {after, before, describe, it} from "mocha";
+import { after, before, describe, it } from "mocha";
 
+import { build_app, parse } from "../../index.js";
 
-import {build_app, parse} from "../../index.js";
+import { MongoClient } from "mongodb";
 
-import {MongoClient} from "mongodb";
-
-import {callSubgraph} from "@gridql/graph";
+import { callSubgraph } from "@gridql/graph";
 
 import assert from "assert";
-import {fileURLToPath} from "url";
-import {dirname} from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
 
 let mongod;
 let client;
@@ -47,7 +45,7 @@ describe("Single node", function () {
     server = await app.listen(config.port);
   });
 
-  after(() => server.close())
+  after(() => server.close());
 
   it("it should fail if the rest config document is invalid", async function () {
     parse(__dirname + "/config/bad_graph.conf")

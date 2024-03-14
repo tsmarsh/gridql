@@ -1,9 +1,9 @@
-import {MessageValidator} from "../lib/MessageValidator.js";
+import { MessageValidator } from "../lib/MessageValidator.js";
 
-import {valid} from "@gridql/payload-validator";
+import { valid } from "@gridql/payload-validator";
 
-import {describe, it} from "mocha";
-import {GotIt} from "./GotIt.js";
+import { describe, it } from "mocha";
+import { GotIt } from "./GotIt.js";
 
 import assert from "assert";
 

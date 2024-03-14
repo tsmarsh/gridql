@@ -1,5 +1,4 @@
-import {parse, print, TypeInfo, visitWithTypeInfo, visit} from "graphql";
-
+import { parse, print, TypeInfo, visitWithTypeInfo, visit } from "graphql";
 
 export const processSelectionSet = (selectionSet) => {
   return selectionSet.selections.reduce(

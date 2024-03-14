@@ -1,7 +1,6 @@
 import promiseRetry from "promise-retry";
 
-import {MongoClient} from "mongodb";
-
+import { MongoClient } from "mongodb";
 
 const promiseRetryOptions = {
   retries: 10,

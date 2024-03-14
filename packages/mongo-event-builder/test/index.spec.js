@@ -1,23 +1,20 @@
-import {Kafka, logLevel} from "kafkajs";
+import { Kafka, logLevel } from "kafkajs";
 
+import { KafkaContainer, MongoDBContainer } from "testcontainers";
 
-import {KafkaContainer, MongoDBContainer} from "testcontainers";
+import { start } from "../index.js";
 
-
-
-import {start} from "../index.js";
-
-import {init} from "../lib/config.js"
+import { init } from "../lib/config.js";
 
 import assert from "assert";
 
 import fs from "fs";
 
-import {TestConsumer} from "@gridql/kafka-consumer";
+import { TestConsumer } from "@gridql/kafka-consumer";
 
-import {after, before, describe, it} from "mocha";
-import {fileURLToPath} from "url";
-import {dirname} from "path";
+import { after, before, describe, it } from "mocha";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 let kafka;
 let kafkaContainer;

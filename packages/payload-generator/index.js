@@ -1,7 +1,6 @@
 import jsf from "json-schema-faker";
 
-import {faker} from "@faker-js/faker";
-
+import { faker } from "@faker-js/faker";
 
 export function builderFactory(schema) {
   jsf.extend("faker", () => faker);

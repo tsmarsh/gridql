@@ -1,14 +1,14 @@
-import {Kafka, logLevel} from "kafkajs";
+import { Kafka, logLevel } from "kafkajs";
 
 import parser from "@pushcorn/hocon-parser";
 
-import {OpenAPIClientAxios} from "openapi-client-axios";
+import { OpenAPIClientAxios } from "openapi-client-axios";
 
 import fs from "fs";
 
-import {valid} from "@gridql/payload-validator";
+import { valid } from "@gridql/payload-validator";
 
-import {parseUrl} from "@gridql/url";
+import { parseUrl } from "@gridql/url";
 
 export const init = async (configFile) => {
   const config = await parser
@@ -36,7 +36,7 @@ export const init = async (configFile) => {
     console.error("Failed to create client: ", err);
   });
 
-  let validator = valid(JSON.parse(fs.readFileSync(schema, 'utf-8')));
+  let validator = valid(JSON.parse(fs.readFileSync(schema, "utf-8")));
 
   return { apiClient, kafkaConsumer, validator, topic: kafka.topic };
 };

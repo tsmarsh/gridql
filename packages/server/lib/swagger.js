@@ -1,5 +1,4 @@
-import {URL} from "url";
-
+import { URL } from "url";
 
 export const swagger = (context, schema, url) => {
   return {

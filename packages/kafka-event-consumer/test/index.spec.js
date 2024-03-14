@@ -1,27 +1,25 @@
-import {Kafka, logLevel} from "kafkajs";
+import { Kafka, logLevel } from "kafkajs";
 
-import {after, before, describe, it} from "mocha";
+import { after, before, describe, it } from "mocha";
 
-import {KafkaContainer} from "testcontainers";
+import { KafkaContainer } from "testcontainers";
 
-
-import {init, start} from "../index.js";
+import { init, start } from "../index.js";
 
 import assert from "assert";
 
 import fs from "fs";
 
-import {swagger} from "@gridql/server/lib/swagger.js";
+import { swagger } from "@gridql/server/lib/swagger.js";
 import nock from "nock";
-import {fileURLToPath} from "url";
-import {dirname} from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 let kafka;
 let kafkaContainer;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
 
 async function createTopics(topic_names) {
   const admin = kafka.admin();

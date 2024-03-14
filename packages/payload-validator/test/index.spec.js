@@ -1,10 +1,10 @@
-import {valid} from "../index.js";
+import { valid } from "../index.js";
 
-import {builderFactory} from "@gridql/payload-generator";
+import { builderFactory } from "@gridql/payload-generator";
 
 import assert from "assert";
 
-import {describe, it} from "mocha";
+import { describe, it } from "mocha";
 describe("test a payload against a schema", function () {
   it("creates a validation function from a json schema", function () {
     const schema = {

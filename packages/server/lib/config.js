@@ -1,15 +1,14 @@
 import parser from "@pushcorn/hocon-parser";
 
-import {buildDb} from "@gridql/mongo-connector";
+import { buildDb } from "@gridql/mongo-connector";
 
-import {context} from "@gridql/graph";
+import { context } from "@gridql/graph";
 
 import fs from "fs";
 
-import {buildSchema} from "graphql";
+import { buildSchema } from "graphql";
 
-import {valid} from "@gridql/payload-validator";
-
+import { valid } from "@gridql/payload-validator";
 
 export const process_graphlettes = async (config) => {
   return await Promise.all(
