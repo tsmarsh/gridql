@@ -1,4 +1,4 @@
-class TestConsumer {
+export class TestConsumer {
   constructor(kafka, config) {
     this.consumer = kafka.consumer(config);
   }
@@ -48,7 +48,3 @@ class TestConsumer {
     this.consumer.destroy();
   };
 }
-
-module.exports = {
-  TestConsumer,
-};

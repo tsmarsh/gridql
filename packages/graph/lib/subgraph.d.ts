@@ -1,6 +1,6 @@
 // YourModuleName.d.ts
 
-import { GraphQLSchema, ASTNode, FieldNode, SelectionSetNode } from "graphql";
+import { GraphQLSchema, FieldNode, SelectionSetNode } from "graphql";
 
 /**
  * Process a GraphQL SelectionSet.

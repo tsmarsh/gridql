@@ -1,18 +1,30 @@
-const { MongoClient } = require("mongodb");
-const { Kafka, logLevel } = require("kafkajs");
+import {Kafka, logLevel} from "kafkajs";
 
-const { KafkaContainer, MongoDBContainer } = require("testcontainers");
+import {after, before, describe, it} from "mocha";
 
-const { start, init } = require("../index");
-const assert = require("assert");
-const fs = require("fs");
-const { parse, build_app } = require("@gridql/server");
-const { default: OpenAPIClientAxios } = require("openapi-client-axios");
-const { TestConsumer } = require("@gridql/kafka-consumer");
-const { builderFactory } = require("@gridql/payload-generator");
-const { swagger } = require("@gridql/server/lib/swagger");
+import {KafkaContainer, MongoDBContainer} from "testcontainers";
 
-let client;
+
+import {start} from "../index.js";
+import {init} from "../lib/config.js"
+
+import assert from "assert";
+
+import {build_app, parse} from "@gridql/server";
+
+import {OpenAPIClientAxios} from "openapi-client-axios";
+
+import {TestConsumer} from "@gridql/kafka-consumer";
+
+import {builderFactory} from "@gridql/payload-generator";
+
+import {swagger} from "@gridql/server/lib/swagger.js";
+import {fileURLToPath} from "url";
+import {dirname} from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 let kafka;
 let kafkaContainer;
 let mongoContainer;
@@ -50,12 +62,6 @@ before(async function () {
   process.env.MONGO_URI = mongoContainer.getConnectionString();
 
   console.log("mongodb uri: ", process.env.MONGO_URI);
-
-  client = await MongoClient.connect(process.env.MONGO_URI, {
-    directConnection: true,
-  }).catch((err) =>
-    console.log("Failed to connect to MongoDB, retrying...", err),
-  );
 
   //Given a kafka server
   kafkaContainer = await new KafkaContainer()
@@ -109,6 +115,7 @@ before(async function () {
 
 after(async () => {
   console.log("-----CLEANING UP------");
+  server.close();
   await kafkaContainer.stop();
   await mongoContainer.stop();
 });

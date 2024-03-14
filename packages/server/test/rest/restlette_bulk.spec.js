@@ -1,18 +1,25 @@
-const { MongoMemoryServer } = require("mongodb-memory-server");
-const { describe, it, before, after } = require("mocha");
+import {MongoMemoryServer} from "mongodb-memory-server";
 
-const { parse, build_app } = require("../../index");
-const { MongoClient } = require("mongodb");
-const assert = require("assert");
-const { builderFactory } = require("@gridql/payload-generator");
+import {after, before, describe, it} from "mocha";
+
+
+import {build_app, parse} from "../../index.js"
+import {MongoClient} from "mongodb";
+
+import assert from "assert";
+
+import {builderFactory} from "@gridql/payload-generator";
+import {fileURLToPath} from "url";
+import {dirname} from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 
 let mongod;
-let uri;
 let client;
-let db;
 let config;
 let server;
-let id;
 
 let builder;
 
@@ -43,9 +50,7 @@ before(async function () {
 
   await client.connect();
 
-  uri = mongod.getUri();
-
-  db = client.db("test").collection("hens");
+  client.db("test").collection("hens");
 
   config = await parse(__dirname + "/../config/simple_rest_bulk.conf");
 

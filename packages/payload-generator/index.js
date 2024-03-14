@@ -1,7 +1,9 @@
-const jsf = require("json-schema-faker");
-const { faker } = require("@faker-js/faker");
+import jsf from "json-schema-faker";
 
-function builderFactory(schema) {
+import {faker} from "@faker-js/faker";
+
+
+export function builderFactory(schema) {
   jsf.extend("faker", () => faker);
   jsf.format("date", () => faker.date.past().toISOString().split("T")[0]);
   jsf.format("id", () => faker.datatype.uuid());
@@ -18,7 +20,3 @@ function builderFactory(schema) {
     }
   };
 }
-
-module.exports = {
-  builderFactory,
-};

@@ -1,34 +1,37 @@
-const { MongoMemoryServer } = require("mongodb-memory-server");
-const { describe, it, before, after } = require("mocha");
-const { parse, build_app } = require("../../index");
-const { MongoClient } = require("mongodb");
-const assert = require("assert");
+import {MongoMemoryServer} from "mongodb-memory-server";
+
+import {after, before, describe, it} from "mocha";
+
+import {build_app, parse} from "../../index.js";
+
+import {MongoClient} from "mongodb";
+
+import assert from "assert";
+import {fileURLToPath} from "url";
+import {dirname} from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 
 let mongod;
-let uri;
 let client;
-let db;
 let config;
 let server;
 let id;
-
-let payload;
 
 before(async function () {
   mongod = await MongoMemoryServer.create({ instance: { port: 60220 } });
   client = new MongoClient(mongod.getUri());
   await client.connect();
 
-  uri = mongod.getUri();
+  mongod.getUri();
 
-  db = client.db("test").collection("hens");
+  client.db("test").collection("hens");
 
   config = await parse(__dirname + "/../config/simple_rest.conf");
   let app = await build_app(config);
 
-  payload = {
-    sub: "1234567890",
-  };
   server = await app.listen(config.port);
 });
 
@@ -40,7 +43,7 @@ after(async function () {
 describe("simple restlette", function () {
   it("it should fail if the config document is invalid", async function () {
     parse("test/../config/invalid.conf")
-      .then(() => fail())
+      .then(() => assert.fail())
       .catch((err) => {
         assert(err !== undefined);
       });
@@ -48,7 +51,7 @@ describe("simple restlette", function () {
 
   it("it should fail if the rest config document is invalid", async function () {
     parse(__dirname + "/../config/bad_rest.conf")
-      .then(() => fail())
+      .then(() => assert.fail())
       .catch((err) => {
         assert(err !== undefined);
       });

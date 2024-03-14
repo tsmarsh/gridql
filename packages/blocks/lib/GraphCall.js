@@ -28,7 +28,7 @@ export class GraphCall {
       })
       .catch((err) => {
         console.error("Fetch Error: ", err);
-        if (this.modules.hasOwnProperty("servererror")) {
+        if (Object.hasOwnProperty.call(this.modules, "servererror")) {
           this.modules.servererror.execute(body);
         }
         return null;
@@ -42,16 +42,14 @@ export class GraphCall {
 
     try {
       let json = JSON.parse(text);
-      if (this.modules.hasOwnProperty("success")) {
+      if (Object.hasOwnProperty.call(this.modules, "success")) {
         this.modules.success.execute(json["data"][this.queryName]);
       }
     } catch (err) {
       console.log("Error parsing json from response: ", err);
-      if (this.modules.hasOwnProperty("error")) {
+      if (Object.hasOwnProperty.call(this.modules, "error")) {
         this.modules.error.execute(data);
       }
     }
   }
 }
-
-module.exports = { GraphCall };

@@ -3,8 +3,10 @@
   "version": "3.6.0",
   "description": "graphql server scaffolding",
   "author": "Tom Marsh",
+  "type": "module",
   "license": "BSD",
   "private": false,
+  "main": "index.js",
   "publishConfig": {
     "access": "public"
   },

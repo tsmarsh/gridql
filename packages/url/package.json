@@ -4,6 +4,7 @@
   "description": "Picks between file and http[s] urls and pulls them appropriately",
   "main": "index.js",
   "author": "Tom Marsh",
+  "type": "module",
   "license": "MIT",
   "private": false,
   "scripts": {

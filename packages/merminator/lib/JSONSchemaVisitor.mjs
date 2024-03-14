@@ -44,8 +44,6 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
   }
 
   typeClause(ctx, schema, name) {
-    let type;
-
     if ("Type" in ctx.children) {
       return { type: ctx.children.Type[0].image.toLowerCase() };
     } else if ("RequiredType" in ctx.children) {
@@ -58,7 +56,7 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
     }
   }
 
-  arrayClause(ctx, schema, name) {
+  arrayClause(ctx) {
     let value = ctx.children.Type[0].toLowerCase();
     return {
       type: "array",

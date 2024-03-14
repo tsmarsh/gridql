@@ -1,8 +1,6 @@
-const { init } = require("./lib/config");
-
 let payloads = [];
 
-const toCRUD = (change) => {
+export const toCRUD = (change) => {
   const verbs = {
     insert: "CREATE",
     update: "UPDATE",
@@ -12,13 +10,13 @@ const toCRUD = (change) => {
   return verbs[change.operationType];
 };
 
-const toPayload = (id) => (change) => {
+export const toPayload = (id) => (change) => {
   const operationType = toCRUD(change);
   if (operationType === undefined) {
     return null;
   }
 
-  const documentId = change.hasOwnProperty("fullDocument")
+  const documentId = Object.hasOwnProperty.call(change,"fullDocument")
     ? change.fullDocument[id]
     : change.documentKey[id];
 
@@ -30,7 +28,7 @@ const toPayload = (id) => (change) => {
   return { key: message.id, value: JSON.stringify(message) };
 };
 
-const start = async ({ collection, kafkaProducer, topic, id = "id" }) => {
+export const start = async ({ collection, kafkaProducer, topic, id = "id" }) => {
   console.log("Starting builder: ", collection, kafkaProducer, topic, id);
 
   const changeStream = await collection.watch();
@@ -55,5 +53,3 @@ const start = async ({ collection, kafkaProducer, topic, id = "id" }) => {
     }
   });
 };
-
-module.exports = { init, start };

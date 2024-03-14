@@ -1,17 +1,30 @@
-const { MongoClient } = require("mongodb");
-const { Kafka, logLevel } = require("kafkajs");
+import {Kafka, logLevel} from "kafkajs";
 
-const { KafkaContainer, MongoDBContainer } = require("testcontainers");
 
-const { start, init } = require("../index");
-const assert = require("assert");
-const fs = require("fs");
-const { TestConsumer } = require("@gridql/kafka-consumer");
+import {KafkaContainer, MongoDBContainer} from "testcontainers";
 
-let client;
+
+
+import {start} from "../index.js";
+
+import {init} from "../lib/config.js"
+
+import assert from "assert";
+
+import fs from "fs";
+
+import {TestConsumer} from "@gridql/kafka-consumer";
+
+import {after, before, describe, it} from "mocha";
+import {fileURLToPath} from "url";
+import {dirname} from "path";
+
 let kafka;
 let kafkaContainer;
 let mongoContainer;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 describe("MongoDB change listener", () => {
   it("should publish a message when a document is inserted", async () => {
@@ -43,8 +56,6 @@ describe("MongoDB change listener", () => {
     let tc = new TestConsumer(kafka, { groupId: "test-group-2" });
     await tc.init(topic);
     await tc.run();
-
-    let consumer = kafka.consumer({ groupId: "test-group-2" });
 
     const result = await collection.insertOne({ name: "Test" });
     let actual_id = result.insertedId.toString();
@@ -94,10 +105,6 @@ before(async function () {
   const uri = mongoContainer.getConnectionString();
 
   console.log("mongodb uri: ", uri);
-
-  client = await MongoClient.connect(uri, { directConnection: true }).catch(
-    (err) => console.log("Failed to connect to MongoDB, retrying...", err),
-  );
 
   kafkaContainer = await new KafkaContainer()
     .withExposedPorts(9093)
@@ -149,7 +156,3 @@ after(async () => {
   await kafkaContainer.stop();
   await mongoContainer.stop();
 });
-
-function delay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}

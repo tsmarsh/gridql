@@ -1,4 +1,4 @@
-import {DTOFactory} from "./DTOFactory";
+import {DTOFactory} from "./DTOFactory.js";
 
 import {isAuthorized} from "@gridql/auth";
 
@@ -51,7 +51,7 @@ export const processQueryTemplate = (id, queryTemplate) => {
 };
 
 export const scalar = (db, dtoFactory, i, queryTemplate) => {
-  return async function (args, context, info) {
+  return async function (args, context) {
     let id = args[i];
     let timestamp = getTimestamp(args);
     let time_filter = {
@@ -99,7 +99,7 @@ export const scalar = (db, dtoFactory, i, queryTemplate) => {
 export function getTimestamp(args) {
   let atArg = "at";
   let at;
-  if (args.hasOwnProperty(atArg)) {
+  if (Object.hasOwnProperty.call(args, atArg)) {
     at = args["at"];
   } else {
     at = Date.now();
@@ -109,7 +109,7 @@ export function getTimestamp(args) {
 }
 
 export const singleton = (db, dtoFactory, id, queryTemplate) => {
-  return async function (args, context, info) {
+  return async function (args, context) {
     let i = args[id];
     const query = processQueryTemplate(i, queryTemplate);
 

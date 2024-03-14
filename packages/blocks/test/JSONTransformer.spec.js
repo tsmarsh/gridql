@@ -1,8 +1,9 @@
-import {GotIt} from "./GotIt";
+import {GotIt} from "./GotIt.js";
 
+import {describe, it} from "mocha";
 import assert from "assert";
 
-import {JSONTransformer} from "../lib/JSONTransformer";
+import {JSONTransformer} from "../lib/JSONTransformer.js";
 
 describe("should validate the data", async function () {
   it("should call the success module if the json is valid", async () => {

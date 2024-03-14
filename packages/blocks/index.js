@@ -4,7 +4,7 @@ import {ReSTFullMessage} from "./lib/ReSTFullMessage";
 
 import {MessageValidator} from "./lib/MessageValidator";
 
-module.exports = {
+export {
   KafkaCUD,
   ReSTFullMessage,
   MessageValidator,

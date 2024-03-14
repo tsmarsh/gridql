@@ -3,6 +3,7 @@
   "version": "3.6.0",
   "description": "Listens to mongo and emits events",
   "main": "index.js",
+  "type": "module",
   "author": "Tom Marsh",
   "license": "MIT",
   "private": false,

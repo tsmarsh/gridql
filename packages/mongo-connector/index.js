@@ -1,9 +1,7 @@
-const promiseRetry = require("promise-retry");
-const { MongoClient } = require("mongodb");
+import promiseRetry from "promise-retry";
 
-const options = {
-  directConnection: true,
-};
+import {MongoClient} from "mongodb";
+
 
 const promiseRetryOptions = {
   retries: 10,
@@ -12,9 +10,9 @@ const promiseRetryOptions = {
   maxTimeout: 5000,
 };
 
-async function buildDb(mongo) {
+export async function buildDb(mongo) {
   let client = new MongoClient(mongo["uri"], mongo["options"]);
-  promiseRetry((retry, number) => {
+  await promiseRetry((retry, number) => {
     console.log(
       `MongoClient connecting to ${mongo["uri"]} - retry number: ${number}`,
     );
@@ -26,7 +24,3 @@ async function buildDb(mongo) {
 
   return client.db(mongo["db"]).collection(mongo["collection"]);
 }
-
-module.exports = {
-  buildDb,
-};

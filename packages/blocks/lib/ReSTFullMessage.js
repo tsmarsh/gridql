@@ -8,24 +8,24 @@ export class ReSTFullMessage {
     switch (message.operation) {
       case "CREATE":
         this.apiClient.create(null, message.payload);
-        if (this.modules.hasOwnProperty("create")) {
+        if (Object.hasOwnProperty.call(this.modules, "create")) {
           this.modules.create.execute(message);
         }
         break;
       case "DELETE":
         this.apiClient.delete(message.id);
-        if (this.modules.hasOwnProperty("delete")) {
+        if (Object.hasOwnProperty.call(this.modules, "delete")) {
           this.modules.delete.execute(message);
         }
         break;
       case "UPDATE":
         this.apiClient.update(message.id, message.payload);
-        if (this.modules.hasOwnProperty("update")) {
+        if (Object.hasOwnProperty.call(this.modules, "update")) {
           this.modules.update.execute(message);
         }
         break;
       default:
-        throw new Error("Unsupported Operation: " + json_message);
+        throw new Error("Unsupported Operation: " + message);
     }
   };
 }

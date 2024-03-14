@@ -1,8 +1,11 @@
-const { Kafka, logLevel } = require("kafkajs");
-const parser = require("@pushcorn/hocon-parser");
-const { buildDb } = require("@gridql/mongo-connector");
+import {Kafka, logLevel} from "kafkajs";
 
-const init = async (configFile) => {
+import parser from "@pushcorn/hocon-parser";
+
+import {buildDb} from "@gridql/mongo-connector";
+
+
+export const init = async (configFile) => {
   const config = await parser
     .parse({ url: configFile })
     .catch((e) => console.log("Error parse config: ", e));
@@ -32,8 +35,4 @@ const init = async (configFile) => {
     });
 
   return { collection, kafkaProducer, topic: kafka.topic, id: kafka.id };
-};
-
-module.exports = {
-  init,
 };

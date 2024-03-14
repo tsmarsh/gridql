@@ -1,8 +1,4 @@
-import {parse, print} from "graphql/index";
-
-import {TypeInfo, visitWithTypeInfo} from "graphql/utilities";
-
-import {visit} from "graphql/language";
+import {parse, print, TypeInfo, visitWithTypeInfo, visit} from "graphql";
 
 
 export const processSelectionSet = (selectionSet) => {

@@ -1,15 +1,27 @@
-const { Kafka, logLevel } = require("kafkajs");
+import {Kafka, logLevel} from "kafkajs";
 
-const { KafkaContainer } = require("testcontainers");
+import {after, before, describe, it} from "mocha";
 
-const { start, init } = require("../index");
-const assert = require("assert");
-const fs = require("fs");
-const { swagger } = require("@gridql/server/lib/swagger");
-const nock = require("nock");
+import {KafkaContainer} from "testcontainers";
+
+
+import {init, start} from "../index.js";
+
+import assert from "assert";
+
+import fs from "fs";
+
+import {swagger} from "@gridql/server/lib/swagger.js";
+import nock from "nock";
+import {fileURLToPath} from "url";
+import {dirname} from "path";
 
 let kafka;
 let kafkaContainer;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 
 async function createTopics(topic_names) {
   const admin = kafka.admin();

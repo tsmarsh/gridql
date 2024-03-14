@@ -1,8 +1,9 @@
-import {ReSTFullMessage} from "../lib/ReSTFullMessage";
+import {ReSTFullMessage} from "../lib/ReSTFullMessage.js";
 
+import {describe, it} from "mocha";
 import assert from "assert";
 
-import {GotIt} from "./GotIt";
+import {GotIt} from "./GotIt.js";
 
 
 export class FakeClient {

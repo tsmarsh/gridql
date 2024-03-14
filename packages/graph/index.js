@@ -1,7 +1,9 @@
-const { callSubgraph } = require("./lib/callgraph");
-const { context } = require("./lib/root");
+import {callSubgraph} from "./lib/callgraph.js";
 
-module.exports = {
+import {context} from "./lib/root.js";
+
+
+export {
   callSubgraph,
   context,
 };

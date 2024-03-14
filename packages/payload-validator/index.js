@@ -1,6 +1,7 @@
-const { Validator } = require("jsonschema");
+import {Validator} from "jsonschema";
 
-const valid = (schema) => {
+
+export const valid = (schema) => {
   const v = new Validator();
 
   return function (payload) {
@@ -12,8 +13,4 @@ const valid = (schema) => {
       return false;
     }
   };
-};
-
-module.exports = {
-  valid,
 };

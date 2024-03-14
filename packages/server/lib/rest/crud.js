@@ -1,13 +1,15 @@
-const { ObjectId } = require("mongodb");
-const jwt = require("jsonwebtoken");
-const express = require("express");
-const swaggerUi = require("swagger-ui-express");
-const { v4: uuid } = require("uuid");
-const { swagger } = require("../swagger");
-const { PayloadRepository } = require("./repository");
-const { getSub, isAuthorized } = require("@gridql/auth");
+import express from "express";
 
-const calculateReaders = (doc, sub) => {
+import swaggerUi from "swagger-ui-express";
+
+import {swagger} from "../swagger.js";
+
+import {PayloadRepository} from "./repository.js";
+
+import {getSub, isAuthorized} from "@gridql/auth";
+
+
+export const calculateReaders = (doc, sub) => {
   const readers = new Set();
 
   if (sub !== null) {
@@ -17,7 +19,7 @@ const calculateReaders = (doc, sub) => {
   return [...readers];
 };
 
-const create = (repo, context) => async (req, res) => {
+export const create = (repo, context) => async (req, res) => {
   const payload = req.body;
 
   const result = await repo.create(payload, {
@@ -37,7 +39,7 @@ const create = (repo, context) => async (req, res) => {
   }
 };
 
-const read = (repo) => async (req, res) => {
+export const read = (repo) => async (req, res) => {
   let id = req.params.id;
 
   const result = await repo.read(id, {});
@@ -56,7 +58,7 @@ const read = (repo) => async (req, res) => {
   }
 };
 
-const update = (repo, context) => async (req, res) => {
+export const update = (repo, context) => async (req, res) => {
   const payload = req.body;
 
   let subscriber = getSub(req.headers.authorization);
@@ -85,7 +87,7 @@ const update = (repo, context) => async (req, res) => {
   }
 };
 
-const remove = (repo) => async (req, res) => {
+export const remove = (repo) => async (req, res) => {
   let id = req.params.id;
   const result = await repo.read(id, {});
 
@@ -104,7 +106,7 @@ const remove = (repo) => async (req, res) => {
   }
 };
 
-const list = (repo, context) => async (req, res) => {
+export const list = (repo, context) => async (req, res) => {
   let subscriber = getSub(req.headers.authorization);
 
   let results = await repo.list(subscriber);
@@ -112,7 +114,7 @@ const list = (repo, context) => async (req, res) => {
   res.json(results.map((r) => `${context}/${r}`));
 };
 
-const bulk_create = (repo, context) => async (req, res) => {
+export const bulk_create = (repo, context) => async (req, res) => {
   let docs = req.body;
 
   let created = await repo.createMany(docs, {
@@ -123,7 +125,7 @@ const bulk_create = (repo, context) => async (req, res) => {
   res.json(created);
 };
 
-const bulk_read = (repo) => async (req, res) => {
+export const bulk_read = (repo) => async (req, res) => {
   let ids = req.query.ids.split(",");
 
   let found = await repo.readMany(ids, {
@@ -132,10 +134,10 @@ const bulk_read = (repo) => async (req, res) => {
   res.json(found);
 };
 
-const bulk_delete = (repo) => async (req, res) => {
+export const bulk_delete = (repo) => async (req, res) => {
   let ids = req.query.ids.split(",");
 
-  let result = await repo.removeMany(ids);
+  await repo.removeMany(ids);
 
   res.json({ OK: ids });
 };
@@ -146,7 +148,7 @@ const options = {
   },
 };
 
-const init = (url, context, app, db, validate, schema) => {
+export const init = (url, context, app, db, validate, schema) => {
   console.log("API Docks are available on: ", `${context}/api-docs`);
 
   let repo = new PayloadRepository(db, validate);
@@ -180,9 +182,4 @@ const init = (url, context, app, db, validate, schema) => {
   app.delete(`${context}/:id`, remove(repo));
 
   return app;
-};
-
-module.exports = {
-  init,
-  calculateReaders,
 };

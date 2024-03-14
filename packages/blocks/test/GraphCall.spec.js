@@ -1,10 +1,11 @@
-import {GraphCall} from "../lib/GraphCall";
+import {GraphCall} from "../lib/GraphCall.js";
 
+import {describe, it} from "mocha";
 import assert from "assert";
 
 import fetchMock from "fetch-mock";
 
-import {GotIt} from "./GotIt";
+import {GotIt} from "./GotIt.js";
 
 
 describe("Should create a query from a template and forward the results", async function () {
@@ -70,7 +71,7 @@ describe("Should create a query from a template and forward the results", async 
       servererror: g,
     });
 
-    const result = await gc.callServer(body);
+    await gc.callServer(body);
     assert(g.called);
     fetchMock.reset();
   });

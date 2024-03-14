@@ -52,7 +52,7 @@ export class GraphSchemaVisitor extends BaseCstVisitor {
     return types;
   }
 
-  fieldClause(ctx, schema) {
+  fieldClause(ctx) {
     let name = ctx.children.Identifier[0].image;
     if (name.endsWith("_id")) {
       name = name.slice(0, -3);

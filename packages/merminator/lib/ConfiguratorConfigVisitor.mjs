@@ -21,13 +21,13 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
   getByX(x) {
     let type = x.slice("getBy".length);
 
-    return `{\"payload.${type.charAt(0).toLowerCase() + type.slice(1)}\": \"\${id}\"}`;
+    return `{"payload.${type.charAt(0).toLowerCase() + type.slice(1)}": "\${id}"}`;
   }
 
   getByXid(x) {
     let type = x.slice("getBy".length);
 
-    return `{\"payload.${type.charAt(0).toLowerCase() + type.slice(1)}_id\": \"\${id}\"}`;
+    return `{"payload.${type.charAt(0).toLowerCase() + type.slice(1)}_id": "\${id}"}`;
   }
 
   statementClause(ctx) {

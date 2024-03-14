@@ -1,7 +1,9 @@
-const { parse } = require("./lib/config");
-const { build_app } = require("./lib/express/express");
+import {parse} from "./lib/config.js";
 
-module.exports = {
+import {build_app} from "./lib/express/express.js";
+
+
+export {
   parse,
   build_app,
 };

@@ -1,6 +1,6 @@
-const { v4: uuid } = require("uuid");
+import {v4 as uuid} from "uuid";
 
-class PayloadRepository {
+export class PayloadRepository {
   constructor(db, valid) {
     this.db = db;
     this.valid = valid;
@@ -73,7 +73,7 @@ class PayloadRepository {
     return results[0];
   };
 
-  readMany = async (ids, { createdAt = new Date(), subscriber = null }) => {
+  readMany = async (ids, { subscriber = null }) => {
     let match = {
       id: { $in: ids },
       deleted: { $exists: false },
@@ -153,7 +153,3 @@ class PayloadRepository {
     return results.map((r) => r.id);
   };
 }
-
-module.exports = {
-  PayloadRepository,
-};

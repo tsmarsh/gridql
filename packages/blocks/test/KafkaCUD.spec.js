@@ -1,8 +1,9 @@
-import {KafkaCUD} from "../lib/KafkaCUD";
+import {KafkaCUD} from "../lib/KafkaCUD.js";
 
+import { describe, it} from "mocha";
 import assert from "assert";
 
-import {GotIt} from "./GotIt";
+import {GotIt} from "./GotIt.js";
 
 
 describe("switching on operation type", async function () {

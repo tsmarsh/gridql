@@ -1,12 +1,21 @@
-const path = require("path");
-const { URL } = require("url");
-const { createHandler } = require("graphql-http/lib/use/express");
-const { getSub } = require("@gridql/auth");
-const { init: crud_init } = require("../rest/crud");
-const express = require("express");
-const cors = require("cors");
+import path, {dirname} from "path";
 
-const add_network_front = (app, url, graphlettes, restlettes) => {
+import {fileURLToPath, URL} from "url";
+
+import {createHandler} from "graphql-http/lib/use/express";
+
+import {getSub} from "@gridql/auth";
+
+import {init as crud_init} from "../rest/crud.js";
+
+import express from "express";
+
+import cors from "cors";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export const add_network_front = (app, url, graphlettes, restlettes) => {
   app.set("view engine", "pug");
   app.set("views", path.join(__dirname, "../../views"));
 
@@ -19,7 +28,7 @@ const add_network_front = (app, url, graphlettes, restlettes) => {
   });
 };
 
-const add_graphlettes = (graphlettes, app) => {
+export const add_graphlettes = (graphlettes, app) => {
   for (let { path, graph } of graphlettes) {
     console.log("Graphing up: " + path);
     app.get(path, (req, res) => {
@@ -47,14 +56,14 @@ const add_graphlettes = (graphlettes, app) => {
   }
 };
 
-const add_restlettes = (restlettes, url, app) => {
+export const add_restlettes = (restlettes, url, app) => {
   for (let { path, db, validator, schema } of restlettes) {
     console.log("ReSTing up: " + path);
     crud_init(url, path, app, db, validator, schema);
   }
 };
 
-const build_app = async ({ url, graphlettes, restlettes }) => {
+export const build_app = async ({ url, graphlettes, restlettes }) => {
   const app = express();
   app.use(cors());
   add_network_front(app, url, graphlettes, restlettes);
@@ -62,11 +71,4 @@ const build_app = async ({ url, graphlettes, restlettes }) => {
   add_restlettes(restlettes, url, app);
 
   return app;
-};
-
-module.exports = {
-  build_app,
-  add_network_front,
-  add_graphlettes,
-  add_restlettes,
 };

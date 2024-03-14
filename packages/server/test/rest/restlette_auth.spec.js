@@ -1,13 +1,23 @@
-const { MongoMemoryServer } = require("mongodb-memory-server");
-const { describe, it, before, after } = require("mocha");
+import {MongoMemoryServer} from "mongodb-memory-server";
 
-const { parse, build_app } = require("../../index");
-const { MongoClient } = require("mongodb");
-const assert = require("assert");
-const jwt = require("jsonwebtoken");
+import {after, before, describe, it} from "mocha";
+
+
+import {build_app, parse} from "../../index.js";
+
+import {MongoClient} from "mongodb";
+
+import assert from "assert";
+
+import jwt from "jsonwebtoken";
+import {fileURLToPath} from "url";
+import {dirname} from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 
 let mongod;
-let uri;
 let client;
 
 let config;
@@ -25,8 +35,6 @@ before(async function () {
   mongod = await MongoMemoryServer.create({ instance: { port: 60230 } });
   client = new MongoClient(mongod.getUri());
   await client.connect();
-
-  uri = mongod.getUri();
 
   config = await parse(__dirname + "/../config/rest_auth.conf");
 
@@ -53,7 +61,6 @@ after(async function () {
 });
 
 describe("simple restlette with auth", function () {
-  let other_hen;
   let fred;
 
   it("it should create a document with a user", async function () {
@@ -94,7 +101,6 @@ describe("simple restlette with auth", function () {
       },
     });
 
-    other_hen = await other_response.json();
     other_id = other_response.url.slice(-36);
 
     const response = await fetch("http://localhost:40022/hens", {

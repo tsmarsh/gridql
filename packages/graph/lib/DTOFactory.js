@@ -1,6 +1,6 @@
-import {processContext} from "./subgraph";
+import {processContext} from "./subgraph.js";
 
-import {callSubgraph} from "./callgraph";
+import {callSubgraph} from "./callgraph.js";
 
 
 export class DTOFactory {

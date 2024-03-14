@@ -42,7 +42,7 @@ let token;
 let sub = uuid();
 
 let farm_id, coop1_id, coop2_id;
-let first_stamp, second_stamp;
+let first_stamp;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -291,7 +291,6 @@ async function buildModels() {
       { name: "purple", farm_id: `${farm_id}` },
     );
 
-    second_stamp = Date.now();
   } catch (err) {
     console.log("The fuck?: ", err);
   }

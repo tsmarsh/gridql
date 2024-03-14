@@ -1,6 +1,7 @@
-const { URL } = require("url");
+import {URL} from "url";
 
-const swagger = (context, schema, url) => {
+
+export const swagger = (context, schema, url) => {
   return {
     openapi: "3.0.0",
     info: {
@@ -318,8 +319,4 @@ const swagger = (context, schema, url) => {
       },
     },
   };
-};
-
-module.exports = {
-  swagger,
 };

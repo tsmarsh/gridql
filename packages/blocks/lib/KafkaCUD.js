@@ -10,17 +10,17 @@ export class KafkaCUD {
 
     switch (json_message.operation) {
       case "CREATE":
-        if (this.modules.hasOwnProperty("create")) {
+        if (Object.hasOwnProperty.call(this.modules, "create")) {
           this.modules.create.execute(json_message);
         }
         break;
       case "DELETE":
-        if (this.modules.hasOwnProperty("delete")) {
+        if (Object.hasOwnProperty.call(this.modules, "delete")) {
           this.modules.delete.execute(json_message);
         }
         break;
       case "UPDATE":
-        if (this.modules.hasOwnProperty("update")) {
+        if (Object.hasOwnProperty.call(this.modules, "update")) {
           this.modules.update.execute(json_message);
         }
         break;
@@ -33,7 +33,7 @@ export class KafkaCUD {
     await this.kafkaConsumer.connect();
 
     await this.kafkaConsumer
-      .subscribe({ topic })
+      .subscribe({ topic: this.topic })
       .then(() => {
         console.log("Subscribed");
       })

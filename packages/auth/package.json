@@ -3,7 +3,7 @@
   "version": "3.6.0",
   "type": "module",
   "description": "Sets the convention for thinking about auth",
-  "main": "index.mjs",
+  "main": "index.js",
   "author": "Tom Marsh",
   "license": "BSD",
   "private": false,

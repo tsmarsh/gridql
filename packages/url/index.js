@@ -1,7 +1,9 @@
-const fs = require("fs");
-const { URL, fileURLToPath } = require("url");
+import fs from "fs";
 
-async function parseUrl(inputUrl, maxRetries = 3, retryDelay = 1000) {
+import {fileURLToPath, URL} from "url";
+
+
+export async function parseUrl(inputUrl, maxRetries = 3, retryDelay = 1000) {
   try {
     const urlObj = new URL(inputUrl);
 
@@ -33,7 +35,3 @@ async function parseUrl(inputUrl, maxRetries = 3, retryDelay = 1000) {
     throw error; // Rethrow or handle as needed
   }
 }
-
-module.exports = {
-  parseUrl,
-};

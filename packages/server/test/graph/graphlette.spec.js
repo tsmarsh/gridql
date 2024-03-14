@@ -1,22 +1,31 @@
-const { MongoMemoryServer } = require("mongodb-memory-server");
-const { expect } = require("chai");
-const { describe, it, before, after } = require("mocha");
+import {MongoMemoryServer} from "mongodb-memory-server";
 
-const { parse, build_app } = require("../../index");
-const { MongoClient } = require("mongodb");
-const { callSubgraph } = require("@gridql/graph");
-const assert = require("assert");
+import {expect} from "chai";
+
+import {after, before, describe, it} from "mocha";
+
+
+import {build_app, parse} from "../../index.js";
+
+import {MongoClient} from "mongodb";
+
+import {callSubgraph} from "@gridql/graph";
+
+import assert from "assert";
+import {fileURLToPath} from "url";
+import {dirname} from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 
 let mongod;
-let uri;
 let client;
 
 before(async function () {
   mongod = await MongoMemoryServer.create({ instance: { port: 60219 } });
   client = new MongoClient(mongod.getUri());
   await client.connect();
-
-  uri = mongod.getUri();
 });
 
 after(async function () {
@@ -38,9 +47,11 @@ describe("Single node", function () {
     server = await app.listen(config.port);
   });
 
+  after(() => server.close())
+
   it("it should fail if the rest config document is invalid", async function () {
     parse(__dirname + "/config/bad_graph.conf")
-      .then(() => fail())
+      .then(() => assert.fail())
       .catch((err) => {
         assert(err !== undefined);
       });
@@ -55,7 +66,7 @@ describe("Single node", function () {
         }`;
 
     await callSubgraph(`http://localhost:40000/test`, query, "getById")
-      .then(() => fail())
+      .then(() => assert.fail())
       .catch((err) => {
         assert(err !== undefined);
       });

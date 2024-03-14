@@ -1,17 +1,29 @@
-const { MongoMemoryServer } = require("mongodb-memory-server");
-const { MongoClient, ObjectId } = require("mongodb");
-const { parse, build_app } = require("../../index");
-const { swagger } = require("../../lib/swagger");
-const assert = require("assert");
-const { after, it } = require("mocha");
-const OpenAPIClientAxios = require("openapi-client-axios").default;
-const jwt = require("jsonwebtoken");
-const { v4 } = require("uuid");
+import {MongoMemoryServer} from "mongodb-memory-server";
+
+import {MongoClient, ObjectId} from "mongodb";
+
+import {build_app, parse} from "../../index.js";
+
+import {swagger} from "../../lib/swagger.js";
+
+import assert from "assert";
+
+import {after, it, before, describe} from "mocha";
+
+import {OpenAPIClientAxios} from "openapi-client-axios";
+
+import jwt from "jsonwebtoken";
+
+import {v4} from "uuid";
+import {fileURLToPath} from "url";
+import {dirname} from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 
 let mongod;
-let uri;
 let client;
-let db;
 let config;
 let server;
 let api;
@@ -26,9 +38,7 @@ before(async function () {
   client = new MongoClient(mongod.getUri());
   await client.connect();
 
-  uri = mongod.getUri();
-
-  db = client.db("test").collection("hens");
+  client.db("test").collection("hens");
 
   config = await parse(__dirname + "/../config/simple_swagger.conf");
   let app = await build_app(config);

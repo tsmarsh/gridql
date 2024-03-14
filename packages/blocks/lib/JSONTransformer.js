@@ -12,11 +12,11 @@ export class JSONTransformer {
       .run(this.filter, data, this.options)
       .then((out) => {
         if (out !== "null" && out !== null) {
-          if (this.modules.hasOwnProperty("success")) {
+          if (Object.hasOwnProperty.call(this.modules, "success")) {
             this.modules.success.execute(out);
           }
         } else {
-          if (this.modules.hasOwnProperty("error")) {
+          if (Object.hasOwnProperty.call(this.modules,"error")) {
             this.modules.error.execute(data);
           }
         }

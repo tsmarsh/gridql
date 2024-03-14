@@ -3,6 +3,7 @@
   "version": "3.6.0",
   "description": "reliably connects to mongo",
   "main": "index.js",
+  "type": "module",
   "license": "MIT",
   "private": false,
   "gitHead": "c480d620f24013ae2822640d70374df7fc9dbd5e",

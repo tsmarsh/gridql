@@ -1,11 +1,17 @@
-const parser = require("@pushcorn/hocon-parser");
-const { buildDb } = require("@gridql/mongo-connector");
-const { context } = require("@gridql/graph");
-const fs = require("fs");
-const { buildSchema } = require("graphql/index");
-const { valid } = require("@gridql/payload-validator");
+import parser from "@pushcorn/hocon-parser";
 
-const process_graphlettes = async (config) => {
+import {buildDb} from "@gridql/mongo-connector";
+
+import {context} from "@gridql/graph";
+
+import fs from "fs";
+
+import {buildSchema} from "graphql";
+
+import {valid} from "@gridql/payload-validator";
+
+
+export const process_graphlettes = async (config) => {
   return await Promise.all(
     config["graphlettes"].map(async ({ mongo, dtoConfig, schema, path }) => {
       let db = await buildDb(mongo);
@@ -20,7 +26,7 @@ const process_graphlettes = async (config) => {
   );
 };
 
-const process_restlettes = async (config) => {
+export const process_restlettes = async (config) => {
   return await Promise.all(
     config["restlettes"].map(async ({ mongo, schema, path }) => {
       let db = await buildDb(mongo);
@@ -31,7 +37,7 @@ const process_restlettes = async (config) => {
     }),
   );
 };
-const parse = async (configFile) => {
+export const parse = async (configFile) => {
   const config = await parser
     .parse({ url: configFile })
     .catch((e) => console.log("Error parse config: ", e));
@@ -62,10 +68,4 @@ const parse = async (configFile) => {
   }
 
   return { url, port, graphlettes, restlettes };
-};
-
-module.exports = {
-  parse,
-  process_graphlettes,
-  process_restlettes,
 };

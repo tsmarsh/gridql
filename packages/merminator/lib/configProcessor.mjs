@@ -39,15 +39,13 @@ export const processConfig = (nodes) => {
 
   const unquoted = data.replace(/(".*":)\s"(.*\$\{\?.*}.*)"/gm, "$1 $2");
 
-  const hocon = unquoted
-    .split("\n")
-    .map((line) => {
-      if (line.includes("${?")) {
-        return line.replace(/\\"/g, '"');
-      }
-      return line;
-    })
-    .join("\n");
-
-  return hocon;
+  return unquoted
+      .split("\n")
+      .map((line) => {
+        if (line.includes("${?")) {
+          return line.replace(/\\"/g, '"');
+        }
+        return line;
+      })
+      .join("\n");
 };

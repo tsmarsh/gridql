@@ -1,5 +1,7 @@
-const { builderFactory } = require("../index");
-const assert = require("assert");
+import {builderFactory} from "../index.js";
+import assert from "assert";
+
+import {describe, it} from "mocha";
 
 describe("creates a valid payload given a schema", function () {
   it("assumes id are uuids", function () {

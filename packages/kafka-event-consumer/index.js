@@ -1,11 +1,16 @@
-const { Kafka, logLevel } = require("kafkajs");
-const parser = require("@pushcorn/hocon-parser");
-const OpenAPIClientAxios = require("openapi-client-axios").default;
-const fs = require("fs");
-const { valid } = require("@gridql/payload-validator");
-const { parseUrl } = require("@gridql/url");
+import {Kafka, logLevel} from "kafkajs";
 
-const init = async (configFile) => {
+import parser from "@pushcorn/hocon-parser";
+
+import {OpenAPIClientAxios} from "openapi-client-axios";
+
+import fs from "fs";
+
+import {valid} from "@gridql/payload-validator";
+
+import {parseUrl} from "@gridql/url";
+
+export const init = async (configFile) => {
   const config = await parser
     .parse({ url: configFile })
     .catch((e) => console.log("Error parse config: ", e));
@@ -31,12 +36,12 @@ const init = async (configFile) => {
     console.error("Failed to create client: ", err);
   });
 
-  let validator = valid(JSON.parse(fs.readFileSync(schema)));
+  let validator = valid(JSON.parse(fs.readFileSync(schema, 'utf-8')));
 
   return { apiClient, kafkaConsumer, validator, topic: kafka.topic };
 };
 
-const start = async ({ apiClient, kafkaConsumer, validator, topic }) => {
+export const start = async ({ apiClient, kafkaConsumer, validator, topic }) => {
   await kafkaConsumer.connect();
 
   await kafkaConsumer
@@ -72,5 +77,3 @@ const start = async ({ apiClient, kafkaConsumer, validator, topic }) => {
     },
   });
 };
-
-module.exports = { init, start };
