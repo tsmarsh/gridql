@@ -2,13 +2,9 @@
 
 import { program } from "commander";
 import { merminate } from "./lib/processor.mjs";
-import fs from "fs";
-
-const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
 
 program
-  .name("Mermaidinator")
-  .version(packageJson.version)
+  .name("Merminator")
   .addHelpText(
     "after",
     `
