@@ -1,6 +1,6 @@
 {
   "name": "@gridql/mongo-event-builder",
-  "version": "3.6.0",
+  "version": "3.7.0",
   "description": "Listens to mongo and emits events",
   "main": "index.js",
   "type": "module",
@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@gridql/mongo-connector": "^3.6.0",
+    "@gridql/mongo-connector": "^3.7.0",
     "@pushcorn/hocon-parser": "^1.2.6",
     "kafkajs": "^2.2.4",
     "mongodb": "^5.9.2"
@@ -20,7 +20,7 @@
     "test": "nyc mocha --exit"
   },
   "devDependencies": {
-    "@gridql/kafka-consumer": "^3.6.0",
+    "@gridql/kafka-consumer": "^3.7.0",
     "nyc": "^15.1.0",
     "testcontainers": "^9.8.0"
   },
