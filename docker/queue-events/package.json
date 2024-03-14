@@ -8,19 +8,23 @@
   "private": false,
   "scripts": {
     "start": "node index.js",
-    "test": "nyc mocha --exit"
+    "test": "nyc mocha --exit",
+    "format": "prettier --write index.js \"test/**/*.{js,jsx,mjs,ts,tsx,json,css,md}\"",
+    "lint": "eslint index.js \"test/**/*.{js,jsx,mjs,ts,tsx,json,css,md}\""
   },
   "dependencies": {
     "@gridql/kafka-event-consumer": "file:../../packages/kafka-event-consumer"
   },
   "devDependencies": {
-    "kafkajs": "^2.2.4",
-    "@gridql/payload-generator": "file:../../packages/payload-generator",
     "@gridql/mongo-connector": "file:../../packages/mongo-connector",
+    "@gridql/payload-generator": "file:../../packages/payload-generator",
+    "eslint": "^8.57.0",
+    "kafkajs": "^2.2.4",
     "mocha": "^10.2.0",
     "mongodb-memory-server": "^8.13.0",
     "nyc": "^15.1.0",
     "openapi-client-axios": "^7.2.0",
+    "prettier": "^3.2.5",
     "testcontainers": "^9.9.1"
   }
 }
