@@ -1,14 +1,24 @@
-const {OpenAPIClientAxios} = require("openapi-client-axios");
-const {builderFactory} = require("@gridql/payload-generator")
-const assert = require("assert");
-const {DockerComposeEnvironment} = require("testcontainers");
-const { Kafka, logLevel } = require("kafkajs");
+import {OpenAPIClientAxios} from "openapi-client-axios";
 
-const path = require('path');
-const fs = require("fs");
-const {TestConsumer} = require("@gridql/kafka-consumer");
+import {builderFactory} from "@gridql/payload-generator";
 
-let environment;
+import assert from "assert";
+
+import {DockerComposeEnvironment} from "testcontainers";
+
+import {Kafka} from "kafkajs";
+
+import fs from "fs";
+
+import {TestConsumer} from "@gridql/kafka-consumer";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+import { before, describe, it } from "mocha";
+
 let schema;
 let kafka;
 let swagger_clients = {}
@@ -40,7 +50,7 @@ async function createKafkaTopic(topicName, numPartitions = 1, replicationFactor 
 before(async function () {
     this.timeout(200000);
 
-    environment = await new DockerComposeEnvironment(__dirname ).up();
+    await new DockerComposeEnvironment(__dirname ).up();
 
     for(let restlette of ["test"]){
         let rest = await fetch(`http://localhost:3033/${restlette}/api/api-docs/swagger.json`)
@@ -89,7 +99,3 @@ describe("Should build docker image and run", function () {
         assert.equal(result.data.name, test.name);
     })
 });
-
-function delay(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}

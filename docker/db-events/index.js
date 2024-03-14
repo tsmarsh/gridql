@@ -1,6 +1,6 @@
-const { init, start } = require("@gridql/mongo-event-builder");
-
-const fs = require("fs");
+import {start} from "@gridql/mongo-event-builder";
+import {init} from "@gridql/mongo-event-builder/lib/config.js";
+import fs from "fs";
 
 let configPath = "./config/config.conf";
 

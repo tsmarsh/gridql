@@ -3,23 +3,28 @@
   "version": "3.2.2",
   "description": "Pulls data from mongo and puts it in a kafka topic",
   "main": "index.js",
+  "type": "module",
   "author": "Tom Marsh",
   "license": "MIT",
   "private": false,
   "scripts": {
     "start": "node index.js",
-    "test": "mocha --exit"
+    "test": "mocha --exit",
+    "format": "prettier --write index.js \"test/**/*.{js,jsx,mjs,ts,tsx,json,css,md}\"",
+    "lint": "eslint index.js \"test/**/*.{js,jsx,mjs,ts,tsx,json,css,md}\""
   },
   "dependencies": {
     "@gridql/mongo-event-builder": "file:../../packages/mongo-event-builder"
   },
   "devDependencies": {
-    "kafkajs": "^2.2.4",
-    "kafka-consumer": "file:../../packages/kafka-consumer",
     "@gridql/payload-generator": "file:../../packages/payload-generator",
+    "eslint": "^8.57.0",
+    "kafka-consumer": "file:../../packages/kafka-consumer",
+    "kafkajs": "^2.2.4",
     "mocha": "^10.2.0",
     "mongodb-memory-server": "^8.13.0",
     "openapi-client-axios": "^7.2.0",
+    "prettier": "^3.2.5",
     "testcontainers": "^9.9.1"
   }
 }
