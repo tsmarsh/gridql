@@ -1,9 +1,6 @@
 {
-  "useWorkspaces": true,
   "version": "3.6.1",
-  "packages": [
-    "packages/"
-  ],
+  "packages": ["packages/*"],
   "npmClient": "yarn",
   "command": {
     "publish": {
@@ -17,5 +14,6 @@
       ],
       "message": "chore(release): publish"
     }
-  }
+  },
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json"
 }
