@@ -93,9 +93,9 @@ export class RepositoryDiagram extends CstParser {
     this.input = result.tokens;
     const ctx = this.statementClause();
 
-    if (parser.errors.length > 0) {
-      console.error(JSON.stringify(parser.errors, null, 2));
-      throw new Error("ERRORS!\n" + parser.errors[0].message);
+    if (this.errors.length > 0) {
+      console.error(JSON.stringify(this.errors, null, 2));
+      throw new Error("ERRORS!\n" + this.errors[0].message);
     }
 
     return ctx;
