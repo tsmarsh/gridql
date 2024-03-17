@@ -11,27 +11,28 @@ export const init = async (configFile) => {
 
   console.log("Config: ", config);
 
-  const { mongo, kafka } = config;
+  const { builders } = config;
 
-  //console.log(kafka);
-
-  let k = new Kafka({
-    logLevel: logLevel.INFO,
-    brokers: kafka.brokers,
-    clientId: kafka.clientId,
-  });
-
-  const collection = await buildDb(mongo);
-
-  const kafkaProducer = k.producer();
-
-  await kafkaProducer
-    .connect()
-    .then(() => console.log("Connected to Kafka"))
-    .catch((reason) => {
-      console.log("Kafka Producer failed to connect: ", reason);
-      throw new Error(reason);
+  return Promise.all(builders.map(async ({mongo, kafka})=>{
+    let k = new Kafka({
+      logLevel: logLevel.INFO,
+      brokers: kafka.brokers,
+      clientId: kafka.clientId,
     });
 
-  return { collection, kafkaProducer, topic: kafka.topic, id: kafka.id };
+    const collection = await buildDb(mongo);
+
+    const kafkaProducer = k.producer();
+
+    await kafkaProducer
+        .connect()
+        .then(() => console.log("Connected to Kafka"))
+        .catch((reason) => {
+          console.log("Kafka Producer failed to connect: ", reason);
+          throw new Error(reason);
+        });
+
+    return { collection, kafkaProducer, topic: kafka.topic, id: kafka.id };
+
+  }))
 };

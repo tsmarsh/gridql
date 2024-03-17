@@ -25,9 +25,9 @@ const __dirname = dirname(__filename);
 
 describe("MongoDB change listener", () => {
   it("should publish a message when a document is inserted", async () => {
-    const { collection, kafkaProducer, topic, id } = await init(
+    const { collection, kafkaProducer, topic, id } = (await init(
       __dirname + "/config/create.conf",
-    );
+    ))[0];
     await start({ collection, kafkaProducer, topic, id });
 
     let tc = new TestConsumer(kafka, { groupId: "test-group-1" });
@@ -44,9 +44,9 @@ describe("MongoDB change listener", () => {
   }).timeout(10000);
 
   it("should publish a message when a document is updated", async () => {
-    const { collection, kafkaProducer, topic, id } = await init(
+    const { collection, kafkaProducer, topic, id } = (await init(
       __dirname + "/config/update.conf",
-    );
+    ))[0];
 
     await start({ collection, kafkaProducer, topic, id });
 
@@ -69,9 +69,9 @@ describe("MongoDB change listener", () => {
   }).timeout(10000);
 
   it("should publish a message when a document is deleted", async () => {
-    const { collection, kafkaProducer, topic, id } = await init(
+    const { collection, kafkaProducer, topic, id } = (await init(
       __dirname + "/config/delete.conf",
-    );
+    ))[0];
 
     await start({ collection, kafkaProducer, topic, id});
 
@@ -94,7 +94,7 @@ describe("MongoDB change listener", () => {
 before(async function () {
   this.timeout(360000);
 
-  let {0: mongoContainer, 1: kafkaContainer} = await Promise.all([
+  let [mc, kc] = await Promise.all([
     new MongoDBContainer("mongo:6.0.6")
         .withExposedPorts(27071)
         .start()
@@ -109,6 +109,9 @@ before(async function () {
         )
   ])
 
+  mongoContainer = mc
+  kafkaContainer = kc
+
   const uri = mongoContainer.getConnectionString();
 
   console.log("mongodb uri: ", uri);
@@ -119,8 +122,8 @@ before(async function () {
   );
 
   let config = `
-        {
-            "mongo": {
+        {builders: [
+            {"mongo": {
                 "uri": "${mongoContainer.getConnectionString()}",
                 "db": "test",
                 "collection": \${topic},
@@ -134,8 +137,8 @@ before(async function () {
                 "clientId": "mongo-event-builder-test",
                 "topic": \${topic},
                 "id": "_id"
-            }
-        }`;
+            }}
+        ]}`;
 
   kafka = new Kafka({
     logLevel: logLevel.INFO,
