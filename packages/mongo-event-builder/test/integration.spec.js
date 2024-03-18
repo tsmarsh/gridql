@@ -88,9 +88,7 @@ before(async function () {
   });
 
   //Given an event builder
-  const builders = await init(
-    __dirname + "/config/config.conf",
-  );
+  const builders = await init(__dirname + "/config/config.conf");
 
   await start(builders);
 

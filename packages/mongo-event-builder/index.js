@@ -27,14 +27,10 @@ export const toPayload = (id) => (change) => {
 };
 
 export const start = async (builders) => {
-  return Promise.all(builders.map((builder) => run(builder)))
-}
+  return Promise.all(builders.map((builder) => run(builder)));
+};
 
-export const run = async ({
-  collection,
-  kafkaProducer,
-  topic,
-  id = "id",}) => {
+export const run = async ({ collection, kafkaProducer, topic, id = "id" }) => {
   console.log("Starting builder: ", collection, kafkaProducer, topic, id);
 
   let payloads = [];

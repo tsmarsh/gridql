@@ -1,20 +1,20 @@
-import {Kafka, logLevel} from "kafkajs";
+import { Kafka, logLevel } from "kafkajs";
 
-import {KafkaContainer, MongoDBContainer} from "testcontainers";
+import { KafkaContainer, MongoDBContainer } from "testcontainers";
 
-import {start} from "../index.js";
+import { start } from "../index.js";
 
-import {init} from "../lib/config.js";
+import { init } from "../lib/config.js";
 
 import assert from "assert";
 
 import fs from "fs";
 
-import {TestConsumer} from "@gridql/kafka-consumer";
+import { TestConsumer } from "@gridql/kafka-consumer";
 
-import {after, before, describe, it} from "mocha";
-import {fileURLToPath} from "url";
-import {dirname} from "path";
+import { after, before, describe, it } from "mocha";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 let kafka;
 let kafkaContainer;
@@ -26,7 +26,7 @@ const __dirname = dirname(__filename);
 describe("MongoDB change listener", () => {
   it("should publish a message when a document is inserted", async () => {
     const builders = await init(__dirname + "/config/create.conf");
-    let {topic, collection} = builders[0]
+    let { topic, collection } = builders[0];
     await start(builders);
 
     let tc = new TestConsumer(kafka, { groupId: "test-group-1" });
@@ -47,7 +47,7 @@ describe("MongoDB change listener", () => {
 
     await start(builders);
 
-    const {topic, collection} = builders[0];
+    const { topic, collection } = builders[0];
     let tc = new TestConsumer(kafka, { groupId: "test-group-2" });
     await tc.init(topic);
     await tc.run();
@@ -67,13 +67,11 @@ describe("MongoDB change listener", () => {
   }).timeout(10000);
 
   it("should publish a message when a document is deleted", async () => {
-    const builders = await init(
-      __dirname + "/config/delete.conf",
-    );
+    const builders = await init(__dirname + "/config/delete.conf");
 
     await start(builders);
 
-    const {topic, collection} = builders[0];
+    const { topic, collection } = builders[0];
 
     let tc = new TestConsumer(kafka, { groupId: "test-group-3" });
 
@@ -97,26 +95,25 @@ before(async function () {
 
   let [mc, kc] = await Promise.all([
     new MongoDBContainer("mongo:6.0.6")
-        .withExposedPorts(27071)
-        .start()
-        .catch((err) => console.log(err)),
+      .withExposedPorts(27071)
+      .start()
+      .catch((err) => console.log(err)),
     new KafkaContainer()
-        .withExposedPorts(9093)
-        .withEnvironment({KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"})
-        .withEnvironment({KAFKA_DELETE_TOPIC_ENABLE: "true"})
-        .start()
-        .catch((reason) =>
-            console.log("Kafka container failed to start: ", reason),
-        )
-  ])
+      .withExposedPorts(9093)
+      .withEnvironment({ KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" })
+      .withEnvironment({ KAFKA_DELETE_TOPIC_ENABLE: "true" })
+      .start()
+      .catch((reason) =>
+        console.log("Kafka container failed to start: ", reason),
+      ),
+  ]);
 
-  mongoContainer = mc
-  kafkaContainer = kc
+  mongoContainer = mc;
+  kafkaContainer = kc;
 
   const uri = mongoContainer.getConnectionString();
 
   console.log("mongodb uri: ", uri);
-
 
   console.log(
     `${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}`,

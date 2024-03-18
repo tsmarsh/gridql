@@ -13,18 +13,19 @@ export const init = async (configFile) => {
 
   const { builders } = config;
 
-  return Promise.all(builders.map(async ({mongo, kafka})=>{
-    let k = new Kafka({
-      logLevel: logLevel.INFO,
-      brokers: kafka.brokers,
-      clientId: kafka.clientId,
-    });
+  return Promise.all(
+    builders.map(async ({ mongo, kafka }) => {
+      let k = new Kafka({
+        logLevel: logLevel.INFO,
+        brokers: kafka.brokers,
+        clientId: kafka.clientId,
+      });
 
-    const collection = await buildDb(mongo);
+      const collection = await buildDb(mongo);
 
-    const kafkaProducer = k.producer();
+      const kafkaProducer = k.producer();
 
-    await kafkaProducer
+      await kafkaProducer
         .connect()
         .then(() => console.log("Connected to Kafka"))
         .catch((reason) => {
@@ -32,7 +33,7 @@ export const init = async (configFile) => {
           throw new Error(reason);
         });
 
-    return { collection, kafkaProducer, topic: kafka.topic, id: kafka.id };
-
-  }))
+      return { collection, kafkaProducer, topic: kafka.topic, id: kafka.id };
+    }),
+  );
 };
