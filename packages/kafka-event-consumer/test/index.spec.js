@@ -59,7 +59,7 @@ before(async function () {
     )}`,
   );
 
-  let config = `{
+  let config = `{consumers: [{
       kafka: {
         brokers: [
           "${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}",
@@ -71,7 +71,7 @@ before(async function () {
       },
       schema: "${__dirname}/config/hen.schema.json",
       swagger: "file://${__dirname}/config/test.swagger.json",
-    }`;
+    }]}`;
 
   fs.writeFileSync(__dirname + "/config/base.conf", config);
 

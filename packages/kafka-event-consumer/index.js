@@ -17,31 +17,34 @@ export const init = async (configFile) => {
 
   console.log("Config: ", config);
 
-  const { kafka, swagger, schema } = config;
+  return Promise.all(config.consumers.map(async ({ kafka, swagger, schema }) => {
+    let k = new Kafka({
+      logLevel: logLevel.INFO,
+      brokers: kafka.brokers,
+      clientId: kafka.clientId,
+    });
 
-  let k = new Kafka({
-    logLevel: logLevel.INFO,
-    brokers: kafka.brokers,
-    clientId: kafka.clientId,
-  });
+    const kafkaConsumer = k.consumer({ groupId: kafka.groupId });
 
-  const kafkaConsumer = k.consumer({ groupId: kafka.groupId });
+    let swagger_doc = JSON.parse(await parseUrl(swagger));
 
-  let swagger_doc = JSON.parse(await parseUrl(swagger));
+    console.log("Swagger doc: ", swagger_doc);
 
-  console.log("Swagger doc: ", swagger_doc);
+    let api = new OpenAPIClientAxios({ definition: swagger_doc });
+    let apiClient = await api.init().catch((err) => {
+      console.error("Failed to create client: ", err);
+    });
 
-  let api = new OpenAPIClientAxios({ definition: swagger_doc });
-  let apiClient = await api.init().catch((err) => {
-    console.error("Failed to create client: ", err);
-  });
+    let validator = valid(JSON.parse(fs.readFileSync(schema, "utf-8")));
 
-  let validator = valid(JSON.parse(fs.readFileSync(schema, "utf-8")));
-
-  return { apiClient, kafkaConsumer, validator, topic: kafka.topic };
+    return { apiClient, kafkaConsumer, validator, topic: kafka.topic };
+  }))
 };
 
-export const start = async ({ apiClient, kafkaConsumer, validator, topic }) => {
+export const start = async (consumers) => {
+  return Promise.all(consumers.map((consumer) => run(consumer)));
+}
+export const run = async ({ apiClient, kafkaConsumer, validator, topic }) => {
   await kafkaConsumer.connect();
 
   await kafkaConsumer
