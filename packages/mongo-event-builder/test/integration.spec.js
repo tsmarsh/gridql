@@ -88,11 +88,11 @@ before(async function () {
   });
 
   //Given an event builder
-  const { collection, kafkaProducer, topic, id } = (await init(
+  const builders = await init(
     __dirname + "/config/config.conf",
-  ))[0];
+  );
 
-  await start({ collection, kafkaProducer, topic, id });
+  await start(builders);
 
   //Given a gridql server
   let configFile = __dirname + "/server/config.conf";
