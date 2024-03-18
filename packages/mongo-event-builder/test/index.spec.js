@@ -25,10 +25,9 @@ const __dirname = dirname(__filename);
 
 describe("MongoDB change listener", () => {
   it("should publish a message when a document is inserted", async () => {
-    const { collection, kafkaProducer, topic, id } = (await init(
-      __dirname + "/config/create.conf",
-    ))[0];
-    await start({ collection, kafkaProducer, topic, id });
+    const builders = await init(__dirname + "/config/create.conf");
+    let {topic, collection} = builders[0]
+    await start(builders);
 
     let tc = new TestConsumer(kafka, { groupId: "test-group-1" });
     await tc.init(topic);
@@ -44,12 +43,11 @@ describe("MongoDB change listener", () => {
   }).timeout(10000);
 
   it("should publish a message when a document is updated", async () => {
-    const { collection, kafkaProducer, topic, id } = (await init(
-      __dirname + "/config/update.conf",
-    ))[0];
+    const builders = await init(__dirname + "/config/update.conf");
 
-    await start({ collection, kafkaProducer, topic, id });
+    await start(builders);
 
+    const {topic, collection} = builders[0];
     let tc = new TestConsumer(kafka, { groupId: "test-group-2" });
     await tc.init(topic);
     await tc.run();
@@ -69,13 +67,16 @@ describe("MongoDB change listener", () => {
   }).timeout(10000);
 
   it("should publish a message when a document is deleted", async () => {
-    const { collection, kafkaProducer, topic, id } = (await init(
+    const builders = await init(
       __dirname + "/config/delete.conf",
-    ))[0];
+    );
 
-    await start({ collection, kafkaProducer, topic, id});
+    await start(builders);
+
+    const {topic, collection} = builders[0];
 
     let tc = new TestConsumer(kafka, { groupId: "test-group-3" });
+
     await tc.init(topic);
     await tc.run();
 

@@ -1,5 +1,3 @@
-let payloads = [];
-
 export const toCRUD = (change) => {
   const verbs = {
     insert: "CREATE",
@@ -28,14 +26,18 @@ export const toPayload = (id) => (change) => {
   return { key: message.id, value: JSON.stringify(message) };
 };
 
-export const start = async ({
+export const start = async (builders) => {
+  return Promise.all(builders.map((builder) => run(builder)))
+}
+
+export const run = async ({
   collection,
   kafkaProducer,
   topic,
-  id = "id",
-}) => {
+  id = "id",}) => {
   console.log("Starting builder: ", collection, kafkaProducer, topic, id);
 
+  let payloads = [];
   const changeStream = await collection.watch();
 
   const processChange = toPayload(id);
