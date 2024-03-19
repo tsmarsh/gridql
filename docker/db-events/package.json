@@ -14,12 +14,12 @@
     "lint": "eslint index.js \"test/**/*.{js,jsx,mjs,ts,tsx,json,css,md}\""
   },
   "dependencies": {
-    "@gridql/mongo-event-builder": "file:../../packages/mongo-event-builder"
+    "@gridql/mongo-event-builder": "^3.8.0"
   },
   "devDependencies": {
-    "@gridql/payload-generator": "file:../../packages/payload-generator",
+    "@gridql/payload-generator": "^3.7.0",
     "eslint": "^8.57.0",
-    "kafka-consumer": "file:../../packages/kafka-consumer",
+    "@gridql/kafka-consumer": "^3.7.0",
     "kafkajs": "^2.2.4",
     "mocha": "^10.2.0",
     "mongodb-memory-server": "^8.13.0",
