@@ -63,8 +63,8 @@ services:
       mongo:
         condition: service_healthy
     build:
-      context: "../../.."
-      dockerfile: "docker/db-events/Dockerfile"
+      context: ".."
+      dockerfile: "./Dockerfile"
     hostname: builder
     ports:
       - "9229:9229"
@@ -85,8 +85,8 @@ services:
       timeout: 10s
       retries: 5
     build:
-      context: "../../.."
-      dockerfile: "docker/gridql/Dockerfile"
+      context: "../../gridql"
+      dockerfile: "./Dockerfile"
     ports:
       - "3033:3033"
     volumes:
@@ -102,8 +102,8 @@ services:
       queue:
         condition: service_started
     build:
-      context: "../../.."
-      dockerfile: "docker/queue-events/Dockerfile"
+      context: "../../queue-events"
+      dockerfile: "./Dockerfile"
     volumes:
       - "./config:/app/config"
     environment:
