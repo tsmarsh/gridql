@@ -8,8 +8,8 @@ services:
   utility:
     depends_on: [mongo]
     build:
-      context: "../../.."
-      dockerfile: "docker/gridql/Dockerfile"
+      context: "../"
+      dockerfile: "./Dockerfile"
     hostname: utility
     ports:
       - "3033:3033"
