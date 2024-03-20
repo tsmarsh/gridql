@@ -11,9 +11,7 @@
     "test": "nyc mocha --exit"
   },
   "devDependencies": {
-    "nock": "^13.3.1",
-    "nyc": "^15.1.0",
-    "testcontainers": "^9.8.0"
+    "nock": "^13.3.1"
   },
   "gitHead": "c480d620f24013ae2822640d70374df7fc9dbd5e"
 }

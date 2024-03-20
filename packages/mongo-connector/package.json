@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "mongodb": "^5.9.2",
+    "mongodb": "^6.5.0",
     "promise-retry": "^2.0.1"
   }
 }

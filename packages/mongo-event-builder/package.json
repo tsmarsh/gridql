@@ -14,7 +14,7 @@
     "@gridql/mongo-connector": "^3.7.0",
     "@pushcorn/hocon-parser": "^1.2.6",
     "kafkajs": "^2.2.4",
-    "mongodb": "^5.9.2"
+    "mongodb": "^6.5.0"
   },
   "scripts": {
     "test": "nyc mocha --exit"

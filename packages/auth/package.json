@@ -8,6 +8,6 @@
   "license": "BSD",
   "private": false,
   "dependencies": {
-    "jsonwebtoken": "^9.0.0"
+    "jsonwebtoken": "^9.0.2"
   }
 }

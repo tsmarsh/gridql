@@ -11,10 +11,6 @@
   "scripts": {
     "test": "nyc mocha"
   },
-  "devDependencies": {
-    "mocha": "^10.2.0",
-    "nyc": "^15.1.0"
-  },
   "dependencies": {
     "@gridql/payload-generator": "^3.7.0",
     "jsonschema": "^1.4.1"
