@@ -37,7 +37,7 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
     let name = ctx.children.Identifier[0].image;
     let type = this.typeClause(ctx.children.typeClause[0], schema, name);
     if (name.endsWith("_id")) {
-      schema.properties[name] = { type: "string" };
+      schema.properties[name] = { type: "string", format: "uuid"};
     } else {
       schema.properties[name] = type;
     }
@@ -45,14 +45,30 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
 
   typeClause(ctx, schema, name) {
     if ("Type" in ctx.children) {
-      return { type: ctx.children.Type[0].image.toLowerCase() };
+      let tipe = ctx.children.Type[0].image.toLowerCase();
+      return this.isSpecial(tipe);
     } else if ("RequiredType" in ctx.children) {
       let image = ctx.children.RequiredType[0].image;
       let important = image.substring(0, image.length - 1).toLowerCase();
       schema.required.push(name);
-      return { type: important };
+      return this.isSpecial(important);
     } else {
       this.arrayClause(ctx.children.arrayClause[0], schema, name);
+    }
+  }
+
+  isSpecial(tipe) {
+    const special = {
+      "Date": {type: "string", format: "date"},
+      "ID": {type: "string", format: "uuid"},
+      "Int": {type: "integer"},
+      "Float": {type: "number"}
+    }
+
+    if (Object.hasOwnProperty.call(special, tipe)) {
+      return special[tipe]
+    } else {
+      return {type: tipe};
     }
   }
 

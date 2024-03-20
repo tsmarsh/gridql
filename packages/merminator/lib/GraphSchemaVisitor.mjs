@@ -15,6 +15,7 @@ export class GraphSchemaVisitor extends BaseCstVisitor {
 
     for (let current_type in types) {
       files[current_type] = [];
+      files[current_type].push("scalar Date")
       for (let type in types) {
         let fs;
         if (current_type === type) {

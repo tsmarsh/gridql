@@ -2,33 +2,34 @@ classDiagram
 
     Farm *-- Coop
     class Farm {
-        id: String
+        id: ID
         name: String!
 
-        getById(id: String): Farm
+        getById(id: ID): Farm
         getByName(name: String): Farm
     }
 
 
     Coop *-- Hen
     class Coop {
-        id: String
+        id: ID
         name: String!
         farm_id: Farm!
 
-        getById(id: String): Coop
+        getById(id: ID): Coop
         getByName(id: String): Coop
-        getByFarm(id: String): [Coop]
+        getByFarm(id: ID): [Coop]
     }
 
     class Hen {
 
-        id: String
+        id: ID
         name: String!
         coop_id: Coop
         eggs: Int
+        dob: Date
 
-        getById(id: String): Hen
+        getById(id: ID): Hen
         getByName(name: String): [Hen]
-        getByCoop(id: String): [Hen]
+        getByCoop(id: ID): [Hen]
     }
