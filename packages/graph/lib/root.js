@@ -2,6 +2,10 @@ import { DTOFactory } from "./DTOFactory.js";
 
 import { isAuthorized } from "@gridql/auth";
 
+import Log4js from "log4js";
+
+let logger = Log4js.getLogger("gridql/root");
+
 export const context = (db, config) => {
   let dtoF = new DTOFactory(config.resolvers);
   let rt = root(db, dtoF, config);
@@ -37,7 +41,7 @@ export const processQueryTemplate = (id, queryTemplate) => {
   try {
     json = JSON.parse(queryWithId);
   } catch (e) {
-    console.error(
+    logger.error(
       `Failed to create query:
       Query Template: ${queryTemplate}
       id: ${id}
@@ -118,13 +122,11 @@ export const singleton = (db, dtoFactory, id, queryTemplate) => {
       $lt: new Date(timestamp),
     };
 
-    //console.log("Q: ", query);
-
     const results = await db.find(query).sort({ createdAt: -1 }).toArray();
     let result = results[0];
 
     if (result === null || result === undefined) {
-      console.log(`Nothing found for: ${i}`);
+      logger.debug(`Nothing found for: ${i}`);
       return result;
     } else {
       if (context === undefined || isAuthorized(context.subscriber, result)) {

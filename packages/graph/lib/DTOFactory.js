@@ -2,6 +2,10 @@ import { processContext } from "./subgraph.js";
 
 import { callSubgraph } from "./callgraph.js";
 
+import Log4js from "log4js";
+
+let logger = Log4js.getLogger("gridql/DTOFactory");
+
 export class DTOFactory {
   resolvers = {};
 
@@ -38,6 +42,7 @@ const assignProperties = (target, source) => {
 };
 
 const assignResolver = (id = "id", queryName, url) => {
+  logger.debug(`Assigning resolver for: ${id}, ${queryName}, ${url}`)
   return async function (parent, args, context) {
     let foreignKey = this[id];
     const query = processContext(

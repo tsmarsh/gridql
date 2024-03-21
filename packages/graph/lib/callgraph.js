@@ -1,7 +1,11 @@
+import Log4js from "log4js";
+
+let logger = Log4js.getLogger("gridql/callgraph");
+
 export const callSubgraph = async (url, query, queryName, authHeader) => {
   const body = JSON.stringify({ query: query });
 
-  console.log("Subgraph Call: ", url, body);
+  logger.trace("Subgraph Call: ", url, body);
   let headers = {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -21,12 +25,12 @@ export const callSubgraph = async (url, query, queryName, authHeader) => {
     let json = JSON.parse(text);
     if (Object.hasOwnProperty.call(json, "errors")) {
       //console.log("Received: \n", text);
-      console.error(json);
+      logger.error(json);
       throw new Error(json["errors"][0]["message"]);
     }
     return json["data"][queryName];
   } catch (err) {
-    console.log("Error parsing json from response: ", err);
+    logger.error("Error parsing json from response: ", err);
     throw err;
   }
 };
