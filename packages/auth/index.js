@@ -1,4 +1,7 @@
 import jwt from "jsonwebtoken";
+import Log4js from "log4js";
+
+let logger = Log4js.getLogger("gridql/auth");
 
 export const isAuthorized = (subscriber, result) => {
   if (result === undefined) throw new Error("Nothing to Authorize");
@@ -22,7 +25,7 @@ export const getSub = (authHeader) => {
 
     return dToken["sub"];
   } else {
-    console.log("Missing Bearer Token");
+    logger.error("Missing Bearer Token");
     return null;
   }
 };

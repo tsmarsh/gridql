@@ -4,4 +4,8 @@ import { ReSTFullMessage } from "./lib/ReSTFullMessage";
 
 import { MessageValidator } from "./lib/MessageValidator";
 
-export { KafkaCUD, ReSTFullMessage, MessageValidator };
+import {GraphCall} from "./lib/GraphCall.js";
+
+import {JSONTransformer} from "./lib/JSONTransformer.js";
+
+export { KafkaCUD, ReSTFullMessage, MessageValidator, GraphCall, JSONTransformer };

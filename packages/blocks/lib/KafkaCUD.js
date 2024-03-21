@@ -1,3 +1,7 @@
+import Log4js from "log4js";
+
+let logger = Log4js.getLogger("gridql/KafkaCUD");
+
 export class KafkaCUD {
   constructor(kafkaConsumer, topic, modules) {
     this.kafkaConsumer = kafkaConsumer;
@@ -35,9 +39,9 @@ export class KafkaCUD {
     await this.kafkaConsumer
       .subscribe({ topic: this.topic })
       .then(() => {
-        console.log("Subscribed");
+        logger.trace("Subscribed")
       })
-      .catch((reason) => console.log("can't subscribe: ", reason));
+      .catch((reason) => logger.error("can't subscribe: " + JSON.stringify(reason)));
 
     await this.kafkaConsumer.run({
       eachMessage: this.switcheroo,

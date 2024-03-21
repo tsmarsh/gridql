@@ -1,4 +1,7 @@
 import jq from "node-jq";
+import Log4js from "log4js";
+
+let logger = Log4js.getLogger("gridql/JSONTransformer");
 
 export class JSONTransformer {
   constructor(filter, modules, options = { input: "json" }) {
@@ -22,7 +25,7 @@ export class JSONTransformer {
         }
       })
       .catch((err) => {
-        console.error(err);
+        logger.error(err);
       });
   }
 }

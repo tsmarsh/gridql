@@ -1,6 +1,11 @@
+import Log4js from "log4js";
+
+let logger = Log4js.getLogger("gridql/GraphCall");
+
 export class GraphCall {
   constructor(url, query_name, queryTemplate, modules) {
     this.url = url;
+    this.query_name = query_name
     this.queryTemplate = queryTemplate;
     this.modules = modules;
   }
@@ -27,7 +32,7 @@ export class GraphCall {
         return response.text();
       })
       .catch((err) => {
-        console.error("Fetch Error: ", err);
+        logger.error("Fetch Error: ", err);
         if (Object.hasOwnProperty.call(this.modules, "servererror")) {
           this.modules.servererror.execute(body);
         }
@@ -43,10 +48,10 @@ export class GraphCall {
     try {
       let json = JSON.parse(text);
       if (Object.hasOwnProperty.call(this.modules, "success")) {
-        this.modules.success.execute(json["data"][this.queryName]);
+        this.modules.success.execute(json["data"][this.query_name]);
       }
     } catch (err) {
-      console.log("Error parsing json from response: ", err);
+      logger.error("Error parsing json from response: ", err);
       if (Object.hasOwnProperty.call(this.modules, "error")) {
         this.modules.error.execute(data);
       }
