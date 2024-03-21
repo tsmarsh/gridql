@@ -1,6 +1,6 @@
 {
   "name": "@gridql/mongo-event-builder",
-  "version": "3.8.0",
+  "version": "3.8.1",
   "description": "Listens to mongo and emits events",
   "main": "index.js",
   "type": "module",
@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@gridql/mongo-connector": "^3.7.0",
+    "@gridql/mongo-connector": "^3.8.1",
     "@pushcorn/hocon-parser": "^1.2.6",
     "kafkajs": "^2.2.4",
     "mongodb": "^6.5.0"
