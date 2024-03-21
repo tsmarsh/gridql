@@ -1,6 +1,6 @@
 {
   "name": "@gridql/merminator",
-  "version": "3.8.1",
+  "version": "3.8.2",
   "description": "Converts mermaid class diagrams to json and graph schema",
   "main": "index.mjs",
   "bin": {
@@ -13,7 +13,7 @@
   "license": "MIT",
   "private": false,
   "devDependencies": {
-    "@gridql/server": "^3.8.1",
+    "@gridql/server": "^3.8.2",
     "axios": "^1.4.0",
     "chai": "^4.3.7",
     "chai-http": "^4.4.0",

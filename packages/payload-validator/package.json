@@ -1,6 +1,6 @@
 {
   "name": "@gridql/payload-validator",
-  "version": "3.8.1",
+  "version": "3.8.2",
   "main": "index.js",
   "type": "module",
   "license": "MIT",
@@ -12,7 +12,7 @@
     "test": "nyc mocha"
   },
   "dependencies": {
-    "@gridql/payload-generator": "^3.8.1",
+    "@gridql/payload-generator": "^3.8.2",
     "jsonschema": "^1.4.1"
   },
   "gitHead": "c480d620f24013ae2822640d70374df7fc9dbd5e"

@@ -1,6 +1,6 @@
 {
   "name": "@gridql/server",
-  "version": "3.8.1",
+  "version": "3.8.2",
   "description": "graphql server scaffolding",
   "author": "Tom Marsh",
   "type": "module",
@@ -18,8 +18,8 @@
     "@gridql/auth": "^3.8.1",
     "@gridql/graph": "^3.8.1",
     "@gridql/mongo-connector": "^3.8.1",
-    "@gridql/payload-generator": "^3.8.1",
-    "@gridql/payload-validator": "^3.8.1",
+    "@gridql/payload-generator": "^3.8.2",
+    "@gridql/payload-validator": "^3.8.2",
     "@pushcorn/hocon-parser": "^1.2.9",
     "cors": "^2.8.5",
     "express": "^4.18.3",
