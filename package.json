@@ -11,14 +11,16 @@
     "coverage:merge": "mkdir -p ./.nyc_output && cp -R packages/*/.nyc_output/* .nyc_output && nyc merge .nyc_output && nyc report --reporter=lcov",
     "format": "prettier --write \"packages/**/*.{js,jsx,mjs,ts,tsx,json,css,md}\"",
     "lint": "eslint \"packages/**/*.{js,mjs}\""
+  },"dependencies": {
+  "winston": "*"
   },
   "devDependencies": {
-    "eslint": "^8.57.0",
-    "husky": "^9.0.10",
-    "lerna": "^8.1.2",
-    "prettier": "^3.2.5",
-    "mocha": "^10.3.0",
-    "nyc": "^15.1.0"
+    "eslint": "*",
+    "husky": "*",
+    "lerna": "*",
+    "prettier": "*",
+    "mocha": "*",
+    "nyc": "*"
   },
   "husky": {
     "hooks": {
