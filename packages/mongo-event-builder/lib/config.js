@@ -5,7 +5,6 @@ import parser from "@pushcorn/hocon-parser";
 import { buildDb } from "@gridql/mongo-connector";
 
 import Log4js from "log4js";
-import {json} from "mocha/lib/reporters/index.js";
 
 let logger = Log4js.getLogger("gridql/mongo-event-builder");
 
