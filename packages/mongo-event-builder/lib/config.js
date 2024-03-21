@@ -4,12 +4,17 @@ import parser from "@pushcorn/hocon-parser";
 
 import { buildDb } from "@gridql/mongo-connector";
 
+import Log4js from "log4js";
+import {json} from "mocha/lib/reporters/index.js";
+
+let logger = Log4js.getLogger("gridql/mongo-event-builder");
+
 export const init = async (configFile) => {
   const config = await parser
     .parse({ url: configFile })
-    .catch((e) => console.log("Error parse config: ", e));
+    .catch((e) => logger.error(`Error parse config: ${JSON.stringify(e, null, 2)}`));
 
-  console.log("Config: ", config);
+  logger.info(`Config: ${JSON.stringify(config, null, 2)}`);
 
   const { builders } = config;
 
@@ -29,7 +34,7 @@ export const init = async (configFile) => {
         .connect()
         .then(() => console.log("Connected to Kafka"))
         .catch((reason) => {
-          console.log("Kafka Producer failed to connect: ", reason);
+          logger.error(`Kafka Producer failed to connect: ${JSON.stringify(readon, null, 2)}`);
           throw new Error(reason);
         });
 

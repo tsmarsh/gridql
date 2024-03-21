@@ -1,5 +1,9 @@
 import { Validator } from "jsonschema";
 
+import Log4js from "log4js";
+
+let logger = Log4js.getLogger("gridql/payload-validator");
+
 export const valid = (schema) => {
   const v = new Validator();
 
@@ -8,7 +12,7 @@ export const valid = (schema) => {
     if (result.valid) {
       return true;
     } else {
-      console.log(result.errors);
+      logger.error(JSON.stringify(result.errors));
       return false;
     }
   };

@@ -1,3 +1,7 @@
+import Log4js from "log4js";
+
+let logger = Log4js.getLogger("gridql/mongo-event-builder");
+
 export const toCRUD = (change) => {
   const verbs = {
     insert: "CREATE",
@@ -31,7 +35,7 @@ export const start = async (builders) => {
 };
 
 export const run = async ({ collection, kafkaProducer, topic, id = "id" }) => {
-  console.log("Starting builder: ", collection, kafkaProducer, topic, id);
+  logger.info(`Starting builder: ${topic}, ${id}`);
 
   let payloads = [];
   const changeStream = await collection.watch();
@@ -39,19 +43,19 @@ export const run = async ({ collection, kafkaProducer, topic, id = "id" }) => {
   const processChange = toPayload(id);
 
   changeStream.on("change", async (change) => {
-    console.log("Change detected:", change);
+    logger.trace(`Change detected: ${change}`);
     let payload = processChange(change);
     if (payload !== null) {
       payloads.push(payload);
     }
     if (payloads.length > 0) {
       let message = { topic, messages: payloads };
-      console.log("Sending: ", JSON.stringify(message));
+      logger.debug(`Sending: ${JSON.stringify(message)}`);
 
       await kafkaProducer
         .send(message)
-        .then(() => console.log("Sent: ", JSON.stringify(message)))
-        .catch((reason) => console.log("Can't send: ", reason));
+        .then(() => logger.trace(`Sent: ${JSON.stringify(message)}`))
+        .catch((reason) => logger.error(`Can't send: ${JSON.stringify(reason, null, 2)}`));
       payloads = [];
     }
   });

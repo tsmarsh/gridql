@@ -10,12 +10,16 @@ import { valid } from "@gridql/payload-validator";
 
 import { parseUrl } from "@gridql/url";
 
+import Log4js from "log4js";
+
+let logger = Log4js.getLogger("gridql/kafka-event-consumer");
+
 export const init = async (configFile) => {
   const config = await parser
     .parse({ url: configFile })
-    .catch((e) => console.log("Error parse config: ", e));
+    .catch((e) => logger.error("Error parse config: ", e));
 
-  console.log("Config: ", config);
+  logger.info(`Config: ${JSON.stringify(config, null, 2)}`);
 
   return Promise.all(
     config.consumers.map(async ({ kafka, swagger, schema }) => {
@@ -27,13 +31,14 @@ export const init = async (configFile) => {
 
       const kafkaConsumer = k.consumer({ groupId: kafka.groupId });
 
-      let swagger_doc = JSON.parse(await parseUrl(swagger));
+        let swaggerText = await parseUrl(swagger);
+        let swagger_doc = JSON.parse(swaggerText);
 
-      console.log("Swagger doc: ", swagger_doc);
+      logger.info(`Swagger doc: ${swaggerText}` );
 
       let api = new OpenAPIClientAxios({ definition: swagger_doc });
       let apiClient = await api.init().catch((err) => {
-        console.error("Failed to create client: ", err);
+        logger.error(`Failed to create client: ${JSON.stringify(err)}`);
       });
 
       let validator = valid(JSON.parse(fs.readFileSync(schema, "utf-8")));
@@ -52,9 +57,9 @@ export const run = async ({ apiClient, kafkaConsumer, validator, topic }) => {
   await kafkaConsumer
     .subscribe({ topic })
     .then(() => {
-      console.log("Subscribed");
+      logger.debug(`Subscribed: ${topic}`);
     })
-    .catch((reason) => console.log("can't subscribe: ", reason));
+    .catch((reason) => logger.error(`Can't subscribe: ${JSON.stringify(reason)}`));
 
   await kafkaConsumer.run({
     eachMessage: async ({ message }) => {
@@ -65,7 +70,7 @@ export const run = async ({ apiClient, kafkaConsumer, validator, topic }) => {
           if (validator(json_message.payload)) {
             apiClient.create(null, json_message.payload);
           } else {
-            console.error("Payload error: ", json_message.payload);
+            logger.error(`Payload error: ${json_message.payload}`);
           }
           break;
         case "DELETE":
@@ -75,7 +80,7 @@ export const run = async ({ apiClient, kafkaConsumer, validator, topic }) => {
           if (validator(json_message.payload)) {
             apiClient.update(json_message.id, json_message.payload);
           } else {
-            console.error("Payload error: ", json_message.payload);
+            logger.error(`Payload error:  ${json_message.payload}`);
           }
           break;
       }
