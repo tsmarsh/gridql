@@ -7,7 +7,9 @@ import { swagger } from "../swagger.js";
 import { PayloadRepository } from "./repository.js";
 
 import { getSub, isAuthorized } from "@gridql/auth";
+import Log4js from "log4js";
 
+let logger = Log4js.getLogger("gridql/server");
 export const calculateReaders = (doc, sub) => {
   const readers = new Set();
 

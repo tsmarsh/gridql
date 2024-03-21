@@ -1,5 +1,7 @@
 import { v4 as uuid } from "uuid";
+import Log4js from "log4js";
 
+let logger = Log4js.getLogger("gridql/server");
 export class PayloadRepository {
   constructor(db, valid) {
     this.db = db;
@@ -48,7 +50,7 @@ export class PayloadRepository {
     try {
       await this.db.insertMany(good);
     } catch (e) {
-      console.log(e);
+      logger.error(JSON.stringify(e, null, 2));
     }
 
     return v;
@@ -66,7 +68,7 @@ export class PayloadRepository {
         .sort({ createdAt: -1 })
         .toArray();
     } catch (err) {
-      console.log("Can't read: ", err);
+      logger.error(`Can't read: ${JSON.stringify(err)}`);
     }
 
     //console.log("Reading: " + JSON.stringify(results));
@@ -105,7 +107,7 @@ export class PayloadRepository {
         ])
         .toArray();
     } catch (err) {
-      console.log("Error listing: ", err);
+      logger.error(`Error listing: ${JSON.stringify(err, null, 2)}`);
     }
 
     return results.map((r) => r.id);
@@ -147,7 +149,7 @@ export class PayloadRepository {
         ])
         .toArray();
     } catch (err) {
-      console.log("Error listing: ", err);
+      logger.error(`Error listing:  ${JSON.stringify(err)}`);
     }
 
     return results.map((r) => r.id);

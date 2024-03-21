@@ -12,6 +12,10 @@ import express from "express";
 
 import cors from "cors";
 
+import Log4js from "log4js";
+
+let logger = Log4js.getLogger("gridql/server");
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -30,7 +34,7 @@ export const add_network_front = (app, url, graphlettes, restlettes) => {
 
 export const add_graphlettes = (graphlettes, app) => {
   for (let { path, graph } of graphlettes) {
-    console.log("Graphing up: " + path);
+    logger.info("Graphing up: " + path);
     app.get(path, (req, res) => {
       res.render("graphiql", {
         path,
@@ -42,7 +46,7 @@ export const add_graphlettes = (graphlettes, app) => {
         schema: graph.schema,
         rootValue: graph.root,
         formatError: (error) => {
-          console.log(error);
+          logger.error(JSON.stringify(error, null, 2));
           return error;
         },
         context: async (req) => {
@@ -58,7 +62,7 @@ export const add_graphlettes = (graphlettes, app) => {
 
 export const add_restlettes = (restlettes, url, app) => {
   for (let { path, db, validator, schema } of restlettes) {
-    console.log("ReSTing up: " + path);
+    logger.info("ReSTing up: " + path);
     crud_init(url, path, app, db, validator, schema);
   }
 };
