@@ -33,7 +33,7 @@ export const init = async (configFile) => {
         .connect()
         .then(() => console.log("Connected to Kafka"))
         .catch((reason) => {
-          logger.error(`Kafka Producer failed to connect: ${JSON.stringify(readon, null, 2)}`);
+          logger.error(`Kafka Producer failed to connect: ${JSON.stringify(reason, null, 2)}`);
           throw new Error(reason);
         });
 
