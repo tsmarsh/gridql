@@ -1,6 +1,6 @@
 {
   "name": "@gridql/graph",
-  "version": "3.8.1",
+  "version": "3.8.4",
   "description": "Utilities for calling graphql inside the mesh",
   "main": "index.js",
   "author": "Tom Marsh",

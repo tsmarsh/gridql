@@ -1,6 +1,6 @@
 {
   "name": "@gridql/mongo-event-builder",
-  "version": "3.8.3",
+  "version": "3.8.4",
   "description": "Listens to mongo and emits events",
   "main": "index.js",
   "type": "module",
@@ -20,7 +20,7 @@
     "test": "nyc mocha --exit"
   },
   "devDependencies": {
-    "@gridql/kafka-consumer": "^3.7.0",
+    "@gridql/kafka-consumer": "^3.8.4",
     "@testcontainers/kafka": "^10.7.2",
     "@testcontainers/mongodb": "^10.7.2",
     "nyc": "^15.1.0",
