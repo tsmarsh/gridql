@@ -74,4 +74,10 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
       },
     };
   }
+
+  methodClause() {}
+
+  argList() {}
+
+  compositionClause() {}
 }
