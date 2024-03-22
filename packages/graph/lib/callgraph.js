@@ -17,7 +17,7 @@ export const callSubgraph = async (url, query, queryName, authHeader) => {
     method: "POST",
     headers,
     body,
-  }).catch((err) => console.log(err));
+  }).catch((err) => logger.error(err));
 
   const text = await response.text();
 

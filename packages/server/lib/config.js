@@ -43,7 +43,9 @@ export const process_restlettes = async (config) => {
 export const parse = async (configFile) => {
   const config = await parser
     .parse({ url: configFile })
-    .catch((e) => logger.error(`Error parse config: ${JSON.stringify(e, null, 2)}`));
+    .catch((e) =>
+      logger.error(`Error parse config: ${JSON.stringify(e, null, 2)}`),
+    );
 
   logger.info(`Config file: ${JSON.stringify(config, null, 2)}`);
 
@@ -67,7 +69,7 @@ export const parse = async (configFile) => {
       restlettes = await process_restlettes(config);
     }
   } catch (err) {
-      logger.error(JSON.stringify(err, null, 2));
+    logger.error(JSON.stringify(err, null, 2));
   }
 
   return { url, port, graphlettes, restlettes };

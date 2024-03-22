@@ -15,6 +15,10 @@ import {
   Type,
 } from "./lexer.mjs";
 
+import Log4js from "log4js";
+
+let logger = Log4js.getLogger("gridql/RepositoryDiagram");
+
 export class RepositoryDiagram extends CstParser {
   constructor() {
     super(allTokens);
@@ -94,7 +98,7 @@ export class RepositoryDiagram extends CstParser {
     const ctx = this.statementClause();
 
     if (this.errors.length > 0) {
-      console.error(JSON.stringify(this.errors, null, 2));
+      logger.error(JSON.stringify(this.errors, null, 2));
       throw new Error("ERRORS!\n" + this.errors[0].message);
     }
 

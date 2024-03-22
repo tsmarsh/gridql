@@ -31,10 +31,10 @@ export const init = async (configFile) => {
 
       const kafkaConsumer = k.consumer({ groupId: kafka.groupId });
 
-        let swaggerText = await parseUrl(swagger);
-        let swagger_doc = JSON.parse(swaggerText);
+      let swaggerText = await parseUrl(swagger);
+      let swagger_doc = JSON.parse(swaggerText);
 
-      logger.info(`Swagger doc: ${swaggerText}` );
+      logger.info(`Swagger doc: ${swaggerText}`);
 
       let api = new OpenAPIClientAxios({ definition: swagger_doc });
       let apiClient = await api.init().catch((err) => {
@@ -59,7 +59,9 @@ export const run = async ({ apiClient, kafkaConsumer, validator, topic }) => {
     .then(() => {
       logger.debug(`Subscribed: ${topic}`);
     })
-    .catch((reason) => logger.error(`Can't subscribe: ${JSON.stringify(reason)}`));
+    .catch((reason) =>
+      logger.error(`Can't subscribe: ${JSON.stringify(reason)}`),
+    );
 
   await kafkaConsumer.run({
     eachMessage: async ({ message }) => {

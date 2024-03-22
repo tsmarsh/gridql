@@ -42,7 +42,7 @@ const assignProperties = (target, source) => {
 };
 
 const assignResolver = (id = "id", queryName, url) => {
-  logger.debug(`Assigning resolver for: ${id}, ${queryName}, ${url}`)
+  logger.debug(`Assigning resolver for: ${id}, ${queryName}, ${url}`);
   return async function (parent, args, context) {
     let foreignKey = this[id];
     const query = processContext(

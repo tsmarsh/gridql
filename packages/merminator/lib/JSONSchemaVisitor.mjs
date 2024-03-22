@@ -12,13 +12,6 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
     return this.schemas;
   }
 
-  compositionClause(ctx) {
-    console.log("COMPOSITION");
-    console.log(
-      `${ctx.children.rhs[0].image} has a ${ctx.children.lhs[0].image} `,
-    );
-  }
-
   classClause(ctx) {
     let name = ctx.children.Type[0].image;
     let schema = {
@@ -37,7 +30,7 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
     let name = ctx.children.Identifier[0].image;
     let type = this.typeClause(ctx.children.typeClause[0], schema, name);
     if (name.endsWith("_id")) {
-      schema.properties[name] = { type: "string", format: "uuid"};
+      schema.properties[name] = { type: "string", format: "uuid" };
     } else {
       schema.properties[name] = type;
     }
@@ -59,16 +52,16 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
 
   isSpecial(tipe) {
     const special = {
-      "Date": {type: "string", format: "date"},
-      "ID": {type: "string", format: "uuid"},
-      "Int": {type: "integer"},
-      "Float": {type: "number"}
-    }
+      Date: { type: "string", format: "date" },
+      ID: { type: "string", format: "uuid" },
+      Int: { type: "integer" },
+      Float: { type: "number" },
+    };
 
     if (Object.hasOwnProperty.call(special, tipe)) {
-      return special[tipe]
+      return special[tipe];
     } else {
-      return {type: tipe};
+      return { type: tipe };
     }
   }
 
@@ -80,15 +73,5 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
         type: value,
       },
     };
-  }
-
-  methodClause(ctx) {
-    console.log("METHOD");
-    console.log(JSON.stringify(ctx, null, 2));
-  }
-
-  argList(ctx) {
-    console.log("ARG_LIST");
-    console.log(JSON.stringify(ctx, null, 2));
   }
 }

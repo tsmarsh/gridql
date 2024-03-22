@@ -2,6 +2,9 @@
 
 import { program } from "commander";
 import { merminate } from "./lib/processor.mjs";
+import Log4js from "log4js";
+
+let logger = Log4js.getLogger("gridql/merminator");
 
 program
   .name("Merminator")
@@ -34,7 +37,7 @@ Example call:
   )
   .action((options) => {
     if (!options.file) {
-      console.error("Error: --file <file> option is required");
+      logger.error("Error: --file <file> option is required");
       process.exit(1);
     }
     merminate(options.file, options.dest, options.url);

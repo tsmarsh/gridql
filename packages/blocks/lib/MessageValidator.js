@@ -12,7 +12,7 @@ export class MessageValidator {
     if (this.validator(data.payload)) {
       this.modules.success.execute(data);
     } else {
-      logger.error("Invalid: " + JSON.stringify(data))
+      logger.error("Invalid: " + JSON.stringify(data));
       this.modules.error.execute(data);
     }
   };

@@ -1,10 +1,13 @@
-import {JSONSchemaFaker} from "json-schema-faker";
+import { JSONSchemaFaker } from "json-schema-faker";
 
 import { faker } from "@faker-js/faker";
 
 export function builderFactory(schema) {
   JSONSchemaFaker.extend("faker", () => faker);
-  JSONSchemaFaker.format("date", () => faker.date.past().toISOString().split("T")[0]);
+  JSONSchemaFaker.format(
+    "date",
+    () => faker.date.past().toISOString().split("T")[0],
+  );
   JSONSchemaFaker.format("id", () => faker.string.uuid());
 
   return (n) => {

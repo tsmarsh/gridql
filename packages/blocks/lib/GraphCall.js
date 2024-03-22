@@ -5,7 +5,7 @@ let logger = Log4js.getLogger("gridql/GraphCall");
 export class GraphCall {
   constructor(url, query_name, queryTemplate, modules) {
     this.url = url;
-    this.query_name = query_name
+    this.query_name = query_name;
     this.queryTemplate = queryTemplate;
     this.modules = modules;
   }

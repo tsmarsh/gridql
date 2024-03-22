@@ -55,7 +55,9 @@ export const run = async ({ collection, kafkaProducer, topic, id = "id" }) => {
       await kafkaProducer
         .send(message)
         .then(() => logger.trace(`Sent: ${JSON.stringify(message)}`))
-        .catch((reason) => logger.error(`Can't send: ${JSON.stringify(reason, null, 2)}`));
+        .catch((reason) =>
+          logger.error(`Can't send: ${JSON.stringify(reason, null, 2)}`),
+        );
       payloads = [];
     }
   });

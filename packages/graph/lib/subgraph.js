@@ -1,9 +1,5 @@
 import { parse, print, TypeInfo, visitWithTypeInfo, visit } from "graphql";
 
-import Log4js from "log4js";
-
-let logger = Log4js.getLogger("gridql/subgraph");
-
 export const processSelectionSet = (selectionSet) => {
   return selectionSet.selections.reduce(
     (q, field) => q + processFieldNode(field),

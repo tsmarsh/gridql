@@ -10,5 +10,14 @@
         "sourceType": "module"
     },
     "rules": {
-    }
+        "no-console": "warn"
+    },
+    "overrides": [
+        {
+            "files": ["*.spec.js"],
+            "rules": {
+                "no-console": "off"
+            }
+        }
+    ]
 }

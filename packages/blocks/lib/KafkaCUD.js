@@ -39,9 +39,11 @@ export class KafkaCUD {
     await this.kafkaConsumer
       .subscribe({ topic: this.topic })
       .then(() => {
-        logger.trace("Subscribed")
+        logger.trace("Subscribed");
       })
-      .catch((reason) => logger.error("can't subscribe: " + JSON.stringify(reason)));
+      .catch((reason) =>
+        logger.error("can't subscribe: " + JSON.stringify(reason)),
+      );
 
     await this.kafkaConsumer.run({
       eachMessage: this.switcheroo,

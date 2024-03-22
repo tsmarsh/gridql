@@ -11,7 +11,9 @@ let logger = Log4js.getLogger("gridql/mongo-event-builder");
 export const init = async (configFile) => {
   const config = await parser
     .parse({ url: configFile })
-    .catch((e) => logger.error(`Error parse config: ${JSON.stringify(e, null, 2)}`));
+    .catch((e) =>
+      logger.error(`Error parse config: ${JSON.stringify(e, null, 2)}`),
+    );
 
   logger.info(`Config: ${JSON.stringify(config, null, 2)}`);
 
@@ -31,9 +33,11 @@ export const init = async (configFile) => {
 
       await kafkaProducer
         .connect()
-        .then(() => console.log("Connected to Kafka"))
+        .then(() => logger.info("Connected to Kafka"))
         .catch((reason) => {
-          logger.error(`Kafka Producer failed to connect: ${JSON.stringify(reason, null, 2)}`);
+          logger.error(
+            `Kafka Producer failed to connect: ${JSON.stringify(reason, null, 2)}`,
+          );
           throw new Error(reason);
         });
 

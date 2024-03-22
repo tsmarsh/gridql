@@ -2,9 +2,9 @@ import { Kafka, logLevel } from "kafkajs";
 
 import { after, before, describe, it } from "mocha";
 
-import {MongoDBContainer} from "@testcontainers/mongodb"
+import { MongoDBContainer } from "@testcontainers/mongodb";
 
-import {KafkaContainer} from "@testcontainers/kafka";
+import { KafkaContainer } from "@testcontainers/kafka";
 
 import { start } from "../index.js";
 import { init } from "../lib/config.js";

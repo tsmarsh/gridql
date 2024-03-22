@@ -31,11 +31,11 @@ export const create = (repo, context) => async (req, res) => {
     if (req.headers.authorization !== undefined) {
       res.header("Authorization", req.headers.authorization);
     }
-    console.log("Created: ", result);
+    logger.debug(`Created: ${result}`);
     res.redirect(303, `${context}/${result}`);
   } else {
     //should respond with diagnostics
-    console.log("Failed to create: ", payload);
+    logger.error(`Failed to create: ${payload}`);
     res.sendStatus(400);
   }
 };
@@ -76,7 +76,7 @@ export const update = (repo, context) => async (req, res) => {
       if (req.headers.authorization !== undefined) {
         res.header("Authorization", req.headers.authorization);
       }
-      console.log("Updated: ", result);
+      logger.debug(`Updated: ${result}`);
       res.redirect(303, `${context}/${id}`);
     } else {
       res.status(403);
@@ -95,7 +95,7 @@ export const remove = (repo) => async (req, res) => {
   if (result !== null && result !== undefined) {
     if (isAuthorized(getSub(req.headers.authorization), result)) {
       await repo.remove(id);
-      console.log("Deleted: ", id);
+      logger.debug(`Deleted: ${id}`);
       res.json({ deleted: id });
     } else {
       res.status(403);
@@ -150,7 +150,7 @@ const options = {
 };
 
 export const init = (url, context, app, db, validate, schema) => {
-  console.log("API Docks are available on: ", `${context}/api-docs`);
+  logger.info(`API Docks are available on: ${context}/api-docs`);
 
   let repo = new PayloadRepository(db, validate);
 
