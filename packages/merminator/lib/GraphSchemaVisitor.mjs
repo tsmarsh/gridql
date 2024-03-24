@@ -85,9 +85,15 @@ export class GraphSchemaVisitor extends BaseCstVisitor {
   }
 
   argList(ctx) {
-    let arg = ctx.children.Identifier[0].image;
-    let type = this.typeClause(ctx.children.typeClause[0]);
+    const args = [];
 
-    return [`${arg}: ${type}`, "at: Float"]; //need to fix the grammar here
+    for(let i = 0; i < ctx.children.Identifier.length; i++){
+      let arg = ctx.children.Identifier[0].image;
+      let type = this.typeClause(ctx.children.typeClause[0]);
+      args.push(`${arg}: ${type}`)
+    }
+
+    args.push("at: Float")
+    return args; //need to fix the grammar here
   }
 }

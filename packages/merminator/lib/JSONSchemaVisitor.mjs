@@ -38,11 +38,11 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
 
   typeClause(ctx, schema, name) {
     if ("Type" in ctx.children) {
-      let tipe = ctx.children.Type[0].image.toLowerCase();
+      let tipe = ctx.children.Type[0].image;
       return this.isSpecial(tipe);
     } else if ("RequiredType" in ctx.children) {
       let image = ctx.children.RequiredType[0].image;
-      let important = image.substring(0, image.length - 1).toLowerCase();
+      let important = image.substring(0, image.length - 1);
       schema.required.push(name);
       return this.isSpecial(important);
     } else {
@@ -61,7 +61,7 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
     if (Object.hasOwnProperty.call(special, tipe)) {
       return special[tipe];
     } else {
-      return { type: tipe };
+      return { type: tipe.toLowerCase() };
     }
   }
 

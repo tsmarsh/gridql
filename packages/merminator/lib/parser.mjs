@@ -1,18 +1,18 @@
 import { CstParser, Lexer } from "chevrotain";
 import {
-  allTokens,
-  Class,
-  CloseArgList,
-  CloseArray,
-  CloseBlock,
-  Colon,
-  ComposedOf,
-  Identifier,
-  OpenArgList,
-  OpenArray,
-  OpenBlock,
-  RequiredType,
-  Type,
+    allTokens,
+    Class,
+    CloseArgList,
+    CloseArray,
+    CloseBlock,
+    Colon, Comma,
+    ComposedOf,
+    Identifier,
+    OpenArgList,
+    OpenArray,
+    OpenBlock,
+    RequiredType,
+    Type,
 } from "./lexer.mjs";
 
 import Log4js from "log4js";
@@ -83,9 +83,14 @@ export class RepositoryDiagram extends CstParser {
     });
 
     $.RULE("argList", () => {
-      $.CONSUME(Identifier);
-      $.CONSUME(Colon);
-      $.SUBRULE($.typeClause);
+        $.MANY_SEP(
+            {SEP: Comma,
+            DEF: () => {
+                $.CONSUME(Identifier);
+                $.CONSUME(Colon);
+                $.SUBRULE($.typeClause);
+            }}
+        )
     });
 
     this.performSelfAnalysis();
