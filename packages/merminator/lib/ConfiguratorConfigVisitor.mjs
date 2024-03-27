@@ -2,7 +2,7 @@ import { BaseCstVisitor } from "./parser.mjs";
 import pluralize from "pluralize";
 
 export class ConfiguratorConfigVisitor extends BaseCstVisitor {
-  constructor(host = "localhost:3033") {
+  constructor(host = "http://localhost:3033") {
     super();
     this.host = host;
     this.validateVisitor();
