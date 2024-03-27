@@ -57,7 +57,7 @@ before(async function () {
 
   await client.connect();
 
-  merminate(__dirname + "/test.mermaid", __dirname, "http://localhost:3033");
+  merminate(__dirname + "/test.mermaid", __dirname);
   process.chdir(__dirname);
 
   config = await parse(__dirname + "/config/config.conf");

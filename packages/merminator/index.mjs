@@ -25,7 +25,7 @@ Example call:
   )
   .option(
     "-u, --url <url>",
-    "Internal host URL. Defaults to 'localhost:3033'.",
+    "Internal host URL. Defaults to 'http://localhost:3033'.",
     (value) => {
       const urlPattern = /^https?:\/\/[^\s$.?#].[^\s]*$/;
       if (!urlPattern.test(value)) {
@@ -33,7 +33,7 @@ Example call:
       }
       return value;
     },
-    "localhost:3033",
+    "http://localhost:3033",
   )
   .action((options) => {
     if (!options.file) {
