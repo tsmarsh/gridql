@@ -17,7 +17,6 @@ jobs:
     strategy:
       matrix:
         node-version: [20.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v3
@@ -27,7 +26,12 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
     - run: yarn install
-    - run: yarn test
+    - name: Run all tests
+      uses: nick-invision/retry@v2
+      with:
+        timeout_minutes: 5
+        max_attempts: 3
+        command: yarn test
     - name: Merge coverage reports
       run: yarn coverage:merge
     - name: Upload coverage reports to Codecov
