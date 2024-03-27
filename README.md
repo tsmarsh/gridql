@@ -30,7 +30,38 @@ This is how you do it.
 
 ## Components
 
-### [Server](packages/server/README.md)
+### [Repository](packages/server/README.md)
+
+The mesh is composed of Repositories. These follow the Repository pattern documented
+by [Martin Fowler in Patterns of Enterprise Architecture](https://martinfowler.com/eaaCatalog/repository.html).
+
+The premise is that we access data via a simple set of commands:
+
+* Create
+* CreateMany
+* Update
+* UpdateMany
+* Delete
+* DeleteMany
+
+and then access the data on the repository:
+
+* Read
+* List
+
+and finally allow us to query
+
+* getById
+* getByX
+
+As these repositories exist in the network and not in memory we instantly fall foul
+of [CAP Theory](https://en.wikipedia.org/wiki/CAP_theorem) as we loose implicit control of state and expose ourselves to
+the far more likely network faults.
+
+We mititate this by splitting the problem into two, similar to the [CRQS](https://martinfowler.com/bliki/CQRS.html)
+pattern.
+Allowing us to scale commands and queries separately but, more importantly allowing us to use ReST for what it shines
+at: Commands and GraphQL for what it excels at Queries.
 
 #### Restlettes
 
@@ -111,6 +142,108 @@ We don't know or care how events get into this topic, but we'd recommend somethi
 ```
 System of Record => Change Data Capture => public topic => ksql => private topic => event consumer
 ```
+
+## Core Concepts
+
+### Modeling
+
+#### Ownership
+
+From the point of view of client applications, each repository owns the data and can be treated as a system of record.
+
+It should be explicit which repository owns which data.
+Think [3rd normal form](https://en.wikipedia.org/wiki/Third_normal_form) in RDBMS.
+
+Complex objects are composed by meshing simple objects.
+
+As we have learned from OO hierarchy can be an important tool, but is a tool of last resort. Composition is the only
+mechanism supported by gridql.
+
+#### Advocacy
+
+It is rarely the case that a Repository is actually the system of record. In our applications, the majority of
+the repositories mapped concepts owned by multiple external systems.
+
+To that end it is the responsibility of the repository to mesh the demands of modern, transactional systems, with
+whatever has been patched together in the enterprise be they: flat files, rdbms, excel documents, manual entry. 
+
+#### Separation of Concerns and Awareness
+
+![Seperation Diagram](./docs/Seperation%20of%20Concerns.svg)
+
+* Clients must only be aware of the Ownership tier.
+* Repositories are only aware of each other and the queue
+* Advocates are aware of the queue, the Ownership tier and the Enterprise
+  * But have really narrow purpose: create an event type, update a system of record
+  * They are unaware of clients
+* Enterprise applications are unaware of everything
+
+### State
+#### Idemptotency and Identification
+
+As we are in a distributed multithreaded environment somethings that might be easy in a single threaded, monolithic solution become... interesting.
+
+So we have three mechanisms of identification on a given object:
+
+1. Canonical "id" this field is automatically added to new objects in its meta data. Its a guid that is used to represent an object throughout its lifecycle in the ownership tier.
+2. The storage id "_id", also in metadata, but only used internally.
+  * An updated object is a copy of the original with the same canonical id, but a different timestamp and _id
+  * There can be N versions of an object in a timeseries.
+3. Payload id. These live in the payload and are used to tie an object back to an external system. They cannot be called "id"
+
+
+#### Time
+
+Because a query might happen whilst a repository is updating its collection, queries between repositories all contain the time stamp of the originating request.
+
+This allows two features:
+
+1. Time travel: we can ask the system how it would have responded to the query at a given moment in the past
+2. Queries are consistent with the state of the mesh at the time of the query.
+
+#### Asynchronisity
+
+The ownership tier is distributed and synchronous. All commands and queries are responded to immediately.
+
+However, reporting true state is important.
+
+If you accept a change on behalf of a system of record you have a responsibility to make that truth available to client applications. 
+
+At least three patterns are effective here:
+
+##### Hold state on the object
+
+1. Client Application submits a payload
+2. Repository emits an event
+3. An event propagator picks that up and writes a new field to the payload or meta data saying "received"
+4. Event propator propogates event to systems of record
+5. Event generator sees change in systems of record and writes back new state to object "accepted"
+6. Client application can query for new state
+
+This mechanism is mostly useful when the object isn't part of a more complicated workflow.
+
+##### One object per state
+
+1. Client Application submits a payload
+2. Repository emits an event
+4. Event propator propogates event to systems of record
+5. Event generator sees change in systems of record and creates an event that will generate a new object
+6. Client application can query for new object
+
+##### Workflow
+
+1. Client Application submits a payload
+2. Repository emits an event
+4. Event propagator propagates event to systems of record
+5. Workflow sees repository event and updates its state for the transaction
+5. Event generator sees change in systems of record and creates an event that will generate a new object
+6. Workflow sees repository event for new object and updates its state for the transaction
+6. Client application can query the workflow for the state of the transaction and query appropriately
+
+### Authorization
+
+Each repository is responsible for its own authorization. A basic 'auth' is provided that uses the SID on a JWT token, but fine grained authz support is encouraged.
+
 
 ### Utilities
 
