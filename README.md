@@ -247,6 +247,10 @@ Each repository is responsible for its own authorization. A basic 'auth' is prov
 
 ### Utilities
 
+#### [Merminator](packages/merminator/README.md)
+
+Dramatically reduces the complexity of generating the config.
+
 #### [Payload Generator](packages/payload-generator/README.md)
 
 You went to the effort of creating json schema to describe your payloads... might as well use it to generate you test data.
