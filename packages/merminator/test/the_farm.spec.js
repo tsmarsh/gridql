@@ -284,7 +284,6 @@ async function buildModels() {
     });
 
     first_stamp = Date.now();
-    console.log("First stamp: ", first_stamp);
 
     await coop_api.update(
       { id: coop1_id },
