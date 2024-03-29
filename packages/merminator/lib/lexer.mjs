@@ -40,6 +40,7 @@ export const CloseArgList = createToken({
 });
 
 export const Colon = createToken({ name: "Colon", pattern: /:/ });
+export const Comma = createToken({ name: "Colon", pattern: /,/ });
 export const ComposedOf = createToken({ name: "ComposedOf", pattern: /\*--/ });
 
 const WhiteSpace = createToken({
@@ -60,6 +61,7 @@ export const allTokens = [
   OpenArray,
   CloseArray,
   Colon,
+  Comma,
   ComposedOf,
   OpenArgList,
   CloseArgList,

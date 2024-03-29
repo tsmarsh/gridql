@@ -6,6 +6,7 @@ import {
   CloseArray,
   CloseBlock,
   Colon,
+  Comma,
   ComposedOf,
   Identifier,
   OpenArgList,
@@ -83,9 +84,14 @@ export class RepositoryDiagram extends CstParser {
     });
 
     $.RULE("argList", () => {
-      $.CONSUME(Identifier);
-      $.CONSUME(Colon);
-      $.SUBRULE($.typeClause);
+      $.MANY_SEP({
+        SEP: Comma,
+        DEF: () => {
+          this.CONSUME(Identifier);
+          this.CONSUME(Colon);
+          this.SUBRULE($.typeClause);
+        },
+      });
     });
 
     this.performSelfAnalysis();
