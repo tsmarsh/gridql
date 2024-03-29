@@ -42,8 +42,12 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
     if (name.endsWith("_id")) {
       schema.properties[name] = { type: "string", format: "uuid" };
     } else {
+      if (Object.hasOwnProperty.call(ctx.children, "varList")){
+
+      }
       schema.properties[name] = type;
     }
+
   }
 
   annotatedFieldClause(ctx, schema) {
@@ -92,7 +96,17 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
 
   argList() {}
 
-  varList() {}
+  varList(type, varlist) {
+    for(v of varlist){
+      for(child of v.children){
+        let value;
+        if(Object.hasOwnProperty.call(child, "DoubleQuotedString")){
+          value = child.DoubleQuotedString[0].image
+        }
+        type[child.Identifier[0].image] = "blah"
+      }
+    }
+  }
 
   compositionClause() {}
 }
