@@ -42,6 +42,7 @@ let token;
 let sub = uuid();
 
 let farm_id, coop1_id, coop2_id;
+let hen_ids = {};
 let first_stamp;
 
 const __filename = fileURLToPath(import.meta.url);
@@ -75,7 +76,6 @@ before(async function () {
       let text = await response.text();
 
       return JSON.parse(text);
-      //return swagger(restlette.path, restlette.schema, config.url);
     }),
   );
 
@@ -118,6 +118,25 @@ describe("The Farm", function () {
     expect(json.coops.length).to.equal(3);
   });
 
+  // it("should answer simple queries", async function () {
+  //   const query = `{
+  //        getByName(name: "duck") {
+  //              id
+  //              name
+  //       }
+  //      }`;
+  //
+  //   const json = await callSubgraph(
+  //       `http://localhost:${port}/hen/graph`,
+  //       query,
+  //       "getByName",
+  //       "Bearer " + token,
+  //   );
+  //
+  //   expect(json[0].id).to.equal(hen_ids["duck"]);
+  //   expect(json[0].name).to.equal("duck")
+  // });
+
   it("should query in both directions", async function () {
     const query = `{
          getByCoop(id: "${coop1_id}") {
@@ -140,6 +159,7 @@ describe("The Farm", function () {
     );
 
     expect(json.length).to.equal(2);
+    expect(json.map((res) => res.name)).to.include.members(["chuck", "duck"]);
     expect(json[0].coop.name).to.equal("purple");
     //This is a configuration problem, not a functionality problem
     // expect(json[0].coop.farm.name).to.equal("Emerdale")
@@ -148,6 +168,7 @@ describe("The Farm", function () {
   it("should get latest by default", async function () {
     const query = `{
          getById(id: "${coop1_id}") {
+              id
               name
          }}`;
 
@@ -158,6 +179,7 @@ describe("The Farm", function () {
       "Bearer " + token,
     );
 
+    assert.equal(json.id, coop1_id);
     assert.equal(json.name, "purple");
   });
 
@@ -316,7 +338,15 @@ async function buildModels() {
     },
   ];
 
-  await Promise.all(hens.map((hen) => hen_api.create(null, hen)));
+  let saved_hens = await Promise.all(
+    hens.map((hen) => {
+      return hen_api.create(null, hen);
+    }),
+  );
+
+  saved_hens.map((hen) => {
+    hen_ids[hen.data.name] = hen.headers["x-canonical-id"];
+  });
 }
 
 function setEnVars() {

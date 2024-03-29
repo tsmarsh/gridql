@@ -18,11 +18,9 @@ classDiagram
 
         getById(id: ID): Coop
         getByName(id: String): Coop
-        getByFarm(id: ID): [Coop]
     }
 
     class Hen {
-
         id: ID
         name: String!
         coop_id: Coop
@@ -31,5 +29,4 @@ classDiagram
 
         getById(id: ID): Hen
         getByName(name: String): [Hen]
-        getByCoop(id: ID): [Hen]
     }

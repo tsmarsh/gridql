@@ -45,6 +45,11 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
     let service = type.charAt(0).toLowerCase() + type.slice(1);
     const nme = pluralize(service, 2);
 
+    types[type.toLowerCase()].scalars.push({
+      name: `getBy${host}`,
+      id: "id",
+      query: `{"payload.${host.charAt(0).toLowerCase() + host.slice(1)}_id": "\${id}"}`,
+    });
     types[host.toLowerCase()].resolvers.push({
       name: nme,
       id: "id",

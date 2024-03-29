@@ -41,6 +41,7 @@ export class GraphSchemaVisitor extends BaseCstVisitor {
 
     const nme = pluralize(type.charAt(0).toLowerCase() + type.slice(1), 2);
 
+    types[type].methods.push(`getBy${host}(id: ID, at: Float): [${type}]`);
     types[host].fields.push(`${nme}: [${type}]`);
     return types;
   }

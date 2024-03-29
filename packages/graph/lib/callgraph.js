@@ -21,16 +21,18 @@ export const callSubgraph = async (url, query, queryName, authHeader) => {
 
   const text = await response.text();
 
+  let json;
   try {
-    let json = JSON.parse(text);
-    if (Object.hasOwnProperty.call(json, "errors")) {
-      //console.log("Received: \n", text);
-      logger.error(json);
-      throw new Error(json["errors"][0]["message"]);
-    }
-    return json["data"][queryName];
+    json = JSON.parse(text);
   } catch (err) {
-    logger.error("Error parsing json from response: ", err);
+    logger.error(`This isn't json: ${text}`);
+    logger.error(`Error parsing json from response: ${err}`);
     throw err;
   }
+
+  if (Object.hasOwnProperty.call(json, "errors")) {
+    logger.error(json);
+    throw new Error(json["errors"][0]["message"]);
+  }
+  return json["data"][queryName];
 };
