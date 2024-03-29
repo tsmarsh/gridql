@@ -10,16 +10,16 @@ classDiagram
 
     Coop *-- Hen
     class Coop {
-        name: String!
+        name: String! [faker: "location.country"]
         farm_id: Farm!
 
         getByName(name: String): Coop
     }
 
     class Hen {
-        name: String!
+        name: String! [faker: "person.firstName"]
         coop_id: Coop
-        eggs: Int
+        eggs: Int [min: 0]
         dob: Date
 
         getByName(name: String): [Hen]

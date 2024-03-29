@@ -65,8 +65,10 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
     let type = ctx.children.Type[0].image.toLowerCase();
 
     ctx.children.fieldClause.map((fc) => this.fieldClause(fc, dtoConfig));
-    if(Object.hasOwnProperty.call(ctx.children, "annotatedFieldClause")) {
-      ctx.children.annotatedFieldClause.map((fc) => this.annotatedFieldClause(fc, dtoConfig));
+    if (Object.hasOwnProperty.call(ctx.children, "annotatedFieldClause")) {
+      ctx.children.annotatedFieldClause.map((fc) =>
+        this.annotatedFieldClause(fc, dtoConfig),
+      );
     }
     ctx.children.methodClause.map((mc) => this.methodClause(mc, dtoConfig));
 
@@ -92,7 +94,7 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
   }
 
   annotatedFieldClause(ctx, dto) {
-    this.fieldClause(ctx, dto)
+    this.fieldClause(ctx, dto);
   }
 
   typeClause(ctx) {
@@ -140,4 +142,6 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
   argList(ctx) {
     return ctx.children.Identifier[0].image;
   }
+
+  varList() {}
 }

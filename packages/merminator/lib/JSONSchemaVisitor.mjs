@@ -18,14 +18,18 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
       type: "object",
       additionalProperties: false,
       required: [],
-      properties: {},
+      properties: {
+        id: {
+          type: "id",
+        },
+      },
     };
     this.schemas[name] = schema;
     for (let fc of ctx.children.fieldClause) {
       this.fieldClause(fc, schema);
     }
 
-    if(Object.hasOwnProperty.call(ctx.children, "annotatedFieldClause")){
+    if (Object.hasOwnProperty.call(ctx.children, "annotatedFieldClause")) {
       for (let fc of ctx.children.annotatedFieldClause) {
         this.annotatedFieldClause(fc, schema);
       }
@@ -43,7 +47,7 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
   }
 
   annotatedFieldClause(ctx, schema) {
-    this.fieldClause(ctx, schema)
+    this.fieldClause(ctx, schema);
   }
   typeClause(ctx, schema, name) {
     if ("Type" in ctx.children) {
@@ -87,6 +91,8 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
   methodClause() {}
 
   argList() {}
+
+  varList() {}
 
   compositionClause() {}
 }

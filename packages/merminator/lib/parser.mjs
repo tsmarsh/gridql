@@ -7,6 +7,9 @@ import {
   CloseBlock,
   Colon,
   Comma,
+  DoubleQuotedString,
+  //SingleQuotedString,
+  Number,
   ComposedOf,
   Identifier,
   OpenArgList,
@@ -58,17 +61,12 @@ export class RepositoryDiagram extends CstParser {
       $.CONSUME(Identifier);
       $.CONSUME(Colon);
       $.SUBRULE($.typeClause);
+      $.OPTION(() => {
+        $.CONSUME(OpenArray);
+        $.SUBRULE($.varList);
+        $.CONSUME(CloseArray);
+      });
     });
-
-    $.RULE("annotatedFieldClause", () => {
-      $.CONSUME(Identifier);
-      $.CONSUME(Colon);
-      $.SUBRULE($.typeClause);
-
-      $.CONSUME(OpenArgList);
-      $.SUBRULE($.argList);
-      $.CONSUME(CloseArgList);
-    })
 
     $.RULE("typeClause", () => {
       $.OR([
@@ -100,6 +98,21 @@ export class RepositoryDiagram extends CstParser {
           this.CONSUME(Identifier);
           this.CONSUME(Colon);
           this.SUBRULE($.typeClause);
+        },
+      });
+    });
+
+    $.RULE("varList", () => {
+      $.MANY_SEP({
+        SEP: Comma,
+        DEF: () => {
+          this.CONSUME(Identifier);
+          this.CONSUME(Colon);
+          $.OR([
+            { ALT: () => $.CONSUME(DoubleQuotedString) },
+            //{ ALT: () => $.CONSUME(SingleQuotedString) },
+            { ALT: () => $.CONSUME2(Number) },
+          ]);
         },
       });
     });

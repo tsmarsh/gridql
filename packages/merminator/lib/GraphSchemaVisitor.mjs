@@ -51,8 +51,10 @@ export class GraphSchemaVisitor extends BaseCstVisitor {
     let fields = [];
     let items = ctx.children.fieldClause.map((fc) => this.fieldClause(fc));
     fields = fields.concat(items);
-    if(Object.hasOwnProperty.call(ctx.children, "annotatedFieldClause")) {
-      let more = ctx.children.annotatedFieldClause.map((fc) => this.annotatedFieldClause(fc));
+    if (Object.hasOwnProperty.call(ctx.children, "annotatedFieldClause")) {
+      let more = ctx.children.annotatedFieldClause.map((fc) =>
+        this.annotatedFieldClause(fc),
+      );
       fields = fields.concat(more);
     }
     let methods = ctx.children.methodClause.map((mc) => this.methodClause(mc));
@@ -72,7 +74,7 @@ export class GraphSchemaVisitor extends BaseCstVisitor {
   }
 
   annotatedFieldClause(ctx) {
-    return this.fieldClause(ctx)
+    return this.fieldClause(ctx);
   }
 
   typeClause(ctx) {
@@ -103,4 +105,6 @@ export class GraphSchemaVisitor extends BaseCstVisitor {
 
     return [`${arg}: ${type}`, "at: Float"]; //need to fix the grammar here
   }
+
+  varList() {}
 }

@@ -41,12 +41,24 @@ export const CloseArgList = createToken({
 
 export const Colon = createToken({ name: "Colon", pattern: /:/ });
 export const Comma = createToken({ name: "Colon", pattern: /,/ });
+export const DoubleQuotedString = createToken({
+  name: "DoubleQuotedString",
+  pattern: /"[^"]*"/,
+});
+//export const SingleQuotedString = createToken({name: "SingleQuotedString", pattern: /'[^']+'/})
+export const Number = createToken({ name: "Number", pattern: /\d+\.\d+|\d+/ });
 export const ComposedOf = createToken({ name: "ComposedOf", pattern: /\*--/ });
 
 const WhiteSpace = createToken({
   name: "WhiteSpace",
   pattern: /\s+/,
   group: Lexer.SKIPPED,
+});
+
+const AnyCharacter = createToken({
+  name: "AnyCharacter",
+  pattern: /./,
+  group: Lexer.SKIPPED, // This will skip the token during parsing.
 });
 
 export const allTokens = [
@@ -62,7 +74,10 @@ export const allTokens = [
   CloseArray,
   Colon,
   Comma,
+  DoubleQuotedString,
+  Number,
   ComposedOf,
   OpenArgList,
   CloseArgList,
+  AnyCharacter,
 ];
