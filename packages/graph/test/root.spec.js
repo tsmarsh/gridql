@@ -46,6 +46,11 @@ describe("GraphQL Configuration", function () {
           id: "id",
           query: '{"id": "${id}"}',
         },
+        {
+          name: "getByFoo",
+          id: "foo",
+          query: '{"payload.foo": "${id}"}',
+        },
       ],
     };
 
@@ -57,6 +62,7 @@ describe("GraphQL Configuration", function () {
         }
         type Query {
           getById(id: String): Test
+          getByFoo(foo: String): Test
         }`,
     );
 
@@ -85,6 +91,36 @@ describe("GraphQL Configuration", function () {
         console.log(response.errors?.[0].message);
       } else {
         assert.equal(6, response.data?.getById.eggs);
+      }
+    });
+
+    it("should query a simple root by a member", async () => {
+      await db.insertOne({
+        id: "test_id",
+        payload: { foo: "bar", eggs: 6 },
+        createdAt,
+      });
+
+      const query = `{
+         getByFoo(foo: "bar") {
+               id,
+               eggs
+            }
+        }`;
+
+      const { root } = context(db, simple);
+
+      const response = await graphql({
+        schema,
+        source: query,
+        rootValue: root,
+      });
+
+      if (Object.hasOwnProperty.call(response, "errors")) {
+        console.log(response.errors?.[0].message);
+      } else {
+        assert.equal(6, response.data?.getByFoo.eggs);
+        assert.equal("test_id", response.data?.getByFoo.id);
       }
     });
   });

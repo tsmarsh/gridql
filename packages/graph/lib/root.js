@@ -113,8 +113,8 @@ export function getTimestamp(args) {
 
 export const singleton = (db, dtoFactory, id, queryTemplate) => {
   return async function (args, context) {
-    let i = args[id];
-    const query = processQueryTemplate(i, queryTemplate);
+    let argValue = args[id];
+    const query = processQueryTemplate(argValue, queryTemplate);
 
     let timestamp = getTimestamp(args);
 
@@ -126,11 +126,11 @@ export const singleton = (db, dtoFactory, id, queryTemplate) => {
     let result = results[0];
 
     if (result === null || result === undefined) {
-      logger.debug(`Nothing found for: ${i}`);
+      logger.debug(`Nothing found for: ${argValue}`);
       return result;
     } else {
       if (context === undefined || isAuthorized(context.subscriber, result)) {
-        result.payload.id = i;
+        result.payload.id = result.id;
         return dtoFactory.fillOne(
           result.payload,
           context === undefined ? null : context.auth_header,
