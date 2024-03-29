@@ -118,24 +118,24 @@ describe("The Farm", function () {
     expect(json.coops.length).to.equal(3);
   });
 
-  // it("should answer simple queries", async function () {
-  //   const query = `{
-  //        getByName(name: "duck") {
-  //              id
-  //              name
-  //       }
-  //      }`;
-  //
-  //   const json = await callSubgraph(
-  //       `http://localhost:${port}/hen/graph`,
-  //       query,
-  //       "getByName",
-  //       "Bearer " + token,
-  //   );
-  //
-  //   expect(json[0].id).to.equal(hen_ids["duck"]);
-  //   expect(json[0].name).to.equal("duck")
-  // });
+  it("should answer simple queries", async function () {
+    const query = `{
+         getByName(name: "duck") {
+               id
+               name
+        }
+       }`;
+
+    const json = await callSubgraph(
+      `http://localhost:${port}/hen/graph`,
+      query,
+      "getByName",
+      "Bearer " + token,
+    );
+
+    expect(json[0].id).to.equal(hen_ids["duck"]);
+    expect(json[0].name).to.equal("duck");
+  });
 
   it("should query in both directions", async function () {
     const query = `{

@@ -60,7 +60,7 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
   }
 
   classClause(ctx, types) {
-    let dtoConfig = { singletons: [], scalars: [], resolvers: [] };
+    let dtoConfig = { fields: [], singletons: [], scalars: [], resolvers: [] };
 
     let type = ctx.children.Type[0].image.toLowerCase();
 
@@ -68,6 +68,7 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
     ctx.children.methodClause.map((mc) => this.methodClause(mc, dtoConfig));
 
     dtoConfig.singletons.push(this.getById);
+    delete dtoConfig.fields;
     types[type] = dtoConfig;
     return types;
   }
@@ -82,6 +83,8 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
         queryName: "getById",
         url: this.graphUrl(service),
       });
+    } else {
+      dto.fields.push(name);
     }
   }
 
@@ -106,8 +109,10 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
     } else if ("arrayClause" in ctx.children) {
       dtoConfig.scalars.push({
         name: fn,
-        id: "id",
-        query: this.getByXid(fn),
+        id: id,
+        query: dtoConfig.fields.includes(id)
+          ? `{"payload.${id}": "\${id}"}`
+          : this.getByXid(fn),
       });
     }
 
