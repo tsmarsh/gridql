@@ -24,6 +24,12 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
     for (let fc of ctx.children.fieldClause) {
       this.fieldClause(fc, schema);
     }
+
+    if(Object.hasOwnProperty.call(ctx.children, "annotatedFieldClause")){
+      for (let fc of ctx.children.annotatedFieldClause) {
+        this.annotatedFieldClause(fc, schema);
+      }
+    }
   }
 
   fieldClause(ctx, schema) {
@@ -36,6 +42,9 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
     }
   }
 
+  annotatedFieldClause(ctx, schema) {
+    this.fieldClause(ctx, schema)
+  }
   typeClause(ctx, schema, name) {
     if ("Type" in ctx.children) {
       let tipe = ctx.children.Type[0].image.toLowerCase();

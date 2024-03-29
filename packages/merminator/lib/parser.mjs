@@ -60,6 +60,16 @@ export class RepositoryDiagram extends CstParser {
       $.SUBRULE($.typeClause);
     });
 
+    $.RULE("annotatedFieldClause", () => {
+      $.CONSUME(Identifier);
+      $.CONSUME(Colon);
+      $.SUBRULE($.typeClause);
+
+      $.CONSUME(OpenArgList);
+      $.SUBRULE($.argList);
+      $.CONSUME(CloseArgList);
+    })
+
     $.RULE("typeClause", () => {
       $.OR([
         { ALT: () => $.CONSUME(RequiredType) },

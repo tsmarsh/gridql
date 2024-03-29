@@ -48,7 +48,13 @@ export class GraphSchemaVisitor extends BaseCstVisitor {
 
   classClause(ctx, types) {
     let type = ctx.children.Type[0].image;
-    let fields = ctx.children.fieldClause.map((fc) => this.fieldClause(fc));
+    let fields = [];
+    let items = ctx.children.fieldClause.map((fc) => this.fieldClause(fc));
+    fields = fields.concat(items);
+    if(Object.hasOwnProperty.call(ctx.children, "annotatedFieldClause")) {
+      let more = ctx.children.annotatedFieldClause.map((fc) => this.annotatedFieldClause(fc));
+      fields = fields.concat(more);
+    }
     let methods = ctx.children.methodClause.map((mc) => this.methodClause(mc));
     methods.push(`getById(id: ID, at: Float): ${type}`);
     fields.push(`id: ID`);
@@ -63,6 +69,10 @@ export class GraphSchemaVisitor extends BaseCstVisitor {
     }
     let type = this.typeClause(ctx.children.typeClause[0]);
     return `${name}: ${type}`;
+  }
+
+  annotatedFieldClause(ctx) {
+    return this.fieldClause(ctx)
   }
 
   typeClause(ctx) {
