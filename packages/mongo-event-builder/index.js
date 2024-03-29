@@ -12,20 +12,27 @@ export const toCRUD = (change) => {
   return verbs[change.operationType];
 };
 
-export const toPayload = (id) => (change) => {
+export const toPayload = (id, col) => (change) => {
   const operationType = toCRUD(change);
   if (operationType === undefined) {
     return null;
   }
 
-  const documentId = Object.hasOwnProperty.call(change, "fullDocument")
-    ? change.fullDocument[id]
-    : change.documentKey[id];
-
-  const message = {
-    id: documentId.toString(),
-    operation: operationType,
-  };
+  let message;
+  if (Object.hasOwnProperty.call(change, "fullDocument")) {
+    message = {
+      id: change.fullDocument[id].toString(),
+      document: change.fullDocument,
+      source: col,
+      operation: operationType,
+    };
+  } else {
+    message = {
+      id: change.documentKey["_id"].toString(), //this is wrong
+      source: col,
+      operation: operationType,
+    };
+  }
 
   return { key: message.id, value: JSON.stringify(message) };
 };
@@ -38,9 +45,9 @@ export const run = async ({ collection, kafkaProducer, topic, id = "id" }) => {
   logger.info(`Starting builder: ${topic}, ${id}`);
 
   let payloads = [];
-  const changeStream = await collection.watch();
+  const changeStream = await collection.watch({ fullDocument: "updateLookup" });
 
-  const processChange = toPayload(id);
+  const processChange = toPayload(id, collection.s.namespace.collection);
 
   changeStream.on("change", async (change) => {
     logger.trace(`Change detected: ${change}`);

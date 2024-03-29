@@ -31,6 +31,8 @@ describe("MongoDB change listener", () => {
     let { topic, collection } = builders[0];
     await start(builders);
 
+    let col = collection.s.namespace.collection;
+
     let tc = new TestConsumer(kafka, { groupId: "test-group-1" });
     await tc.init(topic);
     await tc.run();
@@ -41,6 +43,8 @@ describe("MongoDB change listener", () => {
     let actual = await tc.current();
 
     assert.equal(actual.id, actual_id);
+    assert.equal(actual.source, col);
+    assert.equal(actual.document.name, "Test");
     assert.equal(actual.operation, "CREATE");
   }).timeout(10000);
 
