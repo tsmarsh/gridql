@@ -67,6 +67,7 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
     ctx.children.fieldClause.map((fc) => this.fieldClause(fc, dtoConfig));
     ctx.children.methodClause.map((mc) => this.methodClause(mc, dtoConfig));
 
+    dtoConfig.singletons.push(this.getById);
     types[type] = dtoConfig;
     return types;
   }
@@ -96,16 +97,11 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
 
   returnTypeClause(ctx, fn, id, dtoConfig) {
     if ("Type" in ctx.children) {
-      if (fn === "getById") {
-        dtoConfig.singletons.push(this.getById);
-      } else {
-        dtoConfig.singletons.push({
-          name: fn,
-          id: id,
-          query: this.getByX(fn),
-        });
-      }
-
+      dtoConfig.singletons.push({
+        name: fn,
+        id: id,
+        query: this.getByX(fn),
+      });
       return ctx.children.Type[0].image;
     } else if ("arrayClause" in ctx.children) {
       dtoConfig.scalars.push({

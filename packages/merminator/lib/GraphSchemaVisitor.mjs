@@ -50,6 +50,8 @@ export class GraphSchemaVisitor extends BaseCstVisitor {
     let type = ctx.children.Type[0].image;
     let fields = ctx.children.fieldClause.map((fc) => this.fieldClause(fc));
     let methods = ctx.children.methodClause.map((mc) => this.methodClause(mc));
+    methods.push(`getById(id: ID, at: Float): ${type}`);
+    fields.push(`id: ID`);
     types[type] = { fields, methods };
     return types;
   }
