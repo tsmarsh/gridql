@@ -1,6 +1,6 @@
 {
   "name": "@gridql/mongo-event-builder",
-  "version": "3.8.4",
+  "version": "3.8.8",
   "description": "Listens to mongo and emits events",
   "main": "index.js",
   "type": "module",
