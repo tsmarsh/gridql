@@ -19,7 +19,7 @@ classDiagram
     class Hen {
         name: String! [faker: "person.firstName"]
         coop_id: Coop
-        eggs: Int [min: 0]
+        eggs: Int [minimum: 0, maximum: 10]
         dob: Date
 
         getByName(name: String): [Hen]

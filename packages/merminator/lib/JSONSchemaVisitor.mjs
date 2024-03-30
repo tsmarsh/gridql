@@ -43,7 +43,7 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
       schema.properties[name] = { type: "string", format: "uuid" };
     } else {
       if (Object.hasOwnProperty.call(ctx.children, "varList")){
-
+        this.varList(type, ctx.children.varList)
       }
       schema.properties[name] = type;
     }
@@ -53,13 +53,14 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
   annotatedFieldClause(ctx, schema) {
     this.fieldClause(ctx, schema);
   }
+
   typeClause(ctx, schema, name) {
     if ("Type" in ctx.children) {
-      let tipe = ctx.children.Type[0].image.toLowerCase();
+      let tipe = ctx.children.Type[0].image;
       return this.isSpecial(tipe);
     } else if ("RequiredType" in ctx.children) {
       let image = ctx.children.RequiredType[0].image;
-      let important = image.substring(0, image.length - 1).toLowerCase();
+      let important = image.substring(0, image.length - 1);
       schema.required.push(name);
       return this.isSpecial(important);
     } else {
@@ -78,7 +79,7 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
     if (Object.hasOwnProperty.call(special, tipe)) {
       return special[tipe];
     } else {
-      return { type: tipe };
+      return { type: tipe.toLowerCase() };
     }
   }
 
@@ -97,14 +98,15 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
   argList() {}
 
   varList(type, varlist) {
-    for(v of varlist){
-      for(child of v.children){
+    for(let v of varlist){
         let value;
-        if(Object.hasOwnProperty.call(child, "DoubleQuotedString")){
-          value = child.DoubleQuotedString[0].image
+        if(Object.hasOwnProperty.call(v.children, "DoubleQuotedString")){
+          let foo = v.children.DoubleQuotedString[0].image;
+          value = foo.substring(1, foo.length - 1);
+        }else {
+          value = parseFloat(v.children.Number[0].image)
         }
-        type[child.Identifier[0].image] = "blah"
-      }
+        type[v.children.Identifier[0].image] = value;
     }
   }
 
