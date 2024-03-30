@@ -144,4 +144,6 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
   }
 
   varList() {}
+
+  valueClause() {}
 }

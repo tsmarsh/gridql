@@ -45,7 +45,11 @@ export const DoubleQuotedString = createToken({
   name: "DoubleQuotedString",
   pattern: /"[^"]*"/,
 });
-//export const SingleQuotedString = createToken({name: "SingleQuotedString", pattern: /'[^']+'/})
+
+export const SingleQuotedString = createToken({
+  name: "SingleQuotedString",
+  pattern: /'[^']*'/,
+});
 export const Number = createToken({ name: "Number", pattern: /\d+\.\d+|\d+/ });
 export const ComposedOf = createToken({ name: "ComposedOf", pattern: /\*--/ });
 
@@ -75,6 +79,7 @@ export const allTokens = [
   Colon,
   Comma,
   DoubleQuotedString,
+  SingleQuotedString,
   Number,
   ComposedOf,
   OpenArgList,

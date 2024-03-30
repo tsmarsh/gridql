@@ -107,4 +107,6 @@ export class GraphSchemaVisitor extends BaseCstVisitor {
   }
 
   varList() {}
+
+  valueClause() {}
 }

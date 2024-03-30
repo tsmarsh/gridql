@@ -8,7 +8,7 @@ import {
   Colon,
   Comma,
   DoubleQuotedString,
-  //SingleQuotedString,
+  SingleQuotedString,
   Number,
   ComposedOf,
   Identifier,
@@ -108,13 +108,17 @@ export class RepositoryDiagram extends CstParser {
         DEF: () => {
           this.CONSUME(Identifier);
           this.CONSUME(Colon);
-          $.OR([
-            { ALT: () => $.CONSUME(DoubleQuotedString) },
-            //{ ALT: () => $.CONSUME(SingleQuotedString) },
-            { ALT: () => $.CONSUME2(Number) },
-          ]);
+          this.SUBRULE($.valueClause);
         },
       });
+    });
+
+    $.RULE("valueClause", () => {
+      $.OR([
+        { ALT: () => $.CONSUME(DoubleQuotedString) },
+        { ALT: () => $.CONSUME(SingleQuotedString) },
+        { ALT: () => $.CONSUME2(Number) },
+      ]);
     });
 
     this.performSelfAnalysis();

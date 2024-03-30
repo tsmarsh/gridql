@@ -20,7 +20,8 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
       required: [],
       properties: {
         id: {
-          type: "id",
+          type: "string",
+          format: "uuid",
         },
       },
     };
@@ -42,12 +43,11 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
     if (name.endsWith("_id")) {
       schema.properties[name] = { type: "string", format: "uuid" };
     } else {
-      if (Object.hasOwnProperty.call(ctx.children, "varList")){
-        this.varList(type, ctx.children.varList)
+      if (Object.hasOwnProperty.call(ctx.children, "varList")) {
+        this.varList(type, ctx.children.varList[0]);
       }
       schema.properties[name] = type;
     }
-
   }
 
   annotatedFieldClause(ctx, schema) {
@@ -97,16 +97,23 @@ export class JSONSchemaVisitor extends BaseCstVisitor {
 
   argList() {}
 
-  varList(type, varlist) {
-    for(let v of varlist){
-        let value;
-        if(Object.hasOwnProperty.call(v.children, "DoubleQuotedString")){
-          let foo = v.children.DoubleQuotedString[0].image;
-          value = foo.substring(1, foo.length - 1);
-        }else {
-          value = parseFloat(v.children.Number[0].image)
-        }
-        type[v.children.Identifier[0].image] = value;
+  varList(type, v) {
+    for (let i = 0; i < v.children.Identifier.length; i++) {
+      type[v.children.Identifier[i].image] = this.valueClause(
+        v.children.valueClause[i],
+      );
+    }
+  }
+
+  valueClause(v) {
+    if (Object.hasOwnProperty.call(v.children, "DoubleQuotedString")) {
+      let foo = v.children.DoubleQuotedString[0].image;
+      return foo.substring(1, foo.length - 1);
+    } else if (Object.hasOwnProperty.call(v.children, "SingleQuotedString")) {
+      let foo = v.children.SingleQuotedString[0].image;
+      return foo.substring(1, foo.length - 1);
+    } else {
+      return parseFloat(v.children.Number[0].image);
     }
   }
 
