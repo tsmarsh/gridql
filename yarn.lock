@@ -969,11 +969,11 @@
     testcontainers "^10.8.2"
 
 "@testcontainers/mongodb@^10.7.2":
-  version "10.7.2"
-  resolved "https://registry.yarnpkg.com/@testcontainers/mongodb/-/mongodb-10.7.2.tgz#2151b027c16e7811e6c486ea6459f81a5deccfc0"
-  integrity sha512-Ocr/Dva6FAp872whLtayrRnnRyXzY38D/0Yp7mF2mdUNrLlI5g5w5vTjpMPumblVaIeFYct3TCbYeZ+AyOBWlw==
+  version "10.8.2"
+  resolved "https://registry.yarnpkg.com/@testcontainers/mongodb/-/mongodb-10.8.2.tgz#b385cc1e54ba8961894d6106fdac777eaf3a9088"
+  integrity sha512-mlD1F5tm9suG4XI9OpiK08OcJ+EMkzWVmvKKM/rxa6lBe3+X1qofp8VNYS4ry/jDu3Uh5ykJU4I1xGfIuM2riQ==
   dependencies:
-    testcontainers "^10.7.2"
+    testcontainers "^10.8.2"
 
 "@tootallnate/once@2":
   version "2.0.0"
