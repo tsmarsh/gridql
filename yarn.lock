@@ -5233,7 +5233,7 @@ mongodb-memory-server@^9.1.7, mongodb-memory-server@^9.1.8:
     mongodb-memory-server-core "9.1.8"
     tslib "^2.6.2"
 
-mongodb@^5.5.0, mongodb@^5.9.1:
+mongodb@^5.9.1:
   version "5.9.2"
   resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-5.9.2.tgz#39a73b9fbc87ac9d9c1aaf8aab5c5bb69e2b913e"
   integrity sha512-H60HecKO4Bc+7dhOv4sJlgvenK4fQNqqUIlXxZYQNbfEWSALGAwGoyJd/0Qwk4TttFXUOHJ2ZJQe/52ScaUwtQ==
