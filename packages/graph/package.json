@@ -17,6 +17,7 @@
   "devDependencies": {
     "mocha": "^10.3.0",
     "mongodb-memory-server": "^9.1.7",
-    "nyc": "^15.1.0"
+    "nyc": "^15.1.0",
+    "fetch-mock": "^9.11.0"
   }
 }

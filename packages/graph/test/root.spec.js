@@ -1,24 +1,24 @@
-import { MongoMemoryServer } from "mongodb-memory-server";
+import {MongoMemoryServer} from "mongodb-memory-server";
 
-import { MongoClient } from "mongodb";
+import {MongoClient} from "mongodb";
 
-import { context } from "../lib/root.js";
+import {context} from "../lib/root.js";
 
-import { buildSchema, graphql } from "graphql";
+import {buildSchema, graphql} from "graphql";
 
-import { expect } from "chai";
-
-import sinon from "sinon";
+import {expect} from "chai";
 
 import assert from "assert";
+
+import fetchMock from "fetch-mock";
+import {after, before, describe, it} from "mocha";
+
 
 let db;
 let test_db = "test_db";
 let mongo_collection = "simple";
 let mongod;
 let createdAt = new Date();
-
-import { after, afterEach, before, describe, it } from "mocha";
 
 before(async function () {
   mongod = await MongoMemoryServer.create();
@@ -206,10 +206,6 @@ describe("GraphQL Configuration", function () {
   });
 
   describe("Generating a simple scalar root with a dependency", () => {
-    afterEach(() => {
-      sinon.restore();
-    });
-
     const simple = {
       singletons: [
         {
@@ -245,12 +241,7 @@ describe("GraphQL Configuration", function () {
     );
 
     it("should call the dependency", async () => {
-      sinon.stub(global, "fetch").resolves({
-        text: () =>
-          Promise.resolve(
-            JSON.stringify({ data: { getById: { name: "mega" } } }),
-          ),
-      });
+      fetchMock.post("http://localhost:3000",{data: {getById: {name: "mega"}}})
 
       await db.insertOne({
         id: "chuck",
