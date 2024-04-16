@@ -28,7 +28,7 @@ Log4js.configure({
     },
   },
   categories: {
-    default: { appenders: ["out"], level: "info" },
+    default: { appenders: ["out"], level: "trace" },
   },
 });
 

@@ -29,7 +29,13 @@ export class GraphCall {
       body,
     })
       .then((response) => {
-        return response.text();
+        if(response.status !== 200) {
+          if (Object.hasOwnProperty.call(this.modules, "servererror")) {
+            this.modules.servererror.execute(body);
+          }
+        } else {
+          return response.text();
+        }
       })
       .catch((err) => {
         logger.error("Fetch Error: ", err);

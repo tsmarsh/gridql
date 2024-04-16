@@ -6,6 +6,18 @@ import assert from "assert";
 import fetchMock from "fetch-mock";
 
 import { GotIt } from "./GotIt.js";
+import Log4js from "log4js";
+
+Log4js.configure({
+  appenders: {
+    out: {
+      type: "stdout",
+    },
+  },
+  categories: {
+    default: { appenders: ["out"], level: "trace" },
+  },
+});
 
 describe("Should create a query from a template and forward the results", async function () {
   const data = {
@@ -52,9 +64,9 @@ describe("Should create a query from a template and forward the results", async 
   let body = '{getById(id: "bob"){name}}';
 
   it("should call the url and return the data", async () => {
-    fetchMock.post("http://testgraph.test", { data: { name: "diddly squat" } });
+    fetchMock.post("http://itworks.test", { data: { name: "diddly squat" } });
 
-    const gc = new GraphCall("http://testgraph.test", null, null, {});
+    const gc = new GraphCall("http://itworks.test", null, null, {});
 
     const result = await gc.callServer(body);
     assert.equal(result, '{"data":{"name":"diddly squat"}}');
@@ -62,14 +74,17 @@ describe("Should create a query from a template and forward the results", async 
   });
 
   it("should call the url and forward and error", async () => {
+    fetchMock.post("http://forwarderror.test", 503);
+
     const g = new GotIt(body);
 
-    const gc = new GraphCall("http://testgraph.test", null, null, {
+    const gc = new GraphCall("http://forwarderror.test", null, null, {
       servererror: g,
     });
 
     await gc.callServer(body);
     assert(g.called);
+    fetchMock.reset()
   });
 
   it("should parse out the data and return the json", async () => {
@@ -90,11 +105,11 @@ describe("Should create a query from a template and forward the results", async 
   });
 
   it("should pass to error if the response isn't json", async () => {
-    fetchMock.post("http://testgraph.test", "definitely not json");
+    fetchMock.post("http://notjson.test", "definitely not json");
 
     const g = new GotIt(data);
 
-    const gc = new GraphCall("http://testgraph.test", "getByName", template, {
+    const gc = new GraphCall("http://notjson.test", "getByName", template, {
       error: g,
     });
 
