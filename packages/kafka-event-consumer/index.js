@@ -12,6 +12,8 @@ import { parseUrl } from "@gridql/url";
 
 import Log4js from "log4js";
 
+import retry from "async-retry";
+
 let logger = Log4js.getLogger("gridql/kafka-event-consumer");
 
 export const init = async (configFile) => {
@@ -52,40 +54,46 @@ export const start = async (consumers) => {
   return Promise.all(consumers.map((consumer) => run(consumer)));
 };
 export const run = async ({ apiClient, kafkaConsumer, validator, topic }) => {
-  await kafkaConsumer.connect();
+    await retry(async ()=> {
+        await kafkaConsumer.connect();
 
-  await kafkaConsumer
-    .subscribe({ topic })
-    .then(() => {
-      logger.debug(`Subscribed: ${topic}`);
+        await kafkaConsumer.subscribe({ topic });
+
+        await kafkaConsumer.run({
+            eachMessage: eachMessage(apiClient, validator),
+        });
+    }, {
+        retries: 5,
+        factor: 2,
+        minTimeout: 1000,
+        onRetry: (err, attempt) => {
+            logger.info(`Attempt ${attempt}: Retrying subscription to ${topic}...`);
+        },
     })
-    .catch((reason) =>
-      logger.error(`Can't subscribe: ${JSON.stringify(reason)}`),
-    );
-
-  await kafkaConsumer.run({
-    eachMessage: async ({ message }) => {
-      let json_message = JSON.parse(message.value);
-
-      switch (json_message.operation) {
-        case "CREATE":
-          if (validator(json_message.payload)) {
-            apiClient.create(null, json_message.payload);
-          } else {
-            logger.error(`Payload error: ${json_message.payload}`);
-          }
-          break;
-        case "DELETE":
-          apiClient.delete(json_message.id);
-          break;
-        case "UPDATE":
-          if (validator(json_message.payload)) {
-            apiClient.update(json_message.id, json_message.payload);
-          } else {
-            logger.error(`Payload error:  ${json_message.payload}`);
-          }
-          break;
-      }
-    },
-  });
 };
+
+const eachMessage = (apiClient, validator) => async ({ message }) => {
+    let json_message = JSON.parse(message.value);
+
+    logger.trace(`Received message: ${message.value}`)
+
+    switch (json_message.operation) {
+        case "CREATE":
+            if (validator(json_message.payload)) {
+                apiClient.create(null, json_message.payload);
+            } else {
+                logger.error(`Payload error: ${json_message.payload}`);
+            }
+            break;
+        case "DELETE":
+            apiClient.delete(json_message.id);
+            break;
+        case "UPDATE":
+            if (validator(json_message.payload)) {
+                apiClient.update(json_message.id, json_message.payload);
+            } else {
+                logger.error(`Payload error:  ${json_message.payload}`);
+            }
+            break;
+    }
+}

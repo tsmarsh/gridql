@@ -13,6 +13,7 @@ import { swagger } from "@gridql/server/lib/swagger.js";
 import nock from "nock";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import Log4js from "log4js";
 
 let kafka;
 let kafkaContainer;
@@ -20,31 +21,23 @@ let kafkaContainer;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-async function createTopics(topic_names) {
-  const admin = kafka.admin();
-  await admin.connect();
-
-  const topics = topic_names.map((t) => {
-    return {
-      topic: t,
-      numPartitions: 1,
-      replicationFactor: 1,
-    };
-  });
-
-  await admin.createTopics({
-    topics: topics,
-  });
-
-  console.log("Topics created");
-  await admin.disconnect();
-}
+Log4js.configure({
+  appenders: {
+    out: {
+      type: "stdout",
+    },
+  },
+  categories: {
+    default: { appenders: ["out"], level: "info" },
+  },
+});
 
 before(async function () {
   this.timeout(360000);
 
   kafkaContainer = await new KafkaContainer()
     .withExposedPorts(9093)
+      .withKraft()
     .withEnvironment({ KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" })
     .withEnvironment({ KAFKA_DELETE_TOPIC_ENABLE: "true" })
     .start()
@@ -52,10 +45,10 @@ before(async function () {
       console.log("Kafka container failed to start: ", reason),
     );
 
+  // await delay(2000);
+
   console.log(
-    `Kafka running on: ${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(
-      9093,
-    )}`,
+    `Kafka running on: ${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}`,
   );
 
   let config = `{consumers: [{
@@ -94,13 +87,11 @@ before(async function () {
     __dirname + "/config/test.swagger.json",
     JSON.stringify(swaggerdoc, null, 4),
   );
-
-  await createTopics([
-    "create-kafka-test",
-    "update-kafka-test",
-    "delete-kafka-test",
-  ]);
 });
+
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
 
 after(async () => {
   console.log("-----CLEANING UP------");
@@ -230,7 +221,7 @@ const waitForApiCall = (apiMock) => {
       } else {
         console.log("Message not received, retrying");
       }
-    }, 100);
+    }, 1000);
 
     setTimeout(() => {
       clearInterval(intervalId);

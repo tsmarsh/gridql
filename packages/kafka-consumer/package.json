@@ -10,5 +10,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "c480d620f24013ae2822640d70374df7fc9dbd5e"
+  "gitHead": "c480d620f24013ae2822640d70374df7fc9dbd5e",
+  "dependencies": {
+    "async-retry": "^1.3.3"
+  }
 }
