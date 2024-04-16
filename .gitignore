@@ -6,6 +6,7 @@ lerna-debug.log
 .nyc_output/
 coverage/
 coverage.json
+packages/kafka-event-consumer/test/config/test.swagger.json
 packages/kafka-event-consumer/test/config/base.conf
 packages/mongo-event-builder/test/config/base.conf
 packages/merminator/test/config

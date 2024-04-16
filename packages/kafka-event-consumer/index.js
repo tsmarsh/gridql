@@ -54,46 +54,51 @@ export const start = async (consumers) => {
   return Promise.all(consumers.map((consumer) => run(consumer)));
 };
 export const run = async ({ apiClient, kafkaConsumer, validator, topic }) => {
-    await retry(async ()=> {
-        await kafkaConsumer.connect();
+  await retry(
+    async () => {
+      await kafkaConsumer.connect();
 
-        await kafkaConsumer.subscribe({ topic });
+      await kafkaConsumer.subscribe({ topic });
 
-        await kafkaConsumer.run({
-            eachMessage: eachMessage(apiClient, validator),
-        });
-    }, {
-        retries: 5,
-        factor: 2,
-        minTimeout: 1000,
-        onRetry: (err, attempt) => {
-            logger.info(`Attempt ${attempt}: Retrying subscription to ${topic}...`);
-        },
-    })
+      await kafkaConsumer.run({
+        eachMessage: eachMessage(apiClient, validator),
+      });
+    },
+    {
+      retries: 5,
+      factor: 2,
+      minTimeout: 1000,
+      onRetry: (err, attempt) => {
+        logger.info(`Attempt ${attempt}: Retrying subscription to ${topic}...`);
+      },
+    },
+  );
 };
 
-const eachMessage = (apiClient, validator) => async ({ message }) => {
+const eachMessage =
+  (apiClient, validator) =>
+  async ({ message }) => {
     let json_message = JSON.parse(message.value);
 
-    logger.trace(`Received message: ${message.value}`)
+    logger.trace(`Received message: ${message.value}`);
 
     switch (json_message.operation) {
-        case "CREATE":
-            if (validator(json_message.payload)) {
-                apiClient.create(null, json_message.payload);
-            } else {
-                logger.error(`Payload error: ${json_message.payload}`);
-            }
-            break;
-        case "DELETE":
-            apiClient.delete(json_message.id);
-            break;
-        case "UPDATE":
-            if (validator(json_message.payload)) {
-                apiClient.update(json_message.id, json_message.payload);
-            } else {
-                logger.error(`Payload error:  ${json_message.payload}`);
-            }
-            break;
+      case "CREATE":
+        if (validator(json_message.payload)) {
+          apiClient.create(null, json_message.payload);
+        } else {
+          logger.error(`Payload error: ${json_message.payload}`);
+        }
+        break;
+      case "DELETE":
+        apiClient.delete(json_message.id);
+        break;
+      case "UPDATE":
+        if (validator(json_message.payload)) {
+          apiClient.update(json_message.id, json_message.payload);
+        } else {
+          logger.error(`Payload error:  ${json_message.payload}`);
+        }
+        break;
     }
-}
+  };

@@ -1,18 +1,17 @@
-import {MongoMemoryServer} from "mongodb-memory-server";
+import { MongoMemoryServer } from "mongodb-memory-server";
 
-import {MongoClient} from "mongodb";
+import { MongoClient } from "mongodb";
 
-import {context} from "../lib/root.js";
+import { context } from "../lib/root.js";
 
-import {buildSchema, graphql} from "graphql";
+import { buildSchema, graphql } from "graphql";
 
-import {expect} from "chai";
+import { expect } from "chai";
 
 import assert from "assert";
 
 import fetchMock from "fetch-mock";
-import {after, before, describe, it} from "mocha";
-
+import { after, before, describe, it } from "mocha";
 
 let db;
 let test_db = "test_db";
@@ -241,7 +240,9 @@ describe("GraphQL Configuration", function () {
     );
 
     it("should call the dependency", async () => {
-      fetchMock.post("http://localhost:3000",{data: {getById: {name: "mega"}}})
+      fetchMock.post("http://localhost:3000", {
+        data: { getById: { name: "mega" } },
+      });
 
       await db.insertOne({
         id: "chuck",

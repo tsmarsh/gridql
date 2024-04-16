@@ -37,7 +37,7 @@ before(async function () {
 
   kafkaContainer = await new KafkaContainer()
     .withExposedPorts(9093)
-      .withKraft()
+    .withKraft()
     .withEnvironment({ KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" })
     .withEnvironment({ KAFKA_DELETE_TOPIC_ENABLE: "true" })
     .start()
@@ -90,7 +90,7 @@ before(async function () {
 });
 
 function delay(time) {
-  return new Promise(resolve => setTimeout(resolve, time));
+  return new Promise((resolve) => setTimeout(resolve, time));
 }
 
 after(async () => {
