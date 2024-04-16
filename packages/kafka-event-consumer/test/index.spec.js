@@ -45,8 +45,6 @@ before(async function () {
       console.log("Kafka container failed to start: ", reason),
     );
 
-  // await delay(2000);
-
   console.log(
     `Kafka running on: ${kafkaContainer.getHost()}:${kafkaContainer.getMappedPort(9093)}`,
   );
@@ -88,10 +86,6 @@ before(async function () {
     JSON.stringify(swaggerdoc, null, 4),
   );
 });
-
-function delay(time) {
-  return new Promise((resolve) => setTimeout(resolve, time));
-}
 
 after(async () => {
   console.log("-----CLEANING UP------");
