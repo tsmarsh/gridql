@@ -62,8 +62,6 @@ describe("Should create a query from a template and forward the results", async 
   });
 
   it("should call the url and forward and error", async () => {
-    //fetchMock.mock("http://testgraph.test", 502);
-
     const g = new GotIt(body);
 
     const gc = new GraphCall("http://testgraph.test", null, null, {
@@ -72,7 +70,6 @@ describe("Should create a query from a template and forward the results", async 
 
     await gc.callServer(body);
     assert(g.called);
-    fetchMock.reset();
   });
 
   it("should parse out the data and return the json", async () => {
