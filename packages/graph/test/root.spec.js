@@ -124,8 +124,8 @@ describe("GraphQL Configuration", function () {
     });
   });
 
-  describe("Generating a simple scalar root", () => {
-    const scalar = {
+  describe("Generating a simple vector root", () => {
+    const vector = {
       singletons: [
         {
           name: "getById",
@@ -133,7 +133,7 @@ describe("GraphQL Configuration", function () {
           query: '{"id": "${id}"}',
         },
       ],
-      scalars: [
+      vectors: [
         {
           name: "getByBreed",
           id: "breed",
@@ -155,7 +155,7 @@ describe("GraphQL Configuration", function () {
         }`,
     );
 
-    it("should create a simple scalr root", async () => {
+    it("should create a simple vector root", async () => {
       await Promise.all([
         db.insertOne({
           id: "chick_1",
@@ -182,7 +182,7 @@ describe("GraphQL Configuration", function () {
             }
         }`;
 
-      const { root } = context(db, scalar);
+      const { root } = context(db, vector);
 
       const response = await graphql({
         schema,
@@ -204,7 +204,7 @@ describe("GraphQL Configuration", function () {
     });
   });
 
-  describe("Generating a simple scalar root with a dependency", () => {
+  describe("Generating a simple singleton root with a dependency", () => {
     const simple = {
       singletons: [
         {

@@ -16,7 +16,7 @@ export const context = (db, config) => {
   };
 };
 
-export const root = (db, dtoFactory, { singletons, scalars }) => {
+export const root = (db, dtoFactory, { singletons, vectors }) => {
   let base = {};
 
   if (singletons !== undefined) {
@@ -25,9 +25,9 @@ export const root = (db, dtoFactory, { singletons, scalars }) => {
     }
   }
 
-  if (scalars !== undefined) {
-    for (const s of scalars) {
-      base[s.name] = scalar(db, dtoFactory, s.id, s.query);
+  if (vectors !== undefined) {
+    for (const s of vectors) {
+      base[s.name] = vector(db, dtoFactory, s.id, s.query);
     }
   }
 
@@ -53,7 +53,7 @@ export const processQueryTemplate = (id, queryTemplate) => {
   return json;
 };
 
-export const scalar = (db, dtoFactory, i, queryTemplate) => {
+export const vector = (db, dtoFactory, i, queryTemplate) => {
   return async function (args, context) {
     let id = args[i];
     let timestamp = getTimestamp(args);

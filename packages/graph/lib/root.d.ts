@@ -36,7 +36,7 @@ export function processQueryTemplate(id: string, queryTemplate: string): any;
  * @param queryTemplate - The query template string.
  * @returns A scalar resolver function.
  */
-export function scalar(
+export function vector(
   db: any,
   dtoFactory: DTOFactory,
   id: string,

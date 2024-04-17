@@ -45,7 +45,7 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
     let service = type.charAt(0).toLowerCase() + type.slice(1);
     const nme = pluralize(service, 2);
 
-    types[type.toLowerCase()].scalars.push({
+    types[type.toLowerCase()].vectors.push({
       name: `getBy${host}`,
       id: "id",
       query: `{"payload.${host.charAt(0).toLowerCase() + host.slice(1)}_id": "\${id}"}`,
@@ -60,7 +60,7 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
   }
 
   classClause(ctx, types) {
-    let dtoConfig = { fields: [], singletons: [], scalars: [], resolvers: [] };
+    let dtoConfig = { fields: [], singletons: [], vectors: [], resolvers: [] };
 
     let type = ctx.children.Type[0].image.toLowerCase();
 
@@ -116,7 +116,7 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
       });
       return ctx.children.Type[0].image;
     } else if ("arrayClause" in ctx.children) {
-      dtoConfig.scalars.push({
+      dtoConfig.vectors.push({
         name: fn,
         id: id,
         query: dtoConfig.fields.includes(id)
