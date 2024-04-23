@@ -1,6 +1,6 @@
 {
   "name": "@gridql/graph",
-  "version": "3.8.7",
+  "version": "3.8.9",
   "description": "Utilities for calling graphql inside the mesh",
   "main": "index.js",
   "author": "Tom Marsh",
@@ -15,9 +15,9 @@
     "graphql": "^16.8.1"
   },
   "devDependencies": {
+    "fetch-mock": "^9.11.0",
     "mocha": "^10.3.0",
     "mongodb-memory-server": "^9.1.7",
-    "nyc": "^15.1.0",
-    "fetch-mock": "^9.11.0"
+    "nyc": "^15.1.0"
   }
 }
