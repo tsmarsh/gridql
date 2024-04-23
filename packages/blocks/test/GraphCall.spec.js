@@ -84,7 +84,7 @@ describe("Should create a query from a template and forward the results", async 
 
     await gc.callServer(body);
     assert(g.called);
-    fetchMock.reset()
+    fetchMock.reset();
   });
 
   it("should parse out the data and return the json", async () => {

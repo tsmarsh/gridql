@@ -29,7 +29,7 @@ export class GraphCall {
       body,
     })
       .then((response) => {
-        if(response.status !== 200) {
+        if (response.status !== 200) {
           if (Object.hasOwnProperty.call(this.modules, "servererror")) {
             this.modules.servererror.execute(body);
           }
