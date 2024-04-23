@@ -57,7 +57,10 @@ export class GraphSchemaVisitor extends BaseCstVisitor {
       );
       fields = fields.concat(more);
     }
-    let methods = ctx.children.methodClause.map((mc) => this.methodClause(mc));
+    let methods = [];
+    if (Object.hasOwnProperty.call(ctx.children, "methodClause")) {
+      methods = ctx.children.methodClause.map((mc) => this.methodClause(mc));
+    }
     methods.push(`getById(id: ID, at: Float): ${type}`);
     fields.push(`id: ID`);
     types[type] = { fields, methods };
@@ -106,7 +109,7 @@ export class GraphSchemaVisitor extends BaseCstVisitor {
     return [`${arg}: ${type}`, "at: Float"]; //need to fix the grammar here
   }
 
-  varList() {}
+  varList() { }
 
-  valueClause() {}
+  valueClause() { }
 }

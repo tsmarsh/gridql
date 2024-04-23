@@ -70,7 +70,9 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
         this.annotatedFieldClause(fc, dtoConfig),
       );
     }
-    ctx.children.methodClause.map((mc) => this.methodClause(mc, dtoConfig));
+    if (Object.hasOwnProperty.call(ctx.children, "methodClause")) {
+      ctx.children.methodClause.map((mc) => this.methodClause(mc, dtoConfig));
+    }
 
     dtoConfig.singletons.push(this.getById);
     delete dtoConfig.fields;
