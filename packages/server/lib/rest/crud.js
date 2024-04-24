@@ -4,8 +4,6 @@ import swaggerUi from "swagger-ui-express";
 
 import { swagger } from "../swagger.js";
 
-import { PayloadRepository } from "./repository.js";
-
 import Log4js from "log4js";
 
 let logger = Log4js.getLogger("gridql/server");
@@ -20,9 +18,9 @@ export const calculateReaders = (doc, sub) => {
 };
 
 export const create = (repo, context, authorizer) => async (req, res) => {
-  const payload = req.body;
+  const doc = { payload: req.body };
 
-  const secure_payload = authorizer.secureData(req, payload);
+  const secure_payload = authorizer.secureData(req, doc);
 
   const result = await repo.create(secure_payload);
 
@@ -33,7 +31,7 @@ export const create = (repo, context, authorizer) => async (req, res) => {
     auth_response.redirect(303, `${context}/${result}`);
   } else {
     //should respond with diagnostics
-    logger.error(`Failed to create: ${payload}`);
+    logger.error(`Failed to create: ${doc}`);
     res.sendStatus(400);
   }
 };
@@ -41,7 +39,11 @@ export const create = (repo, context, authorizer) => async (req, res) => {
 export const read = (repo, authorizer) => async (req, res) => {
   let id = req.params.id;
 
-  const result = await repo.read(id, {});
+  const result = await repo.read(
+    id,
+    (d) => authorizer.isAuthorized(req, d),
+    {},
+  );
 
   if (result !== null && result !== undefined) {
     res.header("X-Canonical-Id", result.id);
@@ -62,13 +64,13 @@ export const update = (repo, context, authorizer) => async (req, res) => {
 
   let id = req.params.id;
 
-  let current = await repo.read(id, {});
+  let current = await repo.read(id, (d) => authorizer.isAuthorized(req, d), {});
 
   if (current !== null && current !== undefined) {
     if (authorizer.isAuthorized(req, current)) {
       let secured_update = authorizer.secureData(req, {
         payload,
-        id
+        id,
       });
 
       const result = await repo.create(secured_update);
@@ -89,10 +91,13 @@ export const update = (repo, context, authorizer) => async (req, res) => {
 
 export const remove = (repo, authorizer) => async (req, res) => {
   let id = req.params.id;
-  const result = await repo.read(id, {});
+  const result = await repo.read(
+    id,
+    (d) => authorizer.isAuthorized(req, d),
+    {},
+  );
 
   if (result !== null && result !== undefined) {
-
     if (authorizer.isAuthorized(req, result)) {
       await repo.remove(id);
       logger.debug(`Deleted: ${id}`);
@@ -116,7 +121,9 @@ export const list = (repo, context, authorizer) => async (req, res) => {
 export const bulk_create = (repo, context, authorizer) => async (req, res) => {
   let docs = req.body;
 
-  let secured_docs = docs.map((payload) => authorizer.secureData(req, {payload}))
+  let secured_docs = docs.map((payload) =>
+    authorizer.secureData(req, { payload }),
+  );
   let created = await repo.createMany(secured_docs);
 
   created.OK = created.OK.map((id) => `${context}/${id}`);

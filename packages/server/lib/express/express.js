@@ -6,7 +6,7 @@ import { createHandler } from "graphql-http/lib/use/express";
 
 import { JWTSubAuthorizer } from "@gridql/auth";
 
-import {valid} from "@gridql/payload-validator";
+import { valid } from "@gridql/payload-validator";
 
 import { init as crud_init } from "../rest/crud.js";
 
@@ -15,7 +15,7 @@ import express from "express";
 import cors from "cors";
 
 import Log4js from "log4js";
-import {PayloadRepository} from "../rest/repository.js";
+import { PayloadRepository } from "../rest/repository.js";
 
 let logger = Log4js.getLogger("gridql/server");
 
@@ -53,7 +53,7 @@ export const add_graphlettes = (graphlettes, app) => {
           return error;
         },
         context: async (req) => {
-          return {req};
+          return { req };
         },
       }),
     );
@@ -61,22 +61,21 @@ export const add_graphlettes = (graphlettes, app) => {
 };
 
 export const add_restlettes = (restlettes, url, app) => {
-  for (let { path, db, validator, schema, authorizer, repo} of restlettes) {
+  for (let { path, db, validator, schema, authorizer, repo } of restlettes) {
     logger.info("ReSTing up: " + path);
 
-    if(validator === undefined) {
+    if (validator === undefined) {
       logger.info("\tusing schema validation");
       validator = valid(schema);
     }
-    if(authorizer === undefined) {
+    if (authorizer === undefined) {
       logger.info("\tusing JWTSubAuthorizer");
-      authorizer = JWTSubAuthorizer
+      authorizer = JWTSubAuthorizer;
     }
-    if(repo === undefined) {
+    if (repo === undefined) {
       logger.info("\tusing Mongo Repository");
-      repo = new PayloadRepository(db, validator)
+      repo = new PayloadRepository(db, validator);
     }
-
 
     crud_init(url, path, app, schema, authorizer, repo);
   }

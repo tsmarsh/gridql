@@ -127,7 +127,10 @@ export const singleton = (db, dtoFactory, authorizer, id, queryTemplate) => {
       logger.debug(`Nothing found for: ${argValue}`);
       return result;
     } else {
-      if (context === undefined || authorizer.isAuthorized(context.req, result)) {
+      if (
+        context === undefined ||
+        authorizer.isAuthorized(context.req, result)
+      ) {
         result.payload.id = result.id;
         return dtoFactory.fillOne(
           result.payload,

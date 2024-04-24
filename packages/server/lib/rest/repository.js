@@ -11,27 +11,25 @@ export class PayloadRepository {
   create = async (doc) => {
     doc.createdAt = new Date();
 
-    if(!Object.hasOwnProperty.call(doc, "id")) {
+    if (!Object.hasOwnProperty.call(doc, "id")) {
       doc.id = uuid();
     }
 
     if (this.valid(doc.payload)) {
-      doc.authorized_readers = subscriber === null ? [] : [subscriber];
-
       await this.db.insertOne(doc, {
         writeConcern: { w: "majority" },
       });
-      return id;
+      return doc.id;
     }
   };
 
   createMany = async (clean_docs) => {
     let createdAt = new Date();
-    let docs = clean_docs.map((payload) => ({
-      payload,
-      createdAt,
-      id: uuid()
-    }));
+    let docs = clean_docs.map((doc) => {
+      doc.createdAt = createdAt;
+      doc.id = uuid();
+      return doc;
+    });
 
     let v = { OK: [], BAD_REQUEST: [] };
 
@@ -57,7 +55,6 @@ export class PayloadRepository {
 
   read = async (id, isAuthorized, { createdAt = new Date() }) => {
     let results;
-
 
     try {
       results = await this.db
@@ -107,7 +104,6 @@ export class PayloadRepository {
       logger.error(`Error listing: ${JSON.stringify(err, null, 2)}`);
     }
 
-    let authorized_results = results.filter((r) => isAuthorized(r));
     return results.map((r) => r.id);
   };
   remove = async (id) => {
@@ -120,9 +116,6 @@ export class PayloadRepository {
 
   list = async (secureRead) => {
     let match = secureRead({ deleted: { $exists: false } });
-    if (subscriber !== undefined && subscriber !== null) {
-      match.authorized_readers = { $in: [subscriber] };
-    }
 
     let results = [];
     try {

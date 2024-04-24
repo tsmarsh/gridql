@@ -12,7 +12,7 @@ import assert from "assert";
 
 import fetchMock from "fetch-mock";
 import { after, before, describe, it } from "mocha";
-import {JWTSubAuthorizer} from "@gridql/auth";
+import { JWTSubAuthorizer } from "@gridql/auth";
 
 let db;
 let test_db = "test_db";
