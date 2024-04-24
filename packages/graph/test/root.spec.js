@@ -12,6 +12,7 @@ import assert from "assert";
 
 import fetchMock from "fetch-mock";
 import { after, before, describe, it } from "mocha";
+import {JWTSubAuthorizer} from "@gridql/auth";
 
 let db;
 let test_db = "test_db";
@@ -78,7 +79,7 @@ describe("GraphQL Configuration", function () {
             }
         }`;
 
-      const { root } = context(db, simple);
+      const { root } = context(db, JWTSubAuthorizer, simple);
 
       const response = await graphql({
         schema,
@@ -107,7 +108,7 @@ describe("GraphQL Configuration", function () {
             }
         }`;
 
-      const { root } = context(db, simple);
+      const { root } = context(db, JWTSubAuthorizer, simple);
 
       const response = await graphql({
         schema,
@@ -182,7 +183,7 @@ describe("GraphQL Configuration", function () {
             }
         }`;
 
-      const { root } = context(db, vector);
+      const { root } = context(db, JWTSubAuthorizer, vector);
 
       const response = await graphql({
         schema,
@@ -260,7 +261,7 @@ describe("GraphQL Configuration", function () {
             }
         }`;
 
-      const { root } = context(db, simple);
+      const { root } = context(db, JWTSubAuthorizer, simple);
 
       const response = await graphql({
         schema,

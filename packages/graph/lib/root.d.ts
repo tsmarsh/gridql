@@ -3,11 +3,13 @@ import { DTOFactory } from "./DTOFactory";
 /**
  * Creates a context with a DTOFactory and root object.
  * @param db - The database object.
+ * @param authorizer - The authorizing object
  * @param config - The configuration object.
  * @returns An object containing the DTOFactory and root object.
  */
 export function context(
   db: any,
+  authorizer: any,
   config: any,
 ): { dtoFactory: DTOFactory; root: any };
 

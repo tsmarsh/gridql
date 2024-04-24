@@ -6,7 +6,6 @@ import { swagger } from "../swagger.js";
 
 import { PayloadRepository } from "./repository.js";
 
-import { getSub, isAuthorized } from "@gridql/auth";
 import Log4js from "log4js";
 
 let logger = Log4js.getLogger("gridql/server");
@@ -20,19 +19,18 @@ export const calculateReaders = (doc, sub) => {
   return [...readers];
 };
 
-export const create = (repo, context) => async (req, res) => {
+export const create = (repo, context, authorizer) => async (req, res) => {
   const payload = req.body;
 
-  const result = await repo.create(payload, {
-    subscriber: getSub(req.headers.authorization),
-  });
+  const secure_payload = authorizer.secureData(req, payload);
+
+  const result = await repo.create(secure_payload);
 
   if (result !== null) {
-    if (req.headers.authorization !== undefined) {
-      res.header("Authorization", req.headers.authorization);
-    }
+    let auth_response = authorizer.authorizeResponse(req, res);
+
     logger.debug(`Created: ${result}`);
-    res.redirect(303, `${context}/${result}`);
+    auth_response.redirect(303, `${context}/${result}`);
   } else {
     //should respond with diagnostics
     logger.error(`Failed to create: ${payload}`);
@@ -40,15 +38,15 @@ export const create = (repo, context) => async (req, res) => {
   }
 };
 
-export const read = (repo) => async (req, res) => {
+export const read = (repo, authorizer) => async (req, res) => {
   let id = req.params.id;
 
   const result = await repo.read(id, {});
 
   if (result !== null && result !== undefined) {
     res.header("X-Canonical-Id", result.id);
-    if (isAuthorized(getSub(req.headers.authorization), result)) {
-      res.json(result.payload);
+    if (authorizer.isAuthorized(req, result)) {
+      authorizer.authorizeResponse(req, res).json(result.payload);
     } else {
       res.status(403);
       res.json({});
@@ -59,25 +57,26 @@ export const read = (repo) => async (req, res) => {
   }
 };
 
-export const update = (repo, context) => async (req, res) => {
+export const update = (repo, context, authorizer) => async (req, res) => {
   const payload = req.body;
 
-  let subscriber = getSub(req.headers.authorization);
   let id = req.params.id;
 
   let current = await repo.read(id, {});
 
   if (current !== null && current !== undefined) {
-    if (isAuthorized(subscriber, current)) {
-      const result = await repo.create(payload, {
-        subscriber,
-        id,
+    if (authorizer.isAuthorized(req, current)) {
+      let secured_update = authorizer.secureData(req, {
+        payload,
+        id
       });
-      if (req.headers.authorization !== undefined) {
-        res.header("Authorization", req.headers.authorization);
-      }
+
+      const result = await repo.create(secured_update);
+
+      let secured_response = authorizer.authorizeResponse(req, res);
+
       logger.debug(`Updated: ${result}`);
-      res.redirect(303, `${context}/${id}`);
+      secured_response.redirect(303, `${context}/${id}`);
     } else {
       res.status(403);
       res.json({});
@@ -88,12 +87,13 @@ export const update = (repo, context) => async (req, res) => {
   }
 };
 
-export const remove = (repo) => async (req, res) => {
+export const remove = (repo, authorizer) => async (req, res) => {
   let id = req.params.id;
   const result = await repo.read(id, {});
 
   if (result !== null && result !== undefined) {
-    if (isAuthorized(getSub(req.headers.authorization), result)) {
+
+    if (authorizer.isAuthorized(req, result)) {
       await repo.remove(id);
       logger.debug(`Deleted: ${id}`);
       res.json({ deleted: id });
@@ -107,32 +107,29 @@ export const remove = (repo) => async (req, res) => {
   }
 };
 
-export const list = (repo, context) => async (req, res) => {
-  let subscriber = getSub(req.headers.authorization);
-
-  let results = await repo.list(subscriber);
+export const list = (repo, context, authorizer) => async (req, res) => {
+  let results = await repo.list((query) => authorizer.secureRead(req, query));
 
   res.json(results.map((r) => `${context}/${r}`));
 };
 
-export const bulk_create = (repo, context) => async (req, res) => {
+export const bulk_create = (repo, context, authorizer) => async (req, res) => {
   let docs = req.body;
 
-  let created = await repo.createMany(docs, {
-    subscriber: getSub(req.headers.authorization),
-  });
+  let secured_docs = docs.map((payload) => authorizer.secureData(req, {payload}))
+  let created = await repo.createMany(secured_docs);
 
   created.OK = created.OK.map((id) => `${context}/${id}`);
   res.json(created);
 };
 
-export const bulk_read = (repo) => async (req, res) => {
+export const bulk_read = (repo, authorizer) => async (req, res) => {
   let ids = req.query.ids.split(",");
 
-  let found = await repo.readMany(ids, {
-    subscriber: getSub(req.headers.authorization),
-  });
-  res.json(found);
+  let found = await repo.readMany(ids, (d) => authorizer.secureData(req, d));
+
+  let authorized_docs = found.filter((r) => authorizer.isAuthorized(req, r));
+  res.json(authorized_docs);
 };
 
 export const bulk_delete = (repo) => async (req, res) => {
@@ -149,10 +146,8 @@ const options = {
   },
 };
 
-export const init = (url, context, app, db, validate, schema) => {
+export const init = (url, context, app, schema, authorizer, repo) => {
   logger.info(`API Docks are available on: ${context}/api-docs`);
-
-  let repo = new PayloadRepository(db, validate);
 
   let swaggerDoc = swagger(context, schema, url);
 
@@ -168,19 +163,19 @@ export const init = (url, context, app, db, validate, schema) => {
 
   app.use(express.json());
 
-  app.post(`${context}/bulk`, bulk_create(repo));
-  app.get(`${context}/bulk`, bulk_read(repo));
+  app.post(`${context}/bulk`, bulk_create(repo, context, authorizer));
+  app.get(`${context}/bulk`, bulk_read(repo, authorizer));
   app.delete(`${context}/bulk`, bulk_delete(repo));
 
-  app.post(`${context}`, create(repo, context));
+  app.post(`${context}`, create(repo, context, authorizer));
 
-  app.get(`${context}`, list(repo, context));
+  app.get(`${context}`, list(repo, context, authorizer));
 
-  app.get(`${context}/:id`, read(repo));
+  app.get(`${context}/:id`, read(repo, authorizer));
 
-  app.put(`${context}/:id`, update(repo, context));
+  app.put(`${context}/:id`, update(repo, context, authorizer));
 
-  app.delete(`${context}/:id`, remove(repo));
+  app.delete(`${context}/:id`, remove(repo, authorizer));
 
   return app;
 };

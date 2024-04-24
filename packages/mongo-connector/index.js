@@ -23,7 +23,7 @@ export async function buildDb(mongo) {
   }, promiseRetryOptions);
 
   const response = await client.db("admin").command({ ping: 1 });
-  logger.trace(`Ping response: ${response}`);
+  logger.trace(`Ping response: ${JSON.stringify(response, null, 2)}`);
 
   return client.db(mongo["db"]).collection(mongo["collection"]);
 }

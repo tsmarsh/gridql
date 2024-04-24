@@ -8,14 +8,14 @@ export class PayloadRepository {
     this.valid = valid;
   }
 
-  create = async (payload, { id = uuid(), subscriber = null }) => {
-    let doc = {
-      payload,
-      createdAt: new Date(),
-      id,
-    };
+  create = async (doc) => {
+    doc.createdAt = new Date();
 
-    if (this.valid(payload)) {
+    if(!Object.hasOwnProperty.call(doc, "id")) {
+      doc.id = uuid();
+    }
+
+    if (this.valid(doc.payload)) {
       doc.authorized_readers = subscriber === null ? [] : [subscriber];
 
       await this.db.insertOne(doc, {
@@ -25,13 +25,12 @@ export class PayloadRepository {
     }
   };
 
-  createMany = async (payloads, { subscriber = null }) => {
+  createMany = async (clean_docs) => {
     let createdAt = new Date();
-    let docs = payloads.map((payload) => ({
+    let docs = clean_docs.map((payload) => ({
       payload,
       createdAt,
-      id: uuid(),
-      authorized_readers: subscriber === null ? [] : [subscriber],
+      id: uuid()
     }));
 
     let v = { OK: [], BAD_REQUEST: [] };
@@ -56,8 +55,10 @@ export class PayloadRepository {
     return v;
   };
 
-  read = async (id, { createdAt = new Date() }) => {
+  read = async (id, isAuthorized, { createdAt = new Date() }) => {
     let results;
+
+
     try {
       results = await this.db
         .find({
@@ -71,21 +72,17 @@ export class PayloadRepository {
       logger.error(`Can't read: ${JSON.stringify(err)}`);
     }
 
-    //console.log("Reading: " + JSON.stringify(results));
     return results[0];
   };
 
-  readMany = async (ids, { subscriber = null }) => {
-    let match = {
+  readMany = async (ids, secureRead) => {
+    let match = secureRead({
       id: { $in: ids },
       deleted: { $exists: false },
-    };
-
-    if (subscriber !== undefined && subscriber !== null) {
-      match.authorized_readers = { $in: [subscriber] };
-    }
+    });
 
     let results = [];
+
     try {
       results = await this.db
         .aggregate([
@@ -110,6 +107,7 @@ export class PayloadRepository {
       logger.error(`Error listing: ${JSON.stringify(err, null, 2)}`);
     }
 
+    let authorized_results = results.filter((r) => isAuthorized(r));
     return results.map((r) => r.id);
   };
   remove = async (id) => {
@@ -120,9 +118,8 @@ export class PayloadRepository {
     await this.db.updateMany({ id: { $in: ids } }, { $set: { deleted: true } });
   };
 
-  list = async (subscriber) => {
-    let match = { deleted: { $exists: false } };
-
+  list = async (secureRead) => {
+    let match = secureRead({ deleted: { $exists: false } });
     if (subscriber !== undefined && subscriber !== null) {
       match.authorized_readers = { $in: [subscriber] };
     }
