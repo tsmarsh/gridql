@@ -10,6 +10,7 @@ import assert from "assert";
 import { builderFactory } from "@gridql/payload-generator";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import Log4js from "log4js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -20,6 +21,17 @@ let config;
 let server;
 
 let builder;
+
+Log4js.configure({
+  appenders: {
+    out: {
+      type: "stdout",
+    },
+  },
+  categories: {
+    default: { appenders: ["out"], level: "trace" },
+  },
+});
 
 before(async function () {
   mongod = await MongoMemoryServer.create({ instance: { port: 60222 } });

@@ -11,6 +11,7 @@ import assert from "assert";
 import jwt from "jsonwebtoken";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import Log4js from "log4js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -28,6 +29,17 @@ let other_token;
 
 let payload;
 const secret = "secret_test";
+
+Log4js.configure({
+  appenders: {
+    out: {
+      type: "stdout",
+    },
+  },
+  categories: {
+    default: { appenders: ["out"], level: "trace" },
+  },
+});
 
 before(async function () {
   mongod = await MongoMemoryServer.create({ instance: { port: 60230 } });

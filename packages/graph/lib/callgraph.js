@@ -27,7 +27,7 @@ export const callSubgraph = async (url, query, queryName, authHeader) => {
   } catch (err) {
     logger.error(`This isn't json: ${text}`);
     logger.error(`Error parsing json from response: ${err}`);
-    throw err;
+    json = {"errors" : [{"message": text}]};
   }
 
   if (Object.hasOwnProperty.call(json, "errors")) {

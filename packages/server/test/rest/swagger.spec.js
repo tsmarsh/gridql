@@ -17,6 +17,7 @@ import jwt from "jsonwebtoken";
 import { v4 } from "uuid";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import Log4js from "log4js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -32,6 +33,16 @@ let id;
 
 let payload;
 
+Log4js.configure({
+  appenders: {
+    out: {
+      type: "stdout",
+    },
+  },
+  categories: {
+    default: { appenders: ["out"], level: "trace" },
+  },
+});
 before(async function () {
   mongod = await MongoMemoryServer.create({ instance: { port: 60323 } });
   client = new MongoClient(mongod.getUri());
