@@ -1,6 +1,6 @@
 {
   "name": "@gridql/blocks",
-  "version": "3.8.9",
+  "version": "3.9.0",
   "description": "Listens to mongo and emits events",
   "main": "index.js",
   "author": "Tom Marsh",
@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@gridql/mongo-connector": "^3.8.1",
+    "@gridql/mongo-connector": "^3.9.0",
     "@gridql/payload-validator": "^3.8.4",
     "@gridql/url": "^3.8.4",
     "@pushcorn/hocon-parser": "^1.2.9",

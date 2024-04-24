@@ -1,6 +1,6 @@
 {
   "name": "@gridql/graph",
-  "version": "3.8.9",
+  "version": "3.9.0",
   "description": "Utilities for calling graphql inside the mesh",
   "main": "index.js",
   "author": "Tom Marsh",
@@ -11,7 +11,7 @@
     "test": "nyc mocha --exit"
   },
   "dependencies": {
-    "@gridql/auth": "^3.8.1",
+    "@gridql/auth": "^3.9.0",
     "graphql": "^16.8.1"
   },
   "devDependencies": {
