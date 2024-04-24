@@ -2,15 +2,13 @@ import parser from "@pushcorn/hocon-parser";
 
 import { buildDb } from "@gridql/mongo-connector";
 
-import {JWTSubAuthorizer} from "@gridql/auth";
+import { JWTSubAuthorizer } from "@gridql/auth";
 
 import { context } from "@gridql/graph";
 
 import fs from "fs";
 
 import { buildSchema } from "graphql";
-
-import { valid } from "@gridql/payload-validator";
 
 import Log4js from "log4js";
 
@@ -38,7 +36,7 @@ export const process_restlettes = async (config) => {
 
       let sch = JSON.parse(fs.readFileSync(schema).toString());
 
-      return { path, schema: sch };
+      return { path, schema: sch, db };
     }),
   );
 };
