@@ -1,4 +1,5 @@
 import { DTOFactory } from "./DTOFactory.js";
+import Handlebars from "handlebars";
 
 import Log4js from "log4js";
 
@@ -33,17 +34,17 @@ export const root = (db, dtoFactory, authorizer, { singletons, vectors }) => {
 };
 
 export const processQueryTemplate = (id, queryTemplate) => {
-  const queryWithId = queryTemplate.replace("${id}", id);
+  let query = queryTemplate({id});
   let json;
 
   try {
-    json = JSON.parse(queryWithId);
+    json = JSON.parse(query);
   } catch (e) {
     logger.error(
       `Failed to create query:
       Query Template: ${queryTemplate}
       id: ${id}
-      Updated Query: ${queryWithId}
+      Updated Query: ${query}
     `,
     );
     throw e;
@@ -52,6 +53,7 @@ export const processQueryTemplate = (id, queryTemplate) => {
 };
 
 export const vector = (db, dtoFactory, authorizer, i, queryTemplate) => {
+  const template = Handlebars.compile(queryTemplate);
   return async function (args, context) {
     let id = args[i];
     let timestamp = getTimestamp(args);
@@ -59,7 +61,7 @@ export const vector = (db, dtoFactory, authorizer, i, queryTemplate) => {
       $lt: new Date(timestamp),
     };
 
-    let query = processQueryTemplate(id, queryTemplate);
+    let query = processQueryTemplate(id, template);
 
     query.createdAt = time_filter;
 
@@ -110,9 +112,10 @@ export function getTimestamp(args) {
 }
 
 export const singleton = (db, dtoFactory, authorizer, id, queryTemplate) => {
+  const template = Handlebars.compile(queryTemplate);
   return async function (args, context) {
     let argValue = args[id];
-    const query = processQueryTemplate(argValue, queryTemplate);
+    const query = processQueryTemplate(argValue, template);
 
     let timestamp = getTimestamp(args);
 

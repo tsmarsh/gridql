@@ -15,19 +15,19 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
   getById = {
     name: "getById",
     id: "id",
-    query: '{"id": "${id}"}',
+    query: '{"id": "{{id}}"}',
   };
 
   getByX(x) {
     let type = x.slice("getBy".length);
 
-    return `{"payload.${type.charAt(0).toLowerCase() + type.slice(1)}": "\${id}"}`;
+    return `{"payload.${type.charAt(0).toLowerCase() + type.slice(1)}": "{{id}}"}`;
   }
 
   getByXid(x) {
     let type = x.slice("getBy".length);
 
-    return `{"payload.${type.charAt(0).toLowerCase() + type.slice(1)}_id": "\${id}"}`;
+    return `{"payload.${type.charAt(0).toLowerCase() + type.slice(1)}_id": "{{id}}"}`;
   }
 
   statementClause(ctx) {
@@ -48,7 +48,7 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
     types[type.toLowerCase()].vectors.push({
       name: `getBy${host}`,
       id: "id",
-      query: `{"payload.${host.charAt(0).toLowerCase() + host.slice(1)}_id": "\${id}"}`,
+      query: `{"payload.${host.charAt(0).toLowerCase() + host.slice(1)}_id": "{{id}}"}`,
     });
     types[host.toLowerCase()].resolvers.push({
       name: nme,
@@ -123,7 +123,7 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
         name: fn,
         id: id,
         query: dtoConfig.fields.includes(id)
-          ? `{"payload.${id}": "\${id}"}`
+          ? `{"payload.${id}": "{{id}}"}`
           : this.getByXid(fn),
       });
     }
