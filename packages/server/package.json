@@ -1,6 +1,6 @@
 {
   "name": "@gridql/server",
-  "version": "3.9.0",
+  "version": "3.9.1",
   "description": "graphql server scaffolding",
   "author": "Tom Marsh",
   "type": "module",
@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
-    "@gridql/auth": "^3.9.0",
-    "@gridql/graph": "^3.9.0",
+    "@gridql/auth": "^3.9.1",
+    "@gridql/graph": "^3.9.1",
     "@gridql/mongo-connector": "^3.9.0",
     "@gridql/payload-generator": "^3.8.4",
     "@gridql/payload-validator": "^3.8.4",
