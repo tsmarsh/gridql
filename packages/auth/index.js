@@ -31,7 +31,7 @@ export const JWTSubAuthorizer = {
         Add metadata so that reads can vetted against credentials
      */
   secureData: (req, data) => {
-    const cred = JWTSubAuthorizer.getCredential(req);q
+    const cred = JWTSubAuthorizer.getCredential(req);
 
     data.authorized_readers =
       cred == null ? [] : [JWTSubAuthorizer.getCredential(req)];
