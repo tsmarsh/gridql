@@ -1,10 +1,6 @@
 import parser from "@pushcorn/hocon-parser";
 
-import { buildDb } from "@gridql/mongo-connector";
-
 import { JWTSubAuthorizer } from "@gridql/auth";
-
-import { context } from "@gridql/graph";
 
 import fs from "fs";
 
@@ -14,17 +10,13 @@ import Log4js from "log4js";
 
 let logger = Log4js.getLogger("gridql/server");
 
-export const process_graphlettes = async (config, authorizer) => {
+export const process_graphlettes = async (config) => {
   return await Promise.all(
     config["graphlettes"].map(async ({ mongo, dtoConfig, schema, path }) => {
-      let db = await buildDb(mongo);
-
-      let { root } = context(db, authorizer, dtoConfig);
-
       let sch = fs.readFileSync(schema).toString();
       const graphSchema = buildSchema(sch);
 
-      return { path, graph: { schema: graphSchema, root } };
+      return { mongo, dtoConfig, schema: graphSchema, path };
     }),
   );
 };
@@ -32,11 +24,9 @@ export const process_graphlettes = async (config, authorizer) => {
 export const process_restlettes = async (config) => {
   return await Promise.all(
     config["restlettes"].map(async ({ mongo, schema, path }) => {
-      let db = await buildDb(mongo);
-
       let sch = JSON.parse(fs.readFileSync(schema).toString());
 
-      return { path, schema: sch, db };
+      return { path, mongo, schema: sch };
     }),
   );
 };

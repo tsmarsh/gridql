@@ -44,18 +44,7 @@ after(async function () {
 
 describe("Single node", function () {
   this.timeout(5000);
-  let db;
-  let config;
   let server;
-
-  before(async function () {
-    db = client.db("test").collection("test");
-
-    config = await parse(__dirname + "/../config/simple.conf");
-    let app = await build_app(config);
-
-    server = await app.listen(config.port);
-  });
 
   after(() => server.close());
 
@@ -83,6 +72,13 @@ describe("Single node", function () {
   });
 
   it("should build a simple server", async function () {
+    const db = client.db("test").collection("test");
+
+    const config = await parse(__dirname + "/../config/simple.conf");
+    const app = await build_app(config);
+
+    server = await app.listen(config.port);
+
     await db.insertOne({
       id: "testid",
       payload: { foo: "bar", eggs: 6 },
