@@ -44,12 +44,12 @@ describe("GraphQL Configuration", function () {
         {
           name: "getById",
           id: "id",
-          query: '{"id": "${id}"}',
+          query: '{"id": "{{id}}"}',
         },
         {
           name: "getByFoo",
           id: "foo",
-          query: '{"payload.foo": "${id}"}',
+          query: '{"payload.foo": "{{id}}"}',
         },
       ],
     };
@@ -131,14 +131,14 @@ describe("GraphQL Configuration", function () {
         {
           name: "getById",
           id: "id",
-          query: '{"id": "${id}"}',
+          query: '{"id": "{{id}}"}',
         },
       ],
       vectors: [
         {
           name: "getByBreed",
           id: "breed",
-          query: '{"payload.breed": "${id}"}',
+          query: '{"payload.breed": "{{id}}"}',
         },
       ],
     };
@@ -211,7 +211,7 @@ describe("GraphQL Configuration", function () {
         {
           name: "getById",
           id: "id",
-          query: '{"id": "${id}"}',
+          query: '{"id": "{{id}}"}',
         },
       ],
       resolvers: [
