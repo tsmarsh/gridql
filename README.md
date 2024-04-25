@@ -8,34 +8,29 @@
 
 <img src="./docs/gridql_logo.png" width="200" align="left" />
 
-Scaffolding for converting event documents into a mesh
+Like the idea of [Events Driven Architecture](https://aws.amazon.com/event-driven-architecture/) but you don't like the idea of building tens of dumb services that all do the same thing? 
 
-GraphQL has a [Conway's Law](https://en.wikipedia.org/wiki/Conway%27s_law) problem: its built by a company that has lots of smaller business units that are controlled, synchronised and presetend by a single umbrella company [Meta](https://about.meta.com). So they solved the distributed nature of GraphQL with a single point of failure [Apollo](https://www.apollographql.com/). 
+Need to get a scalable, fast enough, data tier up and running in minutes? 
 
-Apollo Server has lots of advantages if you didn't start with GraphQL in mind. It does an excellent job presenting ReST and RPC API as GraphQL. So you can quickly experiement with graph design if you're new to the concept. It also 'enhances' your graph with conventional queiry tools that make the api look more like SQL giving your filters and pagination out of the box. But if you've ever built a distributed system you're probably asking questions like:
+Tired of having to release each microservice on its own?
 
-* How well does this perform?
-* What happens when the gateway fails?
-* How do the filters work?
-* How does it handle dependent system failures?
+Like the idea of GraphQL because you don't have to build a BFF but hate mutations?
 
-And of course, it handles them as well as it can, given this architecture: poorly. 
+Like ReST, but don't like using it for queries?
 
-Apollo Server is a developer tool that gets a poor-to-mid solution to market quickly. Because of that, its very attractive organisations that value time to market over performance. This trade off is nearly always the right solution.
+We got you.
 
-But that's not why we're here. We want to do a native GraphQL solution. An actual GraphQL solution that is genuinely distributed, performant and fast to market. 
-
-This is how you do it.
-
+GridQL isn't your destination it's your starting point. Scaffolding, composed of a small, pre-canned set of opinions to start your journey towards building a modern(ish) platform.
 
 ## Components
 
 ### [Repository](packages/server/README.md)
 
 The mesh is composed of Repositories. These follow the Repository pattern documented
-by [Martin Fowler in Patterns of Enterprise Architecture](https://martinfowler.com/eaaCatalog/repository.html).
+by [Martin Fowler in Patterns of Enterprise Architecture](https://martinfowler.com/eaaCatalog/repository.html). The repository server two functions:
 
-The premise is that we access data via a simple set of commands:
+
+The premise is that we access data via a simple set of commands for state transfer:
 
 * Create
 * CreateMany
@@ -251,6 +246,8 @@ Each repository is responsible for its own authorization. A basic 'auth' is prov
 
 Dramatically reduces the complexity of generating the config.
 
+**This is just a QoL thing. You should get used to the config, its where all the fun happens**
+
 #### [Payload Generator](packages/payload-generator/README.md)
 
 You went to the effort of creating json schema to describe your payloads... might as well use it to generate you test data.
@@ -269,9 +266,13 @@ This is not a hard problem to solve, this is how we solved.
 
 **You're probably better off using your own module.**
 
-## Example App
+#### [Authorizer](packages/auth/README.md)
 
-[MicroBlog](https://github.com/tsmarsh/microblog) is a very quick an dirty 'Twitter Clone' to demonstrate how you can use this library for rapid role out of a data layer.
+We have a couple of examples of how you might implement authorization. But really, we don't know how you need to authorize access to your data. 
+
+There is a simple enough pattern to follow. Please feel free to contribute back any generic solutions.
+
+**You're probably better off using your own module.**
 
 ## To Do
 
