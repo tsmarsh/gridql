@@ -20,21 +20,21 @@ export const root = (db, dtoFactory, authorizer, { singletons, vectors }) => {
 
   if (singletons !== undefined) {
     for (const s of singletons) {
-      base[s.name] = singleton(db, dtoFactory, authorizer, s.id, s.query);
+      base[s.name] = singleton(db, dtoFactory, authorizer, s.query);
     }
   }
 
   if (vectors !== undefined) {
     for (const s of vectors) {
-      base[s.name] = vector(db, dtoFactory, authorizer, s.id, s.query);
+      base[s.name] = vector(db, dtoFactory, authorizer, s.query);
     }
   }
 
   return base;
 };
 
-export const processQueryTemplate = (id, queryTemplate) => {
-  let query = queryTemplate({id});
+export const processQueryTemplate = (parameters, queryTemplate) => {
+  let query = queryTemplate(parameters);
   let json;
 
   try {
@@ -52,16 +52,15 @@ export const processQueryTemplate = (id, queryTemplate) => {
   return json;
 };
 
-export const vector = (db, dtoFactory, authorizer, i, queryTemplate) => {
+export const vector = (db, dtoFactory, authorizer, queryTemplate) => {
   const template = Handlebars.compile(queryTemplate);
   return async function (args, context) {
-    let id = args[i];
     let timestamp = getTimestamp(args);
     let time_filter = {
       $lt: new Date(timestamp),
     };
 
-    let query = processQueryTemplate(id, template);
+    let query = processQueryTemplate(args, template);
 
     query.createdAt = time_filter;
 
@@ -111,11 +110,10 @@ export function getTimestamp(args) {
   return at;
 }
 
-export const singleton = (db, dtoFactory, authorizer, id, queryTemplate) => {
+export const singleton = (db, dtoFactory, authorizer, queryTemplate) => {
   const template = Handlebars.compile(queryTemplate);
   return async function (args, context) {
-    let argValue = args[id];
-    const query = processQueryTemplate(argValue, template);
+    const query = processQueryTemplate(args, template);
 
     let timestamp = getTimestamp(args);
 
@@ -127,7 +125,7 @@ export const singleton = (db, dtoFactory, authorizer, id, queryTemplate) => {
     let result = results[0];
 
     if (result === null || result === undefined) {
-      logger.debug(`Nothing found for: ${argValue}`);
+      logger.debug(`Nothing found for: ${args}`);
       return result;
     } else {
       if (
