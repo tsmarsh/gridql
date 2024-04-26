@@ -14,7 +14,6 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
 
   getById = {
     name: "getById",
-    id: "id",
     query: '{"id": "{{id}}"}',
   };
 
@@ -47,12 +46,10 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
 
     types[type.toLowerCase()].vectors.push({
       name: `getBy${host}`,
-      id: "id",
       query: `{"payload.${host.charAt(0).toLowerCase() + host.slice(1)}_id": "{{id}}"}`,
     });
     types[host.toLowerCase()].resolvers.push({
       name: nme,
-      id: "id",
       queryName: "getBy" + host,
       url: this.graphUrl(service),
     });
@@ -121,9 +118,8 @@ export class ConfiguratorConfigVisitor extends BaseCstVisitor {
     } else if ("arrayClause" in ctx.children) {
       dtoConfig.vectors.push({
         name: fn,
-        id: id,
         query: dtoConfig.fields.includes(id)
-          ? `{"payload.${id}": "{{id}}"}`
+          ? `{"payload.${id}": "{{${id}}}"}`
           : this.getByXid(fn),
       });
     }

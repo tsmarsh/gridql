@@ -43,13 +43,11 @@ describe("GraphQL Configuration", function () {
       singletons: [
         {
           name: "getById",
-          id: "id",
           query: '{"id": "{{id}}"}',
         },
         {
           name: "getByFoo",
-          id: "foo",
-          query: '{"payload.foo": "{{id}}"}',
+          query: '{"payload.foo": "{{foo}}"}',
         },
       ],
     };
@@ -130,15 +128,13 @@ describe("GraphQL Configuration", function () {
       singletons: [
         {
           name: "getById",
-          id: "id",
           query: '{"id": "{{id}}"}',
         },
       ],
       vectors: [
         {
           name: "getByBreed",
-          id: "breed",
-          query: '{"payload.breed": "{{id}}"}',
+          query: '{"payload.breed": "{{breed}}"}',
         },
       ],
     };

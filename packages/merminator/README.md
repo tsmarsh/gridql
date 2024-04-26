@@ -132,36 +132,28 @@ classDiagram
 
   Farm *-- Coop
   class Farm {
-    id: ID
     name: String!
 
-    getById(id: ID): Farm
     getByName(name: String): Farm
   }
 
 
   Coop *-- Hen
   class Coop {
-    id: ID
     name: String!
     farm_id: Farm!
 
-    getById(id: ID): Coop
     getByName(id: String): Coop
     getByFarm(id: ID): [Coop]
   }
 
   class Hen {
-
-    id: ID
     name: String!
     coop_id: Coop
     eggs: Int
     dob: Date
 
-    getById(id: ID): Hen
     getByName(name: String): [Hen]
-    getByCoop(id: ID): [Hen]
   }
 ```
 
@@ -214,19 +206,15 @@ A optional argument of `at: Float` is added to every query so that the state / t
 ```
 Coop *-- Hen
 class Hen {
-    id: ID
     name: String!
     coop_id: Coop
     eggs: Int
     dob: Date
 
-    getById(id: ID): Hen
     getByName(name: String): [Hen]
     getByCoop(id: ID): [Hen]
 }
 ```
-
-`getByID`. This is required for foreignKey look ups
 
 In this example coop_id and the `Coop *-- Hen` relationship that `getByCoop(id: ID): [Hen]` is required, however, it currently isn't added by merminator.
 
