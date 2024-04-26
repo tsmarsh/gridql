@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/tsmarsh/gridql/actions/workflows/node.js.yml/badge.svg)](https://github.com/tsmarsh/gridql/actions/workflows/node.js.yml)
 [![codecov](https://codecov.io/gh/tsmarsh/gridql/branch/main/graph/badge.svg?token=b9wLrKB3dU)](https://codecov.io/gh/tsmarsh/gridql)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/tsmarsh/gridql/badge)](https://scorecard.dev/viewer/?uri=github.com/tsmarsh/gridql)
 
 # gridql
 
