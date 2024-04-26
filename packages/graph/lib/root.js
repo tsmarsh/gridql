@@ -43,7 +43,7 @@ export const processQueryTemplate = (parameters, queryTemplate) => {
     logger.error(
       `Failed to create query:
       Query Template: ${queryTemplate}
-      id: ${id}
+      parameters: ${parameters}
       Updated Query: ${query}
     `,
     );
