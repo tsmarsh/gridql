@@ -967,11 +967,11 @@
   integrity sha512-sXXKG+uL9IrKqViTtao2Ws6dy0znu9sOaP1di/jKGW1M6VssO8vlpXCQcpZ+jisQ1tTFAC5Jo/EOzFbggBagFQ==
 
 "@testcontainers/kafka@^10.7.2":
-  version "10.8.2"
-  resolved "https://registry.yarnpkg.com/@testcontainers/kafka/-/kafka-10.8.2.tgz#efbcb7658713e2684c0467e33c9b11134982b8e1"
-  integrity sha512-sa/rLYfAlQZWSoIdBrpa1HlFClF4PjgXiMCHv3YtMu6sF/Tke77QyVMGtBaUrK9HOjBtTWmObxLOgwEaYG32Ow==
+  version "10.9.0"
+  resolved "https://registry.yarnpkg.com/@testcontainers/kafka/-/kafka-10.9.0.tgz#4053877bc1111f2b04668519381971ffbe9438cb"
+  integrity sha512-DyGFqEsrGihFr5KvvJvzT1epysJT8OEhXQJALAnLysZQDO+NQ8OtWb7MDKPJ/r/oxKWfZ8+/0l/GiVje8I70Zg==
   dependencies:
-    testcontainers "^10.8.2"
+    testcontainers "^10.9.0"
 
 "@testcontainers/mongodb@^10.7.2":
   version "10.8.2"
@@ -7361,7 +7361,7 @@ test-exclude@^6.0.0:
     glob "^7.1.4"
     minimatch "^3.0.4"
 
-testcontainers@^10.7.2, testcontainers@^10.8.2:
+testcontainers@^10.7.2, testcontainers@^10.8.2, testcontainers@^10.9.0:
   version "10.9.0"
   resolved "https://registry.yarnpkg.com/testcontainers/-/testcontainers-10.9.0.tgz#9d5b2ef189ed32a0be376d013017ba8593a09e93"
   integrity sha512-LN+cKAOd61Up9SVMJW+3VFVGeVQG8JBqZhEQo2U0HBfIsAynyAXcsLBSo+KZrOfy9SBz7pGHctWN/KabLDbNFA==
