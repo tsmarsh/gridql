@@ -5366,9 +5366,9 @@ node-gyp@^10.0.0:
     which "^4.0.0"
 
 node-jq@^4.3.1:
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/node-jq/-/node-jq-4.3.1.tgz#c2a082210745fd1c54df5965b9ba5d046fce9d68"
-  integrity sha512-5iU9L/7j8ZNHwhxDRJXgyza6JnEKqdkNcJ9+ul5HZnhConhg/v9JdvA9agJ8XA+qBgGr1MK/MeHDrdK1tL2QAA==
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/node-jq/-/node-jq-4.4.0.tgz#830642631cb5ebf24bf2a9216c98aafb9301438b"
+  integrity sha512-L9FC47dT/nT0wCLn7K/xNdFd4N0uLsfHBZaAGdQr2ViledRnohnX9dLhVWVtN0iT0pFzjHL7fyJUt3RCW1woYw==
   dependencies:
     bin-build "^3.0.0"
     is-valid-path "^0.1.1"
