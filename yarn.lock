@@ -5730,9 +5730,9 @@ open@^8.4.0:
     is-wsl "^2.2.0"
 
 openapi-client-axios@^7.2.0, openapi-client-axios@^7.5.4:
-  version "7.5.4"
-  resolved "https://registry.yarnpkg.com/openapi-client-axios/-/openapi-client-axios-7.5.4.tgz#6132d093c530c95d269186e748eb513e50c77c4e"
-  integrity sha512-ZVzGRobfNjV1EWVlQ8R1ycpx+36bn6uAxrQotII6gy9fFmEoYgkMBM2qlrbfa3JgPO8G3A2bLF4dV7oyCJK2Pg==
+  version "7.5.5"
+  resolved "https://registry.yarnpkg.com/openapi-client-axios/-/openapi-client-axios-7.5.5.tgz#4cb2bb7484ff9d1c92d9ff509db235cc35d64f38"
+  integrity sha512-pgCo1z+rxtYmGQXzB+N5DiXvRurTP6JqV+Ao/wtaGUMIIIM+znh3nTztps+FZS8mZgWnDHpdEzL9bWtZuWuvoA==
   dependencies:
     bath-es5 "^3.0.3"
     dereference-json-schema "^0.2.1"
