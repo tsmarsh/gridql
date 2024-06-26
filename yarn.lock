@@ -968,11 +968,11 @@
   integrity sha512-sXXKG+uL9IrKqViTtao2Ws6dy0znu9sOaP1di/jKGW1M6VssO8vlpXCQcpZ+jisQ1tTFAC5Jo/EOzFbggBagFQ==
 
 "@testcontainers/kafka@^10.7.2":
-  version "10.9.0"
-  resolved "https://registry.yarnpkg.com/@testcontainers/kafka/-/kafka-10.9.0.tgz#4053877bc1111f2b04668519381971ffbe9438cb"
-  integrity sha512-DyGFqEsrGihFr5KvvJvzT1epysJT8OEhXQJALAnLysZQDO+NQ8OtWb7MDKPJ/r/oxKWfZ8+/0l/GiVje8I70Zg==
+  version "10.10.0"
+  resolved "https://registry.yarnpkg.com/@testcontainers/kafka/-/kafka-10.10.0.tgz#25207002f30c4d145305befb2efb3ed983102e9d"
+  integrity sha512-LrJcuKk2gRtHAz/0W+X0hxAg4foJEJE2eQEjkQXamPN04uT45tiPdsWDkSqUk/jNVtZKBW7VGNeEYzo9qaKq9Q==
   dependencies:
-    testcontainers "^10.9.0"
+    testcontainers "^10.10.0"
 
 "@testcontainers/mongodb@^10.7.2":
   version "10.9.0"
@@ -1030,13 +1030,14 @@
     "@types/node" "*"
     "@types/ssh2" "*"
 
-"@types/dockerode@^3.3.24":
-  version "3.3.26"
-  resolved "https://registry.yarnpkg.com/@types/dockerode/-/dockerode-3.3.26.tgz#e7f5f06e985ee045c9b9643fd9c34684deb80cd1"
-  integrity sha512-/K+I9bGhRO2SvyIHisGeOsy/ypxnWLz8+Rde9S2tNNEKa3r91e0XMYIEq2D+kb7srm7xrmpAR0CDKfXoZOr4OA==
+"@types/dockerode@^3.3.29":
+  version "3.3.29"
+  resolved "https://registry.yarnpkg.com/@types/dockerode/-/dockerode-3.3.29.tgz#7d3c99a91c381115015587a8a2a71002029e1740"
+  integrity sha512-5PRRq/yt5OT/Jf77ltIdz4EiR9+VLnPF+HpU4xGFwUqmV24Co2HKBNW3w+slqZ1CYchbcDeqJASHDYWzZCcMiQ==
   dependencies:
     "@types/docker-modem" "*"
     "@types/node" "*"
+    "@types/ssh2" "*"
 
 "@types/json-schema@^7.0.6":
   version "7.0.15"
@@ -2598,10 +2599,10 @@ dir-glob@^3.0.1:
   dependencies:
     path-type "^4.0.0"
 
-docker-compose@^0.24.6:
-  version "0.24.7"
-  resolved "https://registry.yarnpkg.com/docker-compose/-/docker-compose-0.24.7.tgz#66490508d5a08c221402108be8d5236d9567bb94"
-  integrity sha512-CdHl9n0S4+bl4i6MaxDQHNjqB1FdvuDirrDTzPKmdiMpheQqCjgsny0GZ2VhvN7qHTY0833lRlKWZgrkn1i6cg==
+docker-compose@^0.24.8:
+  version "0.24.8"
+  resolved "https://registry.yarnpkg.com/docker-compose/-/docker-compose-0.24.8.tgz#6c125e6b9e04cf68ced47e2596ef2bb93ee9694e"
+  integrity sha512-plizRs/Vf15H+GCVxq2EUvyPK7ei9b/cVesHvjnX4xaXjM9spHe2Ytq0BitndFgvTJ3E3NljPNUEl7BAN43iZw==
   dependencies:
     yaml "^2.2.2"
 
@@ -7266,10 +7267,10 @@ swagger-ui-express@^5.0.0:
   dependencies:
     swagger-ui-dist ">=5.0.0"
 
-tar-fs@^3.0.5:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/tar-fs/-/tar-fs-3.0.5.tgz#f954d77767e4e6edf973384e1eb95f8f81d64ed9"
-  integrity sha512-JOgGAmZyMgbqpLwct7ZV8VzkEB6pxXFBVErLtb+XCOqzc6w1xiWKI9GVd6bwk68EX7eJ4DWmfXVmq8K2ziZTGg==
+tar-fs@^3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/tar-fs/-/tar-fs-3.0.6.tgz#eaccd3a67d5672f09ca8e8f9c3d2b89fa173f217"
+  integrity sha512-iokBDQQkUyeXhgPYaZxmczGPhnhXZ0CmrqI+MOb/WFGS9DW5wnfrLgtjUJBvz50vQ3qfRwJ62QVoCFu8mPVu5w==
   dependencies:
     pump "^3.0.0"
     tar-stream "^3.1.5"
@@ -7367,26 +7368,26 @@ test-exclude@^6.0.0:
     glob "^7.1.4"
     minimatch "^3.0.4"
 
-testcontainers@^10.7.2, testcontainers@^10.9.0:
-  version "10.9.0"
-  resolved "https://registry.yarnpkg.com/testcontainers/-/testcontainers-10.9.0.tgz#9d5b2ef189ed32a0be376d013017ba8593a09e93"
-  integrity sha512-LN+cKAOd61Up9SVMJW+3VFVGeVQG8JBqZhEQo2U0HBfIsAynyAXcsLBSo+KZrOfy9SBz7pGHctWN/KabLDbNFA==
+testcontainers@^10.10.0, testcontainers@^10.7.2, testcontainers@^10.9.0:
+  version "10.10.0"
+  resolved "https://registry.yarnpkg.com/testcontainers/-/testcontainers-10.10.0.tgz#374b82f298efdcf64867b29bbe3d42a0c552881b"
+  integrity sha512-XlAdr6XzxM9ywTc5D6xA97Ug8dCotDnrOgOqmy3vYnAwUYrzhzAwrp791g97QAMvDOYp2pxkJl/P4WxuUbGShw==
   dependencies:
     "@balena/dockerignore" "^1.0.2"
-    "@types/dockerode" "^3.3.24"
+    "@types/dockerode" "^3.3.29"
     archiver "^5.3.2"
     async-lock "^1.4.1"
     byline "^5.0.0"
-    debug "^4.3.4"
-    docker-compose "^0.24.6"
+    debug "^4.3.5"
+    docker-compose "^0.24.8"
     dockerode "^3.3.5"
     get-port "^5.1.1"
     node-fetch "^2.7.0"
     proper-lockfile "^4.1.2"
     properties-reader "^2.3.0"
     ssh-remote-port-forward "^1.0.4"
-    tar-fs "^3.0.5"
-    tmp "^0.2.1"
+    tar-fs "^3.0.6"
+    tmp "^0.2.3"
 
 text-extensions@^1.0.0:
   version "1.9.0"
@@ -7423,7 +7424,7 @@ tmp@^0.0.33:
   dependencies:
     os-tmpdir "~1.0.2"
 
-tmp@^0.2.1, tmp@~0.2.1:
+tmp@^0.2.3, tmp@~0.2.1:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.2.3.tgz#eb783cc22bc1e8bebd0671476d46ea4eb32a79ae"
   integrity sha512-nZD7m9iCPC5g0pYmcaxogYKggSfLsdxl8of3Q/oIbqCqLLIO9IAF0GWjX1z9NZRHPiXv8Wex4yDCaZsgEw0Y8w==
