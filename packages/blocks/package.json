@@ -24,7 +24,7 @@
     "test": "nyc mocha --exit"
   },
   "devDependencies": {
-    "fetch-mock": "^9.11.0",
+    "fetch-mock": "^10.0.7",
     "nyc": "^15.1.0",
     "testcontainers": "^10.7.2"
   },
