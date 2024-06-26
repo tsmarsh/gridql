@@ -16,7 +16,7 @@
     "@gridql/server": "^3.9.2",
     "axios": "^1.4.0",
     "chai": "^4.4.1",
-    "chai-http": "^4.4.0",
+    "chai-http": "^5.0.0",
     "cheerio": "^1.0.0-rc.12",
     "mocha": "^10.3.0",
     "mongodb-memory-server": "^9.1.8",
