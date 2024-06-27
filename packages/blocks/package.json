@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "fetch-mock": "^10.0.7",
-    "nyc": "^15.1.0",
+    "nyc": "^17.0.0",
     "testcontainers": "^10.7.2"
   },
   "gitHead": "c480d620f24013ae2822640d70374df7fc9dbd5e"

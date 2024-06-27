@@ -23,7 +23,7 @@
     "@gridql/kafka-consumer": "^3.8.9",
     "@testcontainers/kafka": "^10.7.2",
     "@testcontainers/mongodb": "^10.7.2",
-    "nyc": "^15.1.0",
+    "nyc": "^17.0.0",
     "testcontainers": "^10.7.2"
   },
   "gitHead": "c480d620f24013ae2822640d70374df7fc9dbd5e"
