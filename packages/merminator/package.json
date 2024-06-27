@@ -20,7 +20,7 @@
     "cheerio": "^1.0.0-rc.12",
     "mocha": "^10.3.0",
     "mongodb-memory-server": "^9.1.8",
-    "nyc": "^15.1.0",
+    "nyc": "^17.0.0",
     "openapi-client-axios": "^7.2.0",
     "sinon": "^18.0.0"
   },
