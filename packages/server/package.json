@@ -41,7 +41,7 @@
     "chai": "^5.1.0",
     "chai-http": "^4.4.0",
     "cheerio": "^1.0.0-rc.12",
-    "mongodb-memory-server": "^9.1.7",
+    "mongodb-memory-server": "^10.0.0",
     "openapi-client-axios": "^7.5.4",
     "sinon": "^18.0.0"
   },
