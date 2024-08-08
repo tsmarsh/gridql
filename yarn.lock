@@ -2954,10 +2954,10 @@ fastq@^1.6.0:
   dependencies:
     reusify "^1.0.4"
 
-fetch-mock@^10.0.7:
-  version "10.1.1"
-  resolved "https://registry.yarnpkg.com/fetch-mock/-/fetch-mock-10.1.1.tgz#09f5f14aff5587095fc1632c271523a5aff1e79c"
-  integrity sha512-R6MwxuGwlUe0K6GzdLY1Wa9voX/GbUBDZjNHBsvlBhrpXurCYpQN4EW0iFCmtWddDTuS0ubR93OtFSgy9E/L2A==
+fetch-mock@^11.0.1:
+  version "11.0.1"
+  resolved "https://registry.yarnpkg.com/fetch-mock/-/fetch-mock-11.0.1.tgz#acc5648984626154a4f0ee1205887e9f94f226d1"
+  integrity sha512-2FJRAxK9YJYQHvd9/PxNjptYSjTkDsI+1n0fBM6TQkwgvaYlYK49Y2VWvuh63gGJLkjRCoXevl9EMraR4n+dpg==
   dependencies:
     debug "^4.1.1"
     dequal "^2.0.3"
