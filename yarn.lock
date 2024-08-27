@@ -1063,11 +1063,11 @@
     testcontainers "^10.11.0"
 
 "@testcontainers/mongodb@^10.7.2":
-  version "10.11.0"
-  resolved "https://registry.yarnpkg.com/@testcontainers/mongodb/-/mongodb-10.11.0.tgz#231554748cad8fc4d7a6f6ff7c62f5b2c11faa34"
-  integrity sha512-kX5zdoGqDEEdpQI4xoCUobS89vW8d36C9HPeonS9xnyhTB5ST8dxO0iWalUMD2/yOUUtN7Vi7teua0zOiS2VuA==
+  version "10.12.0"
+  resolved "https://registry.yarnpkg.com/@testcontainers/mongodb/-/mongodb-10.12.0.tgz#8d8f30fccb1363a599ea8afa0baac1d24b2458be"
+  integrity sha512-SGGv2L2frCWIdxkG+3JUm+ISZztwfUlTjG0NlDM6e9gG1ihe0dYhjYR1nwnP14NJYaj/i0TR2rXbZn+HG7e9Aw==
   dependencies:
-    testcontainers "^10.11.0"
+    testcontainers "^10.12.0"
 
 "@tufjs/canonical-json@2.0.0":
   version "2.0.0"
@@ -6845,10 +6845,10 @@ test-exclude@^6.0.0:
     glob "^7.1.4"
     minimatch "^3.0.4"
 
-testcontainers@^10.11.0, testcontainers@^10.7.2:
-  version "10.11.0"
-  resolved "https://registry.yarnpkg.com/testcontainers/-/testcontainers-10.11.0.tgz#53fb19b2922ae02374df384077e27c3e5b5f4850"
-  integrity sha512-TYgpR+MjZSuX7kSUxTa0f/CsN6eErbMFrAFumW08IvOnU8b+EoRzpzEu7mF0d29M1ItnHfHPUP44HYiE4yP3Zg==
+testcontainers@^10.11.0, testcontainers@^10.12.0, testcontainers@^10.7.2:
+  version "10.12.0"
+  resolved "https://registry.yarnpkg.com/testcontainers/-/testcontainers-10.12.0.tgz#493f70796df929b8f5440b78fdfef50de5f1afd0"
+  integrity sha512-KEtFj7VvfZPZuyugYJe5aYC/frFN2LRHwQVOVbdZf1vYYGDa4VQt6d0/bM3PcgTE1BOAY6cWBD/S41yu4JQ1Kg==
   dependencies:
     "@balena/dockerignore" "^1.0.2"
     "@types/dockerode" "^3.3.29"
