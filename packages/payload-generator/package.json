@@ -12,7 +12,7 @@
     "test": "nyc mocha"
   },
   "dependencies": {
-    "@faker-js/faker": "^8.4.1",
+    "@faker-js/faker": "^9.0.2",
     "json-schema-faker": "^0.5.6"
   },
   "gitHead": "c480d620f24013ae2822640d70374df7fc9dbd5e"
