@@ -12,3 +12,4 @@ packages/mongo-event-builder/test/config/base.conf
 packages/merminator/test/config
 
 /docker/db-events/test/queue/
+.aider*
