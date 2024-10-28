@@ -15,7 +15,7 @@
   "devDependencies": {
     "@gridql/server": "^3.9.2",
     "axios": "^1.4.0",
-    "chai": "^4.4.1",
+    "chai": "^5.1.2",
     "chai-http": "^4.4.0",
     "cheerio": "^1.0.0-rc.12",
     "mocha": "^10.3.0",
