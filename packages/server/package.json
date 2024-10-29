@@ -43,7 +43,7 @@
     "cheerio": "^1.0.0-rc.12",
     "mongodb-memory-server": "^10.0.0",
     "openapi-client-axios": "^7.5.4",
-    "sinon": "^18.0.0"
+    "sinon": "^19.0.2"
   },
   "gitHead": "c480d620f24013ae2822640d70374df7fc9dbd5e"
 }
