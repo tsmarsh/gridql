@@ -2995,15 +2995,15 @@ fastq@^1.6.0:
   dependencies:
     reusify "^1.0.4"
 
-fetch-mock@^11.1.1:
-  version "11.1.5"
-  resolved "https://registry.yarnpkg.com/fetch-mock/-/fetch-mock-11.1.5.tgz#77f78942f3733cfba47fc232b8528d1138a6761f"
-  integrity sha512-KHmZDnZ1ry0pCTrX4YG5DtThHi0MH+GNI9caESnzX/nMJBrvppUHMvLx47M0WY9oAtKOMiPfZDRpxhlHg89BOA==
+fetch-mock@^12.1.0:
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/fetch-mock/-/fetch-mock-12.1.0.tgz#a63b524093a16a6757a8bc17f593a5ca13835193"
+  integrity sha512-xKcKpS9JIfA/vtYRGZtNXIYVHM7Ta/06e6tClSrJoOlU/46pribn1wmW2lDZkqY6MtloUSpeRzy+TbwSKxcvmQ==
   dependencies:
     "@types/glob-to-regexp" "^0.4.4"
     dequal "^2.0.3"
     glob-to-regexp "^0.4.1"
-    is-subset "^0.1.1"
+    is-subset-of "^3.1.10"
     regexparam "^3.0.0"
 
 figures@3.2.0, figures@^3.0.0:
@@ -3890,10 +3890,12 @@ is-stream@^3.0.0:
   resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-3.0.0.tgz#e6bfd7aa6bef69f4f472ce9bb681e3e57b4319ac"
   integrity sha512-LnQR4bZ9IADDRSkvpqMGvt/tEJWclzklNgSw48V5EAaAeDd6qGvN8ei6k5p0tvxSR171VmGyHuTiAOfxAbr8kA==
 
-is-subset@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/is-subset/-/is-subset-0.1.1.tgz#8a59117d932de1de00f245fcdd39ce43f1e939a6"
-  integrity sha512-6Ybun0IkarhmEqxXCNw/C0bna6Zb/TkfUX9UbwJtK6ObwAVCxmAP308WWTHviM/zAqXk05cdhYsUsZeGQh99iw==
+is-subset-of@^3.1.10:
+  version "3.1.10"
+  resolved "https://registry.yarnpkg.com/is-subset-of/-/is-subset-of-3.1.10.tgz#d3f4331b9ca288318fae92ad5d953241b6f7b00b"
+  integrity sha512-avvaYgVmYWyaZ1NDFiv4y9JGkrE2je3op1Po4VYKKJKR8H2qVPsg1GZuuXl5elCTxTlwAIsrAjWAs4BVrISFRw==
+  dependencies:
+    typedescriptor "3.0.2"
 
 is-text-path@^1.0.1:
   version "1.0.1"
@@ -7063,6 +7065,11 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==
+
+typedescriptor@3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/typedescriptor/-/typedescriptor-3.0.2.tgz#9ad1715bc2be1cf063d5acbc4cd4bfc96d644225"
+  integrity sha512-hyVbaCUd18UiXk656g/imaBLMogpdijIEpnhWYrSda9rhvO4gOU16n2nh7xG5lv/rjumnZzGOdz0CEGTmFe0fQ==
 
 "typescript@>=3 < 6":
   version "5.4.2"
