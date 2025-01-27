@@ -1,0 +1,23 @@
+classDiagram
+
+    Farm *-- Coop
+    class Farm {
+        name: String!
+    }
+
+    Coop *-- Hen
+    class Coop {
+        name: String!
+        farm_id: Farm!
+
+        getByName(name: String): Coop
+    }
+
+    class Hen {
+        name: String!
+        coop_id: Coop
+        eggs: Int
+        dob: Date
+
+        getByName(name: String): [Hen]
+    } 

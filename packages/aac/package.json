@@ -1,0 +1,33 @@
+{
+  "name": "@gridql/aac",
+  "version": "1.0.0",
+  "description": "Converts mermaid class diagrams to json and graph schema (TypeScript version of Merminator).",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "test": "mocha --exit"
+  },
+  "dependencies": {
+    "pluralize": "^8.0.0",
+    "chevrotain": "^11.0.3",
+    "commander": "^12.0.0"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^20.5.1",
+    "@types/pluralize": "^0.0.29",
+    "mocha": "^10.3.0",
+    "typescript": "^5.2.2"
+  },
+  "keywords": [
+    "mermaid",
+    "classdiagram",
+    "graphql",
+    "jsonschema",
+    "ts"
+  ],
+  "author": "You",
+  "license": "MIT"
+} 
